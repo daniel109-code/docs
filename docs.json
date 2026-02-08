@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Helply Documentation",
   "colors": {
-    "primary": "#0d0f0e",
-    "light": "#4e2e8e",
-    "dark": "#171131"
+    "primary": "#803fe6",
+    "light": "#8c56e2",
+    "dark": "#722ae6"
   },
   "favicon": "/images/Helply_Circle.png",
   "navigation": {
@@ -14,7 +14,7 @@
         {
           "anchor": "Documentation",
           "icon": "book-open-cover",
-          "href": "https://mintlify.com/docs"
+          "href": "https://docs.helplybot.xyz/"
         },
         {
           "anchor": "Blog",
@@ -28,8 +28,10 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Bulletin",
+            "group": "Getting Started",
             "pages": [
+              "info",
+              "setup",
               "commands",
               "features"
             ]
@@ -112,6 +114,11 @@
     "family": "Sora",
     "heading": {
       "family": "Space Grotesk"
+    }
+  },
+  "background": {
+    "color": {
+      "dark": "#1D1D1D"
     }
   }
 }
