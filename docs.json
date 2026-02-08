@@ -121,9 +121,6 @@
     }
   },
   "description": "Lear how to set up and use Helply in your Discord Server",
-  "background": {
-    "image": "/images/HelplyBanner2.png"
-  },
   "fonts": {
     "family": "Sora",
     "heading": {
