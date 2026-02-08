@@ -1,13 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Helply Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0d0f0e",
+    "light": "#4e2e8e",
+    "dark": "#171131"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/images/Helply_Circle.png",
   "navigation": {
     "tabs": [
       {
@@ -83,15 +83,16 @@
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
+  "logo": "/images/helply_logo_official.png",
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "https://discord.gg/RA99tbwdW3"
+      },
+      {
+        "label": "Dashboard",
+        "href": "https://helplybot.xyz/dashboard"
       }
     ],
     "primary": {
@@ -117,6 +118,16 @@
       "x": "https://x.com/mintlify",
       "github": "https://github.com/mintlify",
       "linkedin": "https://linkedin.com/company/mintlify"
+    }
+  },
+  "description": "Lear how to set up and use Helply in your Discord Server",
+  "background": {
+    "image": "/images/HelplyBanner2.png"
+  },
+  "fonts": {
+    "family": "Sora",
+    "heading": {
+      "family": "Space Grotesk"
     }
   }
 }
