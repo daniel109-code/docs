@@ -25,7 +25,48 @@
     },
     "tabs": [
       {
-        "tab": "Documentation"
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Bulletin",
+            "pages": [
+              "commands",
+              "features"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "overview",
+              "context",
+              "forums",
+              "intelligence",
+              "actions",
+              "behavior",
+              "permissions",
+              "analytics",
+              "optimize",
+              "usage"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": []
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "troubleshooting",
+              "frequently-asked-questions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "pages": [
+          "what-is-new"
+        ]
       }
     ]
   },
