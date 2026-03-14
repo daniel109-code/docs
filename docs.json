@@ -103,13 +103,6 @@
      "vscode"
    ]
   },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
-  },
   "description": "Lear how to set up and use Helply in your Discord Server",
   "fonts": {
     "family": "Sora",
@@ -121,5 +114,8 @@
     "color": {
       "dark": "#1D1D1D"
     }
+  },
+  "banner": {
+    "dismissible": false
   }
 }
