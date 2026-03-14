@@ -1,4 +1,129 @@
 ---
-title: 'Context'
+title: "Context"
 ---
 
+![Context Banner](/images/context_banner.png)
+
+The **Context** tab is where you give Helply the information it uses to answer questions.
+
+Context is required for Helply to send messages. If a server has no context, Helply will not respond. Once context is added, Helply can use that knowledge to generate grounded answers instead of generic replies.
+
+## What the Context tab does
+
+The Context tab lets you:
+
+- upload knowledge sources for a specific server
+- manage the files and sources Helply uses when answering
+- keep responses grounded in your docs, notes, websites, and server content
+- track how many context slots and how much storage your server has used
+
+---
+
+## Supported upload methods
+
+Helply supports several ways to add context.
+
+### Plain text
+
+Paste raw text directly into Helply.
+
+This is useful for short notes, policies, FAQs, instructions, or any other information you want Helply to learn without uploading a file.
+
+### File upload
+
+Upload a TXT file from your device.
+
+This is useful when you already have support content, guides, or notes saved locally and want to add them as context.
+
+### Website upload
+
+Paste direct URLs to scrape live pages into a single webdata file.
+
+This is useful for help centers, public docs, landing pages, or any web content you want Helply to reference.
+
+### Mintlify docs
+
+Connect a Mintlify docs site to sync documentation into Helply.
+
+This is useful if your product docs already live in Mintlify and you want Helply to answer from that source directly. Simply paste the link to any page of your documentation.
+
+### GitBook
+
+Import a GitBook space into Helply.
+
+This is useful for teams that keep their documentation in GitBook and want Helply to use it for support replies. Simply paste the link to any page of your documentation.
+
+### Discord forum posts
+
+Index selected forum posts and tags.
+
+This is useful when important answers already live inside your server’s forum channels and you want Helply to learn from them.
+
+### Follow channels
+
+Track the latest messages from selected channels.
+
+This is useful when your server has announcement, update, or knowledge channels that Helply should stay aware of over time.
+
+---
+
+## Custom learning feed
+
+The Context tab also includes a **Custom learning feed**.
+
+This is a special context file that Helply builds from:
+
+- `/train`, which summarizes recent channel logs
+- `/learn`, which adds quick manual notes
+
+One context slot is reserved for this file.
+
+Use the **View / Edit** button to review and manage what has been added to the learning feed.
+
+Read more here:
+
+- [Commands](/commands)
+
+## Context limits
+
+Each server has context limits based on its plan.
+
+- **Free:** 6 files, max size 800 KB per file
+
+- **Plus:** 10 files, max size 3 MB per file
+
+- **Pro:** 20 files, max size 5 MB per file
+
+If you reach your plan limit, you will need to remove an existing context item or upgrade your plan before adding another.
+
+## Refreshing and syncing
+
+Some context sources can stay up to date automatically after upload.
+
+For supported web-based sources, Helply can refresh synced content on an interval so your docs stay current over time.
+
+## What to put in Context
+
+Good context usually includes things like:
+
+- product documentation
+- setup steps
+- troubleshooting guides
+-  FAQs
+- policy notes
+- support playbooks
+- known issue explanations
+- forum answers worth reusing
+- any information that a human support team member would need to know!
+
+**The better your context is, the more accurate Helply’s responses will be.**
+
+<Info>
+  If Helply responses are inaccurate, it is most likely due to a lack of context surrounding the question.
+</Info>
+
+## Related pages
+
+- [Setup](/setup)
+- [Commands](/commands)
+- [Overview](/overview)

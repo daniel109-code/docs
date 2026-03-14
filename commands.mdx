@@ -1,4 +1,120 @@
 ---
-title: 'Commands'
+title: "Commands"
 ---
 
+<img
+  src="/images/image.png"
+  alt="Image"
+  className="mx-auto"
+/>
+
+Helply includes slash commands for asking questions, training its learning file, managing tickets and forum threads, and opening your dashboard.
+
+---
+
+## Permissions
+
+Command permissions are managed in the **Permissions** tab of your server dashboard. There, you can choose which roles can run each Helply slash command. If you leave a command with no roles selected, access is limited to members with **Manage Server** permissions.
+
+You can also configure optional per-role **/ask cooldowns** in the same tab.
+
+Read more here: [Permissions](/permissions)
+
+---
+
+## `/ask`
+
+Ask Helply a question and get a private answer.
+
+**Options**
+
+- `Message` - required: Your question for Helply
+- `file` - optional: Optional file or screenshot to include
+
+---
+
+### `/train`
+
+Plus/Pro: summarize recent human messages into Helply's learning file.
+
+**Options**
+
+- `channel` - required: Channel containing the relevant discussion
+- `focus` - required: Short focus statement about what Helply should learn
+- `messages` - required: Number of recent human messages to scan, from `1` to `100`
+
+<Note>
+  The train command is a **Plus/Pro** feature. [Learn more.](/billing)
+</Note>
+
+---
+
+### `/learn`
+
+Add a quick manual note to Helply's custom learning file.
+
+**Options**
+
+- `note` - required: Plain-text note Helply should remember
+
+---
+
+### `/overview`
+
+Show the most common ticket issues over a time window.
+
+**Options**
+
+- `hours`  - optional: Number of hours to summarize, from `1` to `168`
+- `dm` - (T/F) optional: Send the summary to you in a DM
+
+<Info>
+  Hourly overviews must be enabled in the [analytics](/analytics) tab for the overview command to function.
+</Info>
+
+<Note>
+  Overview analytics is a **Plus/Pro** feature. [Learn more.](/billing)
+</Note>
+
+---
+
+### `/close`
+
+Close this ticket and save a transcript.
+
+---
+
+### `/resolve`
+
+Mark this forum thread as resolved.
+
+---
+
+### `/unresolve`
+
+Mark this forum thread as unresolved.
+
+---
+
+### `/dashboard`
+
+Get the link to your Helply dashboard.
+
+---
+
+### `/reminder stop`
+
+Stop inactivity reminders in this ticket.
+
+---
+
+### `/reminder resume`
+
+Resume inactivity reminders in this ticket.
+
+---
+
+## Notes
+
+- `/ask` supports optional per-role cooldowns in the [**Permissions**](/permissions) tab.
+- Command access can be customized per server in the [**Permissions**](/permissions) tab.
