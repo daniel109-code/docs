@@ -81,14 +81,14 @@
         "href": "https://discord.gg/RA99tbwdW3"
       },
       {
-        "label": "Dashboard",
-        "href": "https://helplybot.xyz/dashboard"
+        "label": "Website",
+        "href": "https://helplybot.xyz/"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://helplybot.xyz/dashboard"
     }
   },
   "contextual": {
@@ -103,7 +103,7 @@
      "vscode"
    ]
   },
-  "description": "Lear how to set up and use Helply in your Discord Server",
+  "description": "Learn how to set up and use Helply in your Discord Server",
   "fonts": {
     "family": "Sora",
     "heading": {
@@ -114,8 +114,5 @@
     "color": {
       "dark": "#1D1D1D"
     }
-  },
-  "banner": {
-    "dismissible": false
   }
 }
