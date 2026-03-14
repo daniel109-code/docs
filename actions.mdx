@@ -3,3 +3,137 @@ title: "Actions"
 ---
 
 ![Actions Banner](/images/actions_banner.png)
+
+The **Actions** tab is where you configure Helply’s ticket workflow automation.
+
+Use this tab to control what happens after a conversation starts, including ticket renaming and closing, transcript delivery, escalation alerts, and inactivity follow-ups.
+
+---
+
+## What the Actions tab does
+
+The Actions tab lets you:
+
+- Automatically rename tickets
+- Automatically close tickets
+- Send ticket transcripts
+- Configure escalation alerts
+- Ping roles when human help is needed
+- Send inactivity reminders and auto-close inactive tickets
+
+---
+
+## Actions automation
+
+Helply can automate common ticket actions to reduce manual support work.
+
+### Auto-rename tickets
+
+Enable **Auto-rename tickets** if you want Helply to rename a ticket channel when the actions agent suggests a better title.
+
+This helps keep ticket names clearer and more organized without requiring staff to rename them manually.
+
+### Auto-close tickets
+
+Enable **Auto-close tickets** if you want Helply to close a ticket when closing is suggested.
+
+This helps clean up resolved conversations automatically.
+
+---
+
+## Ticket transcripts
+
+Helply can send transcripts when tickets are automatically closed.
+
+### Send ticket transcripts
+
+Enable this if you want transcripts delivered when Helply auto-closes a ticket.
+
+### Transcript location
+
+You can choose where transcripts should be sent.
+
+By default, transcripts can be delivered to the server’s log channel, but you can manage the destination from this section.
+
+---
+
+## Escalation notifications
+
+Helply can notify your team when a conversation needs human attention.
+
+For each watched destination, you can configure:
+
+- Whether escalation notifications are enabled
+- Where the notification should be sent
+- Which roles should be pinged
+
+### Notify channel
+
+Choose where escalation alerts should go.
+
+You can send alerts directly in the current ticket or forum, or route them somewhere else depending on your workflow.
+
+### Roles to ping
+
+Choose one or more roles to mention when an escalation happens.
+
+This helps the right people see the issue quickly.
+
+### AI issue summary on escalation
+
+Helply can generate a short AI summary when escalating an issue to give staff quick handoff context.
+
+This summary uses Helply credits and condenses the issue into a few sentences so the support team can understand the situation faster.
+
+<Note>
+  AI summaries are a **Plus/Pro** feature. [Learn more.](/billing)
+</Note>
+
+---
+
+## Inactivity reminders
+
+Helply can follow up when a ticket goes quiet.
+
+Reminders reset when new messages are sent. If auto-close is enabled, the auto-close timer starts after the reminder is sent.
+
+<Info>
+  Reminders are sent only when there has been no response to Helply or to a staff member; if the latest message in a ticket is from the user who needs support, an inactivity reminder will not be sent.
+</Info>
+
+### Reminder delay
+
+Choose how long Helply should wait before sending an inactivity reminder.
+
+### Auto-close delay
+
+Choose how long Helply should wait after the reminder before automatically closing the ticket.
+
+### Reminder message
+
+You can customize the inactivity reminder message that Helply sends.
+
+This message supports variables such as:
+
+- `{user}`
+- `{no_response_hours}`
+- `{close_timer}`
+
+### Send reminders in handed-off channels
+
+Enable this if you want Helply to keep sending inactivity reminders even after a ticket has been handed off to a human.
+
+If this is turned off, handed-off tickets will not receive reminder or auto-close behavior from Helply.
+
+<Note>
+  Inactivity reminders are a **Plus/Pro** feature. [Learn more.](/billing)
+</Note>
+
+---
+
+## Related pages
+
+- [Overview](/overview) for core routing and support team settings
+- [Forums](/forums) for forum-specific inactivity and escalation behavior
+- [Permissions](/permissions) for command access
+- [Commands](/commands) for commands like `/close`

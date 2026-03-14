@@ -3,3 +3,99 @@ title: "Intelligence"
 ---
 
 ![Intelligencebanner](/images/intelligencebanner.png)
+
+The **Intelligence** tab is where you control Helply’s model selection for a server.
+
+Use this tab to choose how Helply balances speed and answer quality. The model you select here affects how Helply responds across your server.
+
+---
+
+## What the Intelligence tab does
+
+The Intelligence tab lets you:
+
+- Choose the model tier Helply uses for responses
+- Control the balance between speed and reasoning quality
+- Set a stronger model on higher plans when you need more capable answers
+
+---
+
+## Available model tiers
+
+Helply uses simple model labels in the dashboard instead of raw model names.
+
+### Fastest
+
+**Fastest** is the speed-focused option.
+
+This is the default model tier and is the only model choice available on Free.
+
+Fastest works best for simple questions that can easily be answered using the uploaded [context](/context).
+
+<Note>
+  The Fastest model is the cheapest model and is recommended for most servers.
+</Note>
+
+### Smarter
+
+**Smarter** gives you a stronger model option for more capable answers.
+
+This option is available on the Plus plan and above and is best for more complex questions that might involve reasoning.
+
+<Warning>
+  The Smarter model uses about 5x more Helply credits compared to the Fastest model.
+</Warning>
+
+### Smartest
+
+**Smartest** is the highest model tier.
+
+This option is available on the Pro plan and should be used only for extremely complex questions that require PhD-level intelligence. Most servers should not use the Smartest model tier due to its high credit usage and overkill intelligence level.
+
+<Warning>
+  The Smartest model uses about 25x more Helply credits compared to the Fastest model.
+</Warning>
+
+---
+
+## Reasoning options
+
+Helply also includes reasoning settings, which control how much thinking the model does before answering.
+
+Lower reasoning is faster and more lightweight, which makes it a good fit for simple support questions and high-volume servers. Higher reasoning gives Helply more room to work through harder questions, which can improve answer quality on more complex issues but may use more credits and take longer to respond.
+
+In general:
+
+- Use lower reasoning when speed matters most
+- Use higher reasoning when accuracy and deeper problem-solving matter more
+
+Your chosen reasoning setting works alongside the model tier you select in the Intelligence tab, so both speed and answer quality can be tuned.
+
+<Warning>
+  Higher reasoning levels like **Medium** and especially **High** consume more Helply credits and experience higher latency.
+</Warning>
+
+---
+
+## Plan access
+
+Model selection depends on your server’s plan:
+
+- **Free:** Fastest only
+- **Plus:** Fastest and Smarter
+- **Pro:** Fastest, Smarter, and Smartest
+
+If a model tier is locked for your current plan, you will need to upgrade that server’s plan before you can use it. Learn more [here](/billing).
+
+## How to choose the right model
+
+- Choose **Fastest** if you want the quickest responses and are fine with the most lightweight model behavior. This model is great for repetitive questions that are directly answered in the uploaded [context](/context).
+- Choose **Smarter** if you want better answer quality and need stronger reasoning than the base tier. This model is great for troubleshooting issues that might not be directly answered in the uploaded [context](/context).
+- Choose **Smartest** if you want the strongest available responses for more demanding support workflows. This model should only be used to solve the most complex support questions that involve advanced reasoning (such as complex coding and math questions).
+
+## Related pages
+
+- [Optimize](/optimize) for other efficiency and cost-related settings
+- [Context](/context) for the knowledge Helply uses when generating answers
+- [Usage](/usage) for tracking credits and plan limits
+- [Billing](/billing) for upgrading a server’s plan
