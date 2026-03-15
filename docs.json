@@ -44,9 +44,7 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "billing",
-              "troubleshooting",
-              "frequently-asked-questions"
+              "billing"
             ]
           }
         ]
