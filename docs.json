@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "maple",
   "name": "Helply Documentation",
   "colors": {
     "primary": "#803fe6",
@@ -112,7 +112,10 @@
   },
   "background": {
     "color": {
-      "dark": "#1D1D1D"
+      "dark": "#05070F"
     }
+  },
+  "appearance": {
+    "default": "system"
   }
 }
