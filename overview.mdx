@@ -1,81 +1,138 @@
 ---
 title: "Overview"
+description: "Configure Helply’s core routing, staff behavior, reply timing, and server-level automation settings."
 ---
 
-![Overview Banner](/images/overview_banner.png)
+<img
+  src="/images/overview_banner.png"
+  alt="Overview Banner"
+  className="rounded-2xl mx-auto"
+/>
 
-The **Overview** tab is the main place to configure Helply’s core automation and routing for a server.
+The **Overview** tab is the main place to configure Helply’s core routing and automation for a server.
 
-This is where you decide where Helply should listen, which roles count as staff, how quickly Helply should reply, and where automation logs should go.
+This is where you decide where Helply should listen, which roles count as staff, how quickly it should reply, and where logs should be sent.
 
----
+<Tip>
+  Start here before moving into more specialized tabs like **Context**, **Actions**, **Forums**, and **Permissions**.
+</Tip>
 
-## What the Overview tab controls
+## What you can configure
 
-### Ticket destinations
+<Columns cols={2}>
+  <Card icon="ticket" title="Ticket destinations">
+    Choose which categories Helply should monitor for support activity.
+  </Card>
+  <Card icon="users" title="Support team roles">
+    Define which roles count as staff, so Helply knows when humans are involved.
+  </Card>
+  <Card icon="up-from-dotted-line" title="Support team handoff">
+    Pause Helply when a support team member joins the conversation.
+  </Card>
+  <Card icon="file-text" title="Server information">
+    Give Helply background on your server, product, or community.
+  </Card>
+  <Card icon="timer" title="Response delay">
+    Control how long Helply waits before replying.
+  </Card>
+  <Card icon="square-1" title="Respond on ticket opening">
+    Let Helply reply to the very first ticket-opening message.
+  </Card>
+  <Card icon="clipboard-list" title="Log channel">
+    Send logs, summaries, and automation events to a chosen channel.
+  </Card>
+  <Card icon="palette" title="Bot customization">
+    Customize how Helply appears in your server.
+  </Card>
+</Columns>
 
-Choose the ticket channels or categories where Helply should listen for new tickets.
+## Settings reference
 
-Once selected, Helply watches those destinations for support activity.
+<AccordionGroup>
+  <Accordion defaultOpen icon="ticket" title="Ticket destinations">
+    Choose the ticket channels or categories where Helply should listen for new tickets.
 
-### Support team roles
+    Once selected, Helply watches those destinations for support activity and responds based on the rest of your configuration.
+  </Accordion>
+  <Accordion icon="users" title="Support team roles">
+    Choose the roles that count as your support team.
 
-Choose the roles that count as your support team.
+    Messages from these roles do not trigger Helply responses. This helps Helply stay out of the way when human staff are already handling the conversation.
+  </Accordion>
+  <Accordion icon="arrow-up-from-dotted-line" title="Support team handoff">
+    Enable **Support team handoff** if you want Helply to pause automatically when a support team member speaks.
 
-Messages from these roles will not trigger Helply responses, which helps Helply stay out of the way when human staff are already handling the conversation.
+    This creates a smoother handoff from AI to human support and prevents Helply from continuing to reply after staff step in.
+  </Accordion>
+  <Accordion icon="file-text" title="Server information">
+    Add a short summary of your server so Helply has better context when responding.
 
-### Support team handoff
+    This is a simple way to give Helply background on your community, product, or support environment.
 
-Enable **Support team handoff** if you want Helply to automatically pause when a support team member speaks.
+    <Note>
+      If Helply has trouble understanding your server or its purpose, adding server information can make a meaningful difference.
+    </Note>
+  </Accordion>
+  <Accordion icon="timer" title="Response delay">
+    Set how long Helply waits before replying.
 
-This helps create a smoother handoff from AI to human support and prevents Helply from continuing to reply once a staff member has stepped in.
+    This gives human staff a chance to answer first and lets you control how proactive or reserved Helply feels in support channels.
+  </Accordion>
+  <Accordion icon="square-1" title="Respond on ticket opening">
+    Choose whether Helply should respond to the initial ticket-opening message.
 
-### Server information
+    When enabled, Helply can reply as soon as a ticket is created, before the user sends a follow-up message.
+  </Accordion>
+  <Accordion icon="clipboard-list" title="Log channel">
+    Choose the channel where Helply sends logs, summaries, and automation events.
 
-Add a short summary of your server so Helply has better context when responding.
+    This gives your team a central place to monitor what Helply is doing across your server.
+  </Accordion>
+  <Accordion description="Pro only" icon="palette" title="Bot customization">
+    Customize how Helply appears in your server.
 
-This is a simple way to give Helply background about your community, product, or support environment.
+    <Info>
+      Uploaded images for bot customization must be under 1 MB.
+    </Info>
+    <Note>
+      Bot customization is available on the Pro plan only.
+    </Note>
+  </Accordion>
+</AccordionGroup>
 
-<Note>
-  If Helply has trouble understanding your server's meaning, adding server information is important.
-</Note>
+## Recommended setup order
 
-### Response delay
-
-Set how long Helply waits before replying.
-
-This gives humans a chance to respond first and helps you control how aggressive or reserved Helply should feel in support channels.
-
-### Respond on ticket opening
-
-Choose whether Helply should respond to the initial ticket opening message.
-
-When this is enabled, Helply can reply immediately when a ticket is created, before the user sends a follow-up message.
-
-### Log channel
-
-Choose the channel where Helply sends logs, summaries, and automation events.
-
-This gives your team a central place to monitor what Helply is doing.
-
-### Bot Customization
-
-This lets you customize how Helply appears in your server.
-
-<Info>
-  Uploaded images for bot customization must be under 1MB.
-</Info>
-
-<Note>
-  Bot customization is a Pro-only feature.
-</Note>
+<Steps>
+  <Step title="Choose where Helply should listen">
+    Set your ticket destinations first so Helply knows which channels or categories it should monitor.
+  </Step>
+  <Step title="Define your staff roles">
+    Add your support team roles and decide whether support team handoff should be enabled.
+  </Step>
+  <Step title="Add server context">
+    Fill in server information so Helply has the background it needs to respond more accurately.
+  </Step>
+  <Step title="Tune reply behavior">
+    Adjust response delay and decide whether Helply should answer the opening ticket message.
+  </Step>
+  <Step title="Set up logging">
+    Choose a log channel so your team can monitor automation, summaries, and support events.
+  </Step>
+</Steps>
 
 ## Related pages
 
-- [Forums](/forums) for forum-specific routing and status flows
-
-- [Context](/context) for docs, notes, and knowledge sources
-
-- [Actions](/actions) for ticket workflow behavior
-
-- [Permissions](/permissions) for command access
+<Columns cols={2}>
+  <Card icon="message-question" href="/forums" title="Forums">
+    Configure forum-specific routing and thread status flows.
+  </Card>
+  <Card icon="newspaper" href="/context" title="Context">
+    Connect docs, notes, and other knowledge sources.
+  </Card>
+  <Card icon="zap" href="/actions" title="Actions">
+    Manage ticket workflow behavior and automation actions.
+  </Card>
+  <Card icon="shield-check" href="/permissions" title="Permissions">
+    Control command access and role-based permissions.
+  </Card>
+</Columns>

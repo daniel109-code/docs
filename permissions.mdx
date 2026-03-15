@@ -1,5 +1,112 @@
 ---
 title: "Permissions"
+description: "Control which roles can use Helply’s slash commands and set optional per-role `/ask` cooldowns."
 ---
 
-![Permissions Banner](/images/permissions_banner.png)
+<img
+  src="/images/permissions_banner.png"
+  alt="Permissions Banner"
+  className="rounded-2xl mx-auto"
+/>
+
+The **Permissions** tab is where you control which roles can use Helply’s slash commands in a server.
+
+Use this tab to decide who can access each command and to optionally limit how often different roles can use `/ask`.
+
+## What the Permissions tab does
+
+<Columns cols={2}>
+  <Card icon="shield-check" title="Control command access">
+    Choose which roles are allowed to run each Helply slash command.
+  </Card>
+  <Card icon="users" title="Restrict staff commands">
+    Keep staff-only commands limited to the right roles.
+  </Card>
+  <Card icon="lock" title="Use server manager fallback">
+    Leave commands empty to keep them limited to members with **Manage Server**.
+  </Card>
+  <Card icon="timer" title="Set `/ask` cooldowns">
+    Add optional per-role usage limits for `/ask`.
+  </Card>
+</Columns>
+
+## Command permissions
+
+Each command in the Permissions tab can be assigned to one or more Discord roles.
+
+Click a command to choose which roles are allowed to run it.
+
+<AccordionGroup>
+  <Accordion defaultOpen icon="key" title="How command access works">
+    - If a command has one or more roles selected, only those roles can use it.
+    - If a command is left empty, access is limited to members with **Manage Server**.
+    - The exceptions are `/help` and `/support`, which anyone can run by default.
+
+    This makes it easy to keep commands restricted until you are ready to open them up more broadly.
+  </Accordion>
+  <Accordion icon="terminal" title="Available commands">
+    The Permissions tab shows the Helply slash commands currently available for your server.
+
+    To view the full command list and what each command does, see [Commands](/commands).
+  </Accordion>
+</AccordionGroup>
+
+## `/ask` cooldowns
+
+The Permissions tab also includes **`/ask cooldowns`**.
+
+This lets you add optional per-role limits for `/ask`, measured in **messages per hour**.
+
+For example, you can give trusted roles a higher limit while keeping a stricter limit for general members.
+
+## How `/ask` cooldowns work
+
+<Columns cols={2}>
+  <Card icon="arrow-up-a-z" title="Per-role limits">
+    Cooldowns are configured per role.
+  </Card>
+  <Card icon="arrow-down-short-wide" title="Role priority">
+    Higher roles override lower roles.
+  </Card>
+  <Card icon="list" title="Up to 10 roles">
+    You can configure cooldowns for up to **10 roles**.
+  </Card>
+  <Card icon="globe" title="Default with `@everyone`">
+    Add `@everyone` if you want a default cooldown for the whole server.
+  </Card>
+</Columns>
+
+<Note>
+  If no `/ask` cooldowns are configured, `/ask` will not have a role-based rate limit from this section.
+</Note>
+
+## Recommended setup
+
+<Steps>
+  <Step title="Lock down staff commands first">
+    Start by assigning sensitive commands to staff or admin roles only.
+  </Step>
+  <Step title="Decide which member commands should be public">
+    Review whether broader roles should be allowed to use commands like `/ask`.
+  </Step>
+  <Step title="Add `/ask` cooldowns if needed">
+    Set stricter limits for general members and higher limits for trusted roles.
+  </Step>
+  <Step title="Use `@everyone` for a default limit">
+    Add `@everyone` if you want a baseline cooldown that applies across the server.
+  </Step>
+</Steps>
+
+## Related pages
+
+<Columns cols={3}>
+  <Card icon="terminal" href="/commands" title="Commands">
+    Learn what each Helply command does.
+  </Card>
+  <Card icon="align-center" href="/overview" title="Overview">
+    Configure core routing and support settings.
+  </Card>
+  <Card icon="zap" href="/actions" title="Actions">
+    Manage ticket workflow automation.
+  </Card>
+</Columns>

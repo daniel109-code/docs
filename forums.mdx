@@ -1,124 +1,155 @@
 ---
 title: "Forums"
+description: "Configure Helply for Discord forum support, including status flows, inactivity handling, locking behavior, and forum customization."
 ---
 
-![Forums Banner](/images/forums_banner.png)
+<img
+  src="/images/forums_banner.png"
+  alt="Forums Banner"
+  className="rounded-2xl mx-auto"
+/>
 
 The **Forums** tab is where you configure Helply for forum-based support.
 
 Use this tab if your server handles support through Discord forum channels. Here, you can choose which forums Helply should monitor, define status flows, control inactivity handling, and customize how forum updates are shown.
 
 <Note>
-  Forum embed customization is a **Plus/Pro** feature. [Learn more.](/billing)
+  Forum embed customization is a **Plus / Pro** feature. [Learn more.](/billing)
 </Note>
-
----
 
 ## What the Forums tab does
 
-The Forums tab lets you:
+<Columns cols={2}>
+  <Card icon="list-check" title="Choose forum channels">
+    Select which Discord forum channels Helply should manage.
+  </Card>
+  <Card icon="tag" title="Filter by tags">
+    Choose which forum tags Helply should respond in.
+  </Card>
+  <Card icon="clipboard-medical" title="Track thread status">
+    Define how resolved, unresolved, inactive, and escalated threads are handled.
+  </Card>
+  <Card icon="snooze" title="Manage inactivity">
+    Configure and customize the reminder and inactivity timing, as well as follow-up behavior.
+  </Card>
+  <Card icon="user-lock" title="Control locking">
+    Decide when resolved or inactive threads should be locked automatically.
+  </Card>
+  <Card icon="palette" title="Customize updates">
+    Adjust forum embeds, status messages, and button styles on supported plans.
+  </Card>
+</Columns>
 
-- Choose which forum channels Helply should use
-- Choose which forum tags Helply responds in
-- Define how thread status is tracked
-- Configure reminders and inactivity behavior
-- Control when threads are locked
-- Customize forum status messages and buttons
+## Settings reference
 
----
+<AccordionGroup>
+  <Accordion defaultOpen icon="hashtag" title="Forum channels">
+    Start by selecting the forum channels Helply should manage.
 
-## Forum channels
+    Once selected, Helply can use those forums for support workflows and apply the rules you configure in this tab.
+  </Accordion>
+  <Accordion icon="arrow-progress" title="Forum status flows">
+    Helply supports forum thread states for:
 
-Start by selecting the forum channels Helply should manage.
+    - **Resolved**
+    - **Unresolved**
+    - **Inactive**
+    - **Escalated**
 
-Once selected, Helply can use those forums for support workflows and apply the rules you configure in this tab.
+    You can map forum tags to each of these states so Helply can update thread status more clearly inside your workflow.
 
----
+    Helply automatically applies the relevant forum tags. This makes it easier for staff and members to see what still needs attention, what has gone inactive, and what has already been resolved or escalated.
+  </Accordion>
+  <Accordion icon="lock" title="Locking behavior">
+    The Forums tab includes controls for thread locking behavior.
 
-## Forum status flows
+    ### Lock on resolve
 
-Helply supports forum thread states for:
+    Enable this if you want Helply to lock a thread when it is marked as resolved.
 
-- **Resolved**
-- **Unresolved**
-- **Inactive**
-- **Escalated**
+    ### Lock on inactive
 
-You can map forum tags to each of these states so Helply can update thread status more clearly inside your forum workflow.
+    Enable this if you want Helply to lock a thread when it is marked as inactive.
 
-Helply will automatically apply these forum tags. This makes it easier for staff and members to see what still needs attention, what has gone inactive, and what has already been resolved or escalated.
+    These settings help keep solved or abandoned threads organized without requiring manual cleanup.
+  </Accordion>
+  <Accordion icon="bell-ring" title="Inactivity reminders">
+    Helply can automatically follow up when a forum thread goes quiet.
 
----
+    When **Inactivity reminders** are enabled, Helply can send a reminder after a set delay, then mark the thread inactive later if there is still no response.
 
-## Locking behavior
+    Reminders reset whenever a new message is sent.
 
-The Forums tab includes controls for thread locking behavior.
+    ### Reminder delay
 
-### Lock on resolve
+    Choose how long Helply should wait before sending an inactivity reminder.
 
-Enable this if you want Helply to lock a thread when it is marked as resolved.
+    ### Inactive after
 
-### Lock on inactive
+    Choose when Helply should mark the thread inactive if there is still no reply after the reminder.
 
-Enable this if you want Helply to lock a thread when it is marked inactive.
+    This helps prevent old support posts from staying open indefinitely while still giving members a chance to continue the conversation.
+  </Accordion>
+  <Accordion icon="brake-warning" title="Unresolved helper and human escalation">
+    The Forums tab also includes an unresolved helper flow.
 
-These settings help keep solved or abandoned threads organized without requiring manual cleanup.
+    If Helply’s last answer did not solve the issue, you can configure a follow-up message that asks for more detail and optionally offers escalation to a human.
 
----
+    This works well when you want Helply to keep the conversation moving without forcing users to start over.
+  </Accordion>
+  <Accordion description="Plus / Pro" icon="palette" title="Forum customization">
+    Helply supports forum embed and button customization for forum workflows.
 
-## Inactivity reminders
+    This includes customization for:
 
-Helply can automatically follow up when a forum thread goes quiet.
+    - main forum response embeds
+    - reminder embeds
+    - resolved and unresolved status embeds
+    - inactive and escalated status embeds
+    - human escalation embeds
+    - unresolved helper embeds
+    - status button labels and button styles
 
-When **Inactivity reminders** are enabled, Helply can send a reminder after a set delay, then mark the thread inactive later if there is still no response.
+    <Note>
+      Forum embed customization is a **Plus / Pro** feature. [Learn more.](/billing)
+    </Note>
+    On paid plans, you can customize embed titles, descriptions, colors, and status button styles to better match your server’s workflow and branding.
+  </Accordion>
+</AccordionGroup>
 
-Reminders reset when a new message is sent.
+## Recommended forum flow
 
-### Reminder delay
-
-Choose how long Helply should wait before sending an inactivity reminder.
-
-### Inactive after
-
-Choose when Helply should mark the thread inactive if there is still no reply after the reminder.
-
-This helps prevent old support posts from staying open forever while still giving members a chance to continue the conversation.
-
----
-
-## Unresolved helper and human escalation
-
-The Forums tab also includes an unresolved helper flow.
-
-If Helply’s last answer did not solve the issue, you can configure a follow-up message that asks for more detail and optionally offers escalation to a human.
-
-This is useful when you want Helply to keep the conversation moving without forcing users to start over.
-
----
-
-## Forum customization
-
-Helply supports forum embed and button customization for forum workflows.
-
-This includes customization for things like:
-
-- main forum response embeds
-- reminder embeds
-- resolved and unresolved status embeds
-- inactive and escalated status embeds
-- human escalation embeds
-- unresolved helper embeds
-- status button labels and button styles
-
-<Note>
-  Forum embed customization is a **Plus/Pro** feature. [Learn more.](/billing)
-</Note>
-
-On paid plans, you can customize embed titles, descriptions, colors, and status button styles to better match your server’s workflow and branding.
+<Steps>
+  <Step title="Select the forum channels Helply should manage">
+    Choose the support forums where Helply should be active.
+  </Step>
+  <Step title="Map tags to your status states">
+    Define how resolved, unresolved, inactive, and escalated threads should appear in your workflow.
+  </Step>
+  <Step title="Set inactivity timing">
+    Choose when reminders should be sent and when quiet threads should become inactive.
+  </Step>
+  <Step title="Decide when threads should lock">
+    Enable automatic locking for resolved or inactive threads if you want a cleaner forum workflow.
+  </Step>
+  <Step title="Customize the experience">
+    On supported plans, adjust embeds and buttons so the forum flow matches your server’s tone and branding.
+  </Step>
+</Steps>
 
 ## Related pages
 
-- [Overview](/overview) for core routing and automation settings
-- [Context](/context) for the knowledge Helply uses when replying
-- [Commands](/commands) for forum-related commands like `/resolve` and `/unresolve`
-- [Actions](/actions) for other support workflow behavior
+<Columns cols={2}>
+  <Card icon="paperclip" href="/overview" title="Overview">
+    Configure core routing, support roles, and server-wide automation settings.
+  </Card>
+  <Card icon="newspaper" href="/context" title="Context">
+    Add the knowledge Helply uses when replying in forum threads.
+  </Card>
+  <Card icon="terminal" href="/commands" title="Commands">
+    Learn about forum-related commands such as `/resolve` and `/unresolve`.
+  </Card>
+  <Card icon="zap" href="/actions" title="Actions">
+    Configure other support workflow behaviors and automation rules.
+  </Card>
+</Columns>

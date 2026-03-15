@@ -1,139 +1,174 @@
 ---
 title: "Actions"
+description: "Configure Helply’s ticket workflow automation, including ticket renaming, closing, transcripts, escalation alerts, and inactivity follow-ups."
 ---
 
-![Actions Banner](/images/actions_banner.png)
+<img
+  src="/images/actions_banner.png"
+  alt="Actions Banner"
+  className="rounded-2xl mx-auto"
+/>
 
 The **Actions** tab is where you configure Helply’s ticket workflow automation.
 
 Use this tab to control what happens after a conversation starts, including ticket renaming and closing, transcript delivery, escalation alerts, and inactivity follow-ups.
 
----
-
 ## What the Actions tab does
 
-The Actions tab lets you:
+<Columns cols={2}>
+  <Card icon="pencil" title="Rename tickets automatically">
+    Let Helply update ticket names when a clearer title is suggested.
+  </Card>
+  <Card icon="xmark-to-slot" title="Close resolved tickets">
+    Automatically close tickets when Helply determines the conversation is complete.
+  </Card>
+  <Card icon="note" title="Send transcripts">
+    Deliver ticket transcripts when tickets are closed automatically.
+  </Card>
+  <Card icon="bell-ring" title="Notify staff on escalation">
+    Alert the right channel and roles when human help is needed.
+  </Card>
+  <Card icon="file-text" title="Add AI issue summaries">
+    Give staff a quick summary during handoff on supported plans.
+  </Card>
+  <Card icon="message-xmark" title="Handle inactivity">
+    Send reminders and auto-close inactive tickets based on your timing rules.
+  </Card>
+</Columns>
 
-- Automatically rename tickets
-- Automatically close tickets
-- Send ticket transcripts
-- Configure escalation alerts
-- Ping roles when human help is needed
-- Send inactivity reminders and auto-close inactive tickets
+## Settings reference
 
----
+<AccordionGroup>
+  <Accordion defaultOpen icon="zap" title="Actions automation">
+    Helply can automate common ticket actions to reduce manual support work.
 
-## Actions automation
+    ### Auto-rename tickets
 
-Helply can automate common ticket actions to reduce manual support work.
+    Enable **Auto-rename tickets** if you want Helply to rename a ticket channel when the actions agent suggests a better title.
 
-### Auto-rename tickets
+    This helps keep ticket names clearer and more organized without requiring staff to rename them manually.
 
-Enable **Auto-rename tickets** if you want Helply to rename a ticket channel when the actions agent suggests a better title.
+    ### Auto-close tickets
 
-This helps keep ticket names clearer and more organized without requiring staff to rename them manually.
+    Enable **Auto-close tickets** if you want Helply to close a ticket when closing is suggested.
 
-### Auto-close tickets
+    This helps clean up resolved conversations automatically.
+  </Accordion>
+  <Accordion icon="note" title="Ticket transcripts">
+    Helply can send transcripts when tickets are automatically closed.
 
-Enable **Auto-close tickets** if you want Helply to close a ticket when closing is suggested.
+    ### Send ticket transcripts
 
-This helps clean up resolved conversations automatically.
+    Enable this if you want transcripts delivered when Helply auto-closes a ticket.
 
----
+    ### Transcript location
 
-## Ticket transcripts
+    Choose where transcripts should be sent.
 
-Helply can send transcripts when tickets are automatically closed.
+    By default, transcripts can be delivered to the server’s log channel, but you can manage the destination from this section.
+  </Accordion>
+  <Accordion icon="angles-up" title="Escalation notifications">
+    Helply can notify your team when a conversation needs human attention.
 
-### Send ticket transcripts
+    For each watched destination, you can configure:
 
-Enable this if you want transcripts delivered when Helply auto-closes a ticket.
+    - whether escalation notifications are enabled
+    - where the notification should be sent
+    - which roles should be pinged
 
-### Transcript location
+    ### Notify channel
 
-You can choose where transcripts should be sent.
+    Choose where escalation alerts should go.
 
-By default, transcripts can be delivered to the server’s log channel, but you can manage the destination from this section.
+    You can send alerts directly in the current ticket or forum, or route them somewhere else depending on your workflow.
 
----
+    ### Roles to ping
 
-## Escalation notifications
+    Choose one or more roles to mention when an escalation happens.
 
-Helply can notify your team when a conversation needs human attention.
+    This helps the right people see the issue quickly.
 
-For each watched destination, you can configure:
+    ### AI issue summary on escalation
 
-- Whether escalation notifications are enabled
-- Where the notification should be sent
-- Which roles should be pinged
+    Helply can generate a short AI summary when escalating an issue to give staff quick handoff context.
 
-### Notify channel
+    This summary uses Helply credits and condenses the issue into a few sentences so the support team can understand the situation faster.
 
-Choose where escalation alerts should go.
+    <Note>
+      AI issue summaries are a **Plus / Pro** feature. [Learn more.](/billing)
+    </Note>
+  </Accordion>
+  <Accordion icon="clock" title="Inactivity reminders">
+    Helply can follow up when a ticket goes quiet.
 
-You can send alerts directly in the current ticket or forum, or route them somewhere else depending on your workflow.
+    Reminders reset when new messages are sent. If auto-close is enabled, the auto-close timer starts after the reminder is sent.
 
-### Roles to ping
+    <Info>
+      Reminders are sent only when there has been no response to Helply or to a staff member. If the latest message in a ticket is from the user who needs support, an inactivity reminder will not be sent.
+    </Info>
+    ### Reminder delay
 
-Choose one or more roles to mention when an escalation happens.
+    Choose how long Helply should wait before sending an inactivity reminder.
 
-This helps the right people see the issue quickly.
+    ### Auto-close delay
 
-### AI issue summary on escalation
+    Choose how long Helply should wait after the reminder before automatically closing the ticket.
 
-Helply can generate a short AI summary when escalating an issue to give staff quick handoff context.
+    ### Reminder message
 
-This summary uses Helply credits and condenses the issue into a few sentences so the support team can understand the situation faster.
+    You can customize the inactivity reminder message that Helply sends.
 
-<Note>
-  AI summaries are a **Plus/Pro** feature. [Learn more.](/billing)
-</Note>
+    Supported variables include:
 
----
+    - `{user}`
+    - `{no_response_hours}`
+    - `{close_timer}`
 
-## Inactivity reminders
+    ### Send reminders in handed-off channels
 
-Helply can follow up when a ticket goes quiet.
+    Enable this if you want Helply to keep sending inactivity reminders even after a ticket has been handed off to a human.
 
-Reminders reset when new messages are sent. If auto-close is enabled, the auto-close timer starts after the reminder is sent.
+    If this is turned off, handed-off tickets will not receive reminder or auto-close behavior from Helply.
 
-<Info>
-  Reminders are sent only when there has been no response to Helply or to a staff member; if the latest message in a ticket is from the user who needs support, an inactivity reminder will not be sent.
-</Info>
+    <Note>
+      Inactivity reminders are a **Plus / Pro** feature. [Learn more.](/billing)
+    </Note>
+  </Accordion>
+</AccordionGroup>
 
-### Reminder delay
+## Recommended setup order
 
-Choose how long Helply should wait before sending an inactivity reminder.
-
-### Auto-close delay
-
-Choose how long Helply should wait after the reminder before automatically closing the ticket.
-
-### Reminder message
-
-You can customize the inactivity reminder message that Helply sends.
-
-This message supports variables such as:
-
-- `{user}`
-- `{no_response_hours}`
-- `{close_timer}`
-
-### Send reminders in handed-off channels
-
-Enable this if you want Helply to keep sending inactivity reminders even after a ticket has been handed off to a human.
-
-If this is turned off, handed-off tickets will not receive reminder or auto-close behavior from Helply.
-
-<Note>
-  Inactivity reminders are a **Plus/Pro** feature. [Learn more.](/billing)
-</Note>
-
----
+<Steps>
+  <Step title="Turn on the automations you want">
+    Decide whether Helply should rename tickets, close resolved tickets, and send transcripts automatically.
+  </Step>
+  <Step title="Configure escalation behavior">
+    Choose where escalation alerts should go and which roles should be pinged when human help is needed.
+  </Step>
+  <Step title="Add handoff context">
+    On supported plans, enable AI issue summaries so staff can review a concise handoff when an issue is escalated.
+  </Step>
+  <Step title="Set inactivity timing">
+    Choose when reminders should be sent and how long Helply should wait before auto-closing inactive tickets.
+  </Step>
+  <Step title="Customize the reminder message">
+    Adjust the inactivity message and variables so the follow-up fits your server’s tone and workflow.
+  </Step>
+</Steps>
 
 ## Related pages
 
-- [Overview](/overview) for core routing and support team settings
-- [Forums](/forums) for forum-specific inactivity and escalation behavior
-- [Permissions](/permissions) for command access
-- [Commands](/commands) for commands like `/close`
+<Columns cols={2}>
+  <Card icon="paperclip" href="/overview" title="Overview">
+    Configure core routing, support team roles, and server-wide behavior.
+  </Card>
+  <Card icon="comment-question" href="/forums" title="Forums">
+    Set up forum-specific inactivity, escalation, and thread status flows.
+  </Card>
+  <Card icon="shield-check" href="/permissions" title="Permissions">
+    Manage command access and role-based permissions.
+  </Card>
+  <Card icon="terminal" href="/commands" title="Commands">
+    Learn about commands such as `/close`.
+  </Card>
+</Columns>

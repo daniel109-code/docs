@@ -1,101 +1,132 @@
 ---
 title: "Intelligence"
+description: "Choose Helply’s model tier and reasoning level to balance speed, answer quality, credit usage, and latency."
 ---
 
-![Intelligencebanner](/images/intelligencebanner.png)
+<img
+  src="/images/intelligencebanner.png"
+  alt="Intelligence Banner"
+  className="rounded-2xl mx-auto"
+/>
 
 The **Intelligence** tab is where you control Helply’s model selection for a server.
 
-Use this tab to choose how Helply balances speed and answer quality. The model you select here affects how Helply responds across your server.
-
----
+Use this tab to choose how Helply balances speed and answer quality. The settings you choose here affect how Helply responds across your server.
 
 ## What the Intelligence tab does
 
-The Intelligence tab lets you:
-
-- Choose the model tier Helply uses for responses
-- Control the balance between speed and reasoning quality
-- Set a stronger model on higher plans when you need more capable answers
-
----
+<Columns cols={2}>
+  <Card icon="brain" title="Choose a model tier">
+    Select which model tier Helply uses for support responses.
+  </Card>
+  <Card icon="gauge" title="Balance speed and quality">
+    Tune how quickly Helply responds versus how much reasoning power it uses.
+  </Card>
+  <Card icon="sparkles" title="Adjust reasoning">
+    Control how much thinking Helply does before answering.
+  </Card>
+  <Card icon="credit-card" title="Match your plan">
+    Unlock stronger model tiers on higher plans when your server needs them.
+  </Card>
+</Columns>
 
 ## Available model tiers
 
 Helply uses simple model labels in the dashboard instead of raw model names.
 
-### Fastest
+<AccordionGroup>
+  <Accordion defaultOpen icon="zap" title="Fastest">
+    **Fastest** is the speed-focused option.
 
-**Fastest** is the speed-focused option.
+    This is the default model tier and the only model choice available on the Free plan.
 
-This is the default model tier and is the only model choice available on Free.
+    Fastest works best for simple questions that are clearly answered by your uploaded [context](/context).
 
-Fastest works best for simple questions that can easily be answered using the uploaded [context](/context).
+    <Note>
+      Fastest is the lowest-cost model tier and is recommended for most servers.
+    </Note>
+  </Accordion>
+  <Accordion description="Plus and above" icon="brain-circuit" title="Smarter">
+    **Smarter** gives you a stronger model option for more capable answers.
 
-<Note>
-  The Fastest model is the cheapest model and is recommended for most servers.
-</Note>
+    This option is available on the Plus plan and above. It works well for more complex questions that require stronger reasoning or better judgment.
 
-### Smarter
+    <Warning>
+      Smarter uses about **5x more Helply credits** than Fastest.
+    </Warning>
+  </Accordion>
+  <Accordion description="Pro only" icon="crown" title="Smartest">
+    **Smartest** is the highest model tier.
 
-**Smarter** gives you a stronger model option for more capable answers.
+    This option is available on the Pro plan. It should be reserved for especially demanding support questions that require advanced reasoning. For most servers, this tier is unnecessary and significantly more expensive to run.
 
-This option is available on the Plus plan and above and is best for more complex questions that might involve reasoning.
-
-<Warning>
-  The Smarter model uses about 5x more Helply credits compared to the Fastest model.
-</Warning>
-
-### Smartest
-
-**Smartest** is the highest model tier.
-
-This option is available on the Pro plan and should be used only for extremely complex questions that require PhD-level intelligence. Most servers should not use the Smartest model tier due to its high credit usage and overkill intelligence level.
-
-<Warning>
-  The Smartest model uses about 25x more Helply credits compared to the Fastest model.
-</Warning>
-
----
+    <Warning>
+      Smartest uses about **25x more Helply credits** than Fastest.
+    </Warning>
+  </Accordion>
+</AccordionGroup>
 
 ## Reasoning options
 
 Helply also includes reasoning settings, which control how much thinking the model does before answering.
 
-Lower reasoning is faster and more lightweight, which makes it a good fit for simple support questions and high-volume servers. Higher reasoning gives Helply more room to work through harder questions, which can improve answer quality on more complex issues but may use more credits and take longer to respond.
+Lower reasoning is faster and more lightweight, which makes it a strong fit for simple support questions and high-volume servers. Higher reasoning gives Helply more room to work through harder questions, which can improve answer quality on more complex issues but may use more credits and take longer to respond.
 
-In general:
+### General guidance
 
-- Use lower reasoning when speed matters most
-- Use higher reasoning when accuracy and deeper problem-solving matter more
-
-Your chosen reasoning setting works alongside the model tier you select in the Intelligence tab, so both speed and answer quality can be tuned.
+- Use lower reasoning when speed matters most.
+- Use higher reasoning when accuracy and deeper problem-solving matter more.
+- Model tier and reasoning work together, so both settings affect answer quality, cost, and latency.
 
 <Warning>
-  Higher reasoning levels like **Medium** and especially **High** consume more Helply credits and experience higher latency.
+  Higher reasoning levels, such as **Medium** and especially **High,** use more Helply credits and can noticeably increase response time.
 </Warning>
-
----
 
 ## Plan access
 
-Model selection depends on your server’s plan:
+Model selection depends on your server’s plan.
 
-- **Free:** Fastest only
-- **Plus:** Fastest and Smarter
-- **Pro:** Fastest, Smarter, and Smartest
+<Columns cols={3}>
+  <Card horizontal title="Free:">
+    **Fastest** only
+  </Card>
+  <Card horizontal title="Plus:">
+    **Fastest** and **Smarter**
+  </Card>
+  <Card horizontal title="Pro:">
+    **Fastest**, **Smarter**, and **Smartest**
+  </Card>
+</Columns>
 
 If a model tier is locked for your current plan, you will need to upgrade that server’s plan before you can use it. Learn more [here](/billing).
 
 ## How to choose the right model
 
-- Choose **Fastest** if you want the quickest responses and are fine with the most lightweight model behavior. This model is great for repetitive questions that are directly answered in the uploaded [context](/context).
-- Choose **Smarter** if you want better answer quality and need stronger reasoning than the base tier. This model is great for troubleshooting issues that might not be directly answered in the uploaded [context](/context).
-- Choose **Smartest** if you want the strongest available responses for more demanding support workflows. This model should only be used to solve the most complex support questions that involve advanced reasoning (such as complex coding and math questions).
+<Steps>
+  <Step title="Choose Fastest for speed and efficiency">
+    Pick **Fastest** if you want quick responses and low credit usage. This tier works especially well for repetitive support questions that are directly covered in your uploaded [context](/context).
+  </Step>
+  <Step title="Choose Smarter for stronger reasoning">
+    Pick **Smarter** if you want better answer quality and stronger reasoning for troubleshooting or more layered support questions.
+  </Step>
+  <Step title="Choose Smartest for the hardest questions">
+    Pick **Smartest** only when your server regularly handles especially difficult support issues, such as advanced coding, logic-heavy troubleshooting, or complex technical questions.
+  </Step>
+</Steps>
 
 ## Related pages
 
-- [Optimize](/optimize) for other efficiency and cost-related settings
-- [Context](/context) for the knowledge Helply uses when generating answers
-- [Usage](/usage) for tracking credits and plan limits
-- [Billing](/billing) for upgrading a server’s plan
+<Columns cols={2}>
+  <Card icon="wave-pulse" href="/optimize" title="Optimize">
+    Adjust other efficiency and cost-related settings.
+  </Card>
+  <Card icon="newspaper" href="/context" title="Context">
+    Manage the knowledge Helply uses when generating answers.
+  </Card>
+  <Card icon="coins" href="/usage" title="Usage">
+    Track credit usage, limits, and remaining balance.
+  </Card>
+  <Card icon="credit-card" href="/billing" title="Billing">
+    Upgrade your server’s plan to unlock higher model tiers.
+  </Card>
+</Columns>

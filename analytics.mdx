@@ -1,5 +1,147 @@
 ---
 title: "Analytics"
+description: "Track support activity across your server, monitor escalation trends, and configure the hour-based overview used by `/overview`."
 ---
 
-![Analytics Banner](/images/analytics_banner.png)
+<img
+  src="/images/analytics_banner.png"
+  alt="Analytics Banner"
+  className="rounded-2xl mx-auto"
+/>
+
+The **Analytics** tab gives you visibility into support activity across your server.
+
+Use this tab to track ticket and forum activity over time, measure escalation trends, and configure the hour-based overview system for issue summaries.
+
+<Note>
+  Analytics and the hour-based overview are **Plus / Pro** features. [Learn more.](/billing)
+</Note>
+
+## What the Analytics tab does
+
+<Columns cols={2}>
+  <Card icon="chart-column" title="Track support volume">
+    Monitor how many issues are opened, resolved, and escalated in your server.
+  </Card>
+  <Card icon="swap-arrows" title="Measure escalation trends">
+    See how often issues are being handed off for human attention.
+  </Card>
+  <Card icon="calendar-range" title="Compare time windows">
+    Review support activity across multiple date ranges.
+  </Card>
+  <Card icon="ballot" title="Configure `/overview`">
+    Manage the hour-based overview system used for issue summaries.
+  </Card>
+</Columns>
+
+## Support metrics
+
+The main analytics view tracks support activity across both **forums** and **ticket channels**.
+
+It includes summary cards for:
+
+- **Opened**
+- **Resolved**
+- **Escalated**
+- **Escalation rate**
+
+These metrics give you a quick snapshot of how much support activity is happening and how often issues are being handed off for human attention.
+
+## Time range filters
+
+Analytics can be viewed across multiple time windows.
+
+<Columns cols={3}>
+  <Card icon="calendar-days" horizontal title="7d">
+    Review the last 7 days of activity.
+  </Card>
+  <Card icon="calendar" horizontal title="30d">
+    Review the last 30 days of activity.
+  </Card>
+  <Card icon="calendar-range" horizontal title="90d">
+    Review the last 90 days of activity.
+  </Card>
+</Columns>
+
+## Trend chart
+
+The Analytics tab also includes a chart showing support activity over time.
+
+This chart helps you visualize patterns in:
+
+- tickets opened
+- tickets resolved
+- issues escalated
+
+Use this view to see whether support volume is increasing, whether issues are being resolved consistently, and whether escalation activity is rising.
+
+## Hour-based overview
+
+The Analytics tab also includes **Hour-based overview** settings.
+
+This feature powers the `/overview` command and is used to generate hour-based summaries of closed tickets and the most common issues.
+
+You can enable or disable it directly from this section.
+
+Read more here: [Commands](/commands)
+
+<AccordionGroup>
+  <Accordion defaultOpen icon="clock-nine" title="What Hour-based overview does">
+    Hour-based overview helps summarize recent support activity over a selected time window.
+
+    It is designed to make `/overview` results more structured and easier to review.
+  </Accordion>
+  <Accordion icon="tags" title="Set categories">
+    Inside Hour-based overview, you can define issue categories for reporting.
+
+    These categories help keep summaries more consistent over time. You can still add or remove categories whenever you want.
+
+    Example categories include:
+
+    - Billing issues
+    - Login issues
+    - Bug reports
+    - Setup questions
+    - Feature requests
+
+    Using categories makes `/overview` summaries easier to compare across time periods.
+
+    <Info>
+      Helply can automatically create new categories as needed.
+    </Info>
+  </Accordion>
+</AccordionGroup>
+
+## Recommended usage
+
+<Steps>
+  <Step title="Review support volume first">
+    Start with the summary metrics to understand how many issues are being opened, resolved, and escalated.
+  </Step>
+  <Step title="Compare different time ranges">
+    Switch between 7-day, 30-day, and 90-day views to spot changes in support activity.
+  </Step>
+  <Step title="Watch escalation patterns">
+    Use the trend chart and escalation rate to see whether more issues are requiring human help over time.
+  </Step>
+  <Step title="Configure Hour-based overview">
+    Turn on the overview system and define categories so `/overview` summaries stay organized and useful.
+  </Step>
+</Steps>
+
+## Related pages
+
+<Columns cols={2}>
+  <Card icon="terminal" href="/commands" title="Commands">
+    Learn more about the `/overview` command.
+  </Card>
+  <Card icon="zap" href="/actions" title="Actions">
+    Configure escalation behavior and handoff settings.
+  </Card>
+  <Card icon="comment-question" href="/forums" title="Forums">
+    Manage forum-based support flows and thread states.
+  </Card>
+  <Card icon="align-center" href="/overview" title="Overview">
+    Configure core routing and server-wide automation settings.
+  </Card>
+</Columns>

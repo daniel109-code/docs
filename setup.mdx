@@ -1,77 +1,108 @@
 ---
 title: "Setup"
+description: "Connect Helply, choose where it responds, add context, and finish your server configuration."
 ---
 
-import SnippetIntro from '/snippets/snippet-intro.mdx';
+<img
+  src="/images/setup_banner.png"
+  alt="Setup Banner"
+  className="mx-auto"
+  style={{ borderRadius:"16px" }}
+/>
 
-![Setup Banner](/images/setup_banner.png)
+Getting Helply ready takes a few steps. Add the bot to your server, open that server in the dashboard, and work through the core configuration tabs.
 
-Getting Helply ready only takes a few steps. [Add the bot](https://discord.com/oauth2/authorize?client_id=1432092138526605412&permissions=8&redirect_uri=https%3A%2F%2Fapi.helplybot.xyz%2Fbot-invite%2Fcallback&response_type=code&scope=applications.commands%20bot) to your server, open that server in the dashboard, and work through the main settings tabs.
+<Tip>
+  Helply is configured per server, so each community can have its own routing, context, behavior, and permissions.
+</Tip>
 
----
+## Setup steps
 
-## 1. Add Helply to your server
+<Steps>
+  <Step title="Add Helply to your server">
+    Open the [Servers page](https://helplybot.xyz/dashboard/servers) in the dashboard and click **Add server**.
 
-Open the [**Servers**](https://helplybot.xyz/dashboard/servers) page in the dashboard and click **Add server**. Once Discord finishes the invite flow, refresh your server list if needed, then open the server you want to configure.
+    Once Discord finishes the invite flow, refresh your server list if needed, then open the server you want to configure.
 
-You can also invite the bot to your Discord server [here](https://discord.com/oauth2/authorize?client_id=1432092138526605412&permissions=8&redirect_uri=https%3A%2F%2Fapi.helplybot.xyz%2Fbot-invite%2Fcallback&response_type=code&scope=applications.commands%20bot).
+    You can also invite Helply directly [here](https://discord.com/oauth2/authorize?client_id=1432092138526605412&permissions=8&redirect_uri=https%3A%2F%2Fapi.helplybot.xyz%2Fbot-invite%2Fcallback&response_type=code&scope=applications.commands%20bot).
+  </Step>
+  <Step title="Open your server dashboard">
+    Select the server you want to configure from the dashboard.
 
-## 2. Open your server dashboard
+    If you are having trouble finding it, run `/dashboard` inside your Discord server to open the correct dashboard page more quickly.
+  </Step>
+  <Step title="Choose where Helply should respond">
+    Start by setting your support destinations. Depending on your workflow, you can configure Helply for ticket channels and categories or for forum channels.
 
-Helply is configured per server, so you can use different routing, context, behavior, and permissions across different communities.
+    <Columns cols={2}>
+      <Card icon="globe" href="/overview" title="Overview">
+        Configure your main support flow and core routing.
+      </Card>
+      <Card icon="paperclip" href="/forums" title="Forums">
+        Set up Helply for forum-based support workflows.
+      </Card>
+    </Columns>
+  </Step>
+  <Step title="Set your support roles">
+    Choose which roles count as your support team. Helply uses this to understand when staff are involved and how it should behave in support conversations.
 
-If you are having trouble finding the dashboard for your server, simply run `/dashboard` in your Discord server.
+    Read more in [Overview](/overview).
+  </Step>
+  <Step title="Add context">
+    Give Helply the information it should use when answering questions. This is where you connect docs, notes, websites, and other knowledge sources so replies stay accurate and grounded.
 
-## 3. Choose where Helply should respond
+    Read more in [Context](/context).
 
-Start by setting your support destinations. Depending on your workflow, you can configure Helply for either:
+    <Warning>
+      Context is required. Helply will not respond unless context has been added.
+    </Warning>
+  </Step>
+  <Step title="Review the rest of your settings">
+    Once the basics are in place, go through the remaining tabs and adjust the parts of Helply that matter for your server.
 
-- ticket channels or categories
-- forum channels
+    <Columns cols={2}>
+      <Card icon="zap" href="/actions" title="Actions">
+        Configure ticket behavior, automation, and workflow actions.
+      </Card>
+      <Card icon="sparkles" href="/optimize" title="Optimize">
+        Improve FAQ handling and response efficiency.
+      </Card>
+      <Card icon="paintbrush" href="/behavior" title="Behavior">
+        Adjust tone, style, and response behavior.
+      </Card>
+      <Card icon="brain" href="/intelligence" title="Intelligence">
+        Manage model-related settings and response quality options.
+      </Card>
+      <Card icon="shield-check" href="/permissions" title="Permissions">
+        Control who can access commands and configuration features.
+      </Card>
+    </Columns>
+  </Step>
+  <Step title="Test Helply">
+    Run a quick test in your server to make sure Helply is responding in the right places and using the context you added.
 
-Read more here:
+    <Note>
+      Helply will not respond until it is enabled at the top of the dashboard.
+    </Note>
+    <Warning>
+      Helply will not respond to you if you have an ignored or staff role. Before testing, ensure you are not using a role that Helply is intentionally set to ignore.
+    </Warning>
+  </Step>
+</Steps>
 
-- [Overview](/overview)
-- [Forums](/forums)
+## What to configure first
 
-## 4. Set your support roles
-
-Choose the roles that count as your support team. Helply uses this to understand when staff are involved and how it should behave in support conversations.
-
-Read more here:
-
-- [Overview](/overview)
-
-## 5. Add context
-
-Give Helply the information it should use when answering questions. This is where you connect docs, notes, websites, and other knowledge sources so replies stay accurate and grounded.
-
-Read more here:
-
-- [Context](/context)
-
-<Warning>
-  Helply requires context to function; Helply will not respond without it.
-</Warning>
-
-## 6. Review your server settings
-
-Once the basics are in place, go through the remaining tabs and adjust anything you want for your server:
-
-- [**Actions**](/actions) for ticket and workflow behavior
-- [**Optimize**](/optimize) for FAQ and response efficiency settings
-- [**Behavior**](/behavior) for tone and response style
-- [**Intelligence**](/intelligence) for model-related settings
-- [**Permissions**](/permissions) for command access
-
-## 7. Test Helply
-
-After setup, run a quick test in your server to confirm Helply is responding in the right places and using the context you added.
-
-<Note>
-  Helply will not respond unless you enable it at the top of the dashboard first.
-</Note>
-
-<Warning>
-  Helply will not respond to you if you have an ignored/staff role. In other words, ensure you don't have the staff role that Helply intentionally ignores before testing.
-</Warning>
+<Columns cols={2}>
+  <Card icon="map" href="/overview" title="Routing">
+    Decide which tickets, threads, or forums Helply should handle.
+  </Card>
+  <Card icon="newspaper" href="/context" title="Context">
+    Add the knowledge Helply should rely on when answering.
+  </Card>
+  <Card icon="users" href="/overview" title="Roles">
+    Define who counts as staff and how Helply should treat support roles.
+  </Card>
+  <Card icon="arrow-rotate-right" href="/permissions" title="Testing">
+    Confirm Helply is enabled and behaving correctly before rollout.
+  </Card>
+</Columns>

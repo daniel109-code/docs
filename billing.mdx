@@ -1,3 +1,145 @@
 ---
 title: "Plans & Billing"
+description: "Compare Helply plans, understand billing intervals, upgrade a server, and manage active subscriptions."
 ---
+
+<img
+  src="/images/plan_billing_banner.png"
+  alt="Plans and Billing Banner"
+  className="rounded-2xl mx-auto"
+/>
+
+Helply billing is **per server**. When you upgrade, you choose the specific server you want to place on a paid plan.
+
+## What this page covers
+
+<Columns cols={2}>
+  <Card icon="angle" title="Compare plans">
+    Understand the differences between Free, Plus, and Pro.
+  </Card>
+  <Card icon="calendar-range" title="Review billing options">
+    Learn how monthly and yearly billing work.
+  </Card>
+  <Card icon="arrow-up-right" title="Upgrade a server">
+    See how server-specific upgrades work during checkout.
+  </Card>
+  <Card icon="credit-card" title="Manage subscriptions">
+    View active subscriptions, payment history, and billing status.
+  </Card>
+</Columns>
+
+## Plan tiers
+
+Helply currently offers three plan tiers.
+
+<AccordionGroup>
+  <Accordion defaultOpen icon="circle" title="Free">
+    Best for testing or smaller communities.
+
+    Free includes core automation and support workflows with lower limits.
+  </Accordion>
+  <Accordion icon="sparkles" title="Plus">
+    Best for growing servers that need higher limits and stronger models.
+
+    Plus adds more capacity, more advanced support features, and better customization.
+  </Accordion>
+  <Accordion icon="crown" title="Pro">
+    Best for larger or more demanding communities.
+
+    Pro gives you the highest limits, the strongest model access, and the most advanced controls.
+  </Accordion>
+</AccordionGroup>
+
+## Plan comparison
+
+| Feature                        | Free                       | Plus                      | Pro                                          |
+| ------------------------------ | -------------------------- | ------------------------- | -------------------------------------------- |
+| Context uploads                | 6 files, up to 800 KB each | 10 files, up to 3 MB each | 20 files, up to 5 MB each                    |
+| **Helply credits per month**   | **2,000**                  | **30,000**                | **80,000**                                   |
+| Model access                   | Fastest                    | Fastest and Smarter       | Fastest, Smarter, and Smartest               |
+| Model reasoning                | Medium                     | High                      | High                                         |
+| Behavior controls              | No personality controls    | Basic presets             | Granular controls and advanced customization |
+| AI issue summary on escalation | No                         | Yes                       | Yes                                          |
+| Analytics                      | No                         | Yes                       | Yes                                          |
+| Inactivity reminders           | No                         | Yes                       | Yes                                          |
+| FAQ suggestions and responses  | Yes                        | Yes                       | Yes                                          |
+| In-ticket memory               | Yes                        | Yes                       | Yes                                          |
+| Auto-rename tickets            | Yes                        | Yes                       | Yes                                          |
+| Auto-close tickets             | Yes                        | Yes                       | Yes                                          |
+| Ticket transcripts             | Yes                        | Yes                       | Yes                                          |
+| Forum support                  | Yes                        | Yes                       | Yes                                          |
+| Escalation notifications       | Yes                        | Yes                       | Yes                                          |
+
+## Billing intervals
+
+Paid plans support both **monthly** and **yearly** billing.
+
+On the pricing page, you can switch between monthly and yearly billing before checkout.
+
+## Upgrading a server
+
+When you choose a paid plan, Helply asks you to select the server you want to upgrade.
+
+Only eligible servers appear in checkout. In general, that means:
+
+- Helply must already be added to the server
+- You must have the required admin access for that server
+- The server must be eligible for the selected upgrade
+
+After selecting a server, Helply redirects you to **Stripe** to complete checkout.
+
+## How billing works
+
+Billing is managed per server, which means different servers can be on different plans at the same time.
+
+For example, one server can stay on Free while another runs on Pro.
+
+Plans renew automatically unless they are cancelled.
+
+## Managing subscriptions
+
+The [Billing page](https://helplybot.xyz/dashboard/billing) shows your current paid servers and their subscription details.
+
+For each active subscription, you can view:
+
+- server name
+- current plan
+- billing interval
+- subscription status
+- expiration or end date, when available
+
+If you own the subscription, you can also manage billing actions from this page.
+
+## Canceling and resuming
+
+You can cancel a subscription from the Billing page.
+
+When cancelled, the subscription stays active until the end of the current billing period. After that, the paid plan ends.
+
+If a subscription is already set to end at period end, you can resume billing before it expires.
+
+## Payment history
+
+The Billing page also includes **Payment history**.
+
+This shows recent invoices and billing activity for plans you purchased, including:
+
+- server
+- plan
+- billing period
+- amount
+- payment status
+
+## Related pages
+
+<Columns cols={3}>
+  <Card icon="coins" href="/usage" title="Usage">
+    Track monthly credit usage and remaining balance.
+  </Card>
+  <Card icon="brain" href="/intelligence" title="Intelligence">
+    Review model and reasoning settings by plan.
+  </Card>
+  <Card icon="sliders" href="/behavior" title="Behavior">
+    Explore personality and model instruction controls.
+  </Card>
+</Columns>

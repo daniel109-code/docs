@@ -1,52 +1,98 @@
 ---
 title: "Information"
+description: "Learn what Helply is, what it does, and how it stays accurate inside your Discord server."
 ---
 
 <img
   src="/images/info_banner.png"
   alt="Info Banner"
   className="mx-auto"
+  style={{ borderRadius:"16px" }}
 />
-
-# What is Helply?
 
 Helply is an AI support agent for Discord communities. It helps your team handle support faster by answering questions inside tickets, threads, and channels using your server’s own context.
 
-Helply is designed to act like a real support teammate. It can respond, ask clarifying questions, and take basic support actions based on your configuration.
+<Tip>
+  Helply is designed to feel like a real support teammate. It can answer questions, ask clarifying follow-ups, and take selected support actions based on your configuration.
+</Tip>
 
-# What Helply is Built For
+## What Helply is built for
 
-Helply fits servers that:
+Helply works best in servers that need fast, consistent support at scale.
 
-- Receive frequent repeat questions
-- Run support through tickets or forum posts
-- Want faster first responses and fewer staff pings
-- Need answers that stay aligned with their own docs and rules
+<Columns cols={2}>
+  <Card icon="temperature-high" title="High-volume support">
+    Great for communities that receive frequent repeat questions and want faster first responses.
+  </Card>
+  <Card icon="ticket" title="Ticket and forum workflows">
+    Built for servers that run support through tickets, forum posts, threads, or dedicated help channels.
+  </Card>
+  <Card icon="chevrons-down" title="Fewer staff interruptions">
+    Reduces unnecessary pings by handling common questions and routing the right issues to humans.
+  </Card>
+  <Card icon="brain" title="Server-specific answers">
+    Keeps answers aligned with your own docs, rules, terminology, and support process.
+  </Card>
+</Columns>
 
-# What Helply Does Day to Day
+## What Helply does day to day
 
-Helply can:
+Helply can support your team across the full flow of a conversation.
 
-- Answer support questions in Discord
-- Pull from your configured context sources, such as documentation, files, and websites
-- Suggest next steps and walk users through common fixes
-- Escalate to staff when the request needs a human
-- Keep support organized by helping resolve threads when issues are complete, including marking forum posts as resolved or closing out finished conversations when enabled
+<Columns cols={2}>
+  <Card icon="block-question" title="Answer questions">
+    Respond to support questions directly inside Discord tickets and support forum threads.
+  </Card>
+  <Card icon="database" title="Use your context">
+    Pull from your configured sources, including documentation, files, and websites.
+  </Card>
+  <Card icon="route" title="Guide users">
+    Suggest next steps and walk users through common fixes or troubleshooting flows.
+  </Card>
+  <Card icon="arrow-up-right" title="Escalate when needed">
+    Hand issues off to staff when a request needs human judgment, review, or access.
+  </Card>
+  <Card icon="paperclip" title="Keep support organized">
+    Help wrap up completed conversations by marking forum posts as resolved or closing finished threads and tickets when enabled.
+  </Card>
+</Columns>
 
-# How Helply Learns Your Server
+## How Helply stays accurate
 
-Helply does not “guess” how your server works. It relies on what you provide:
+Helply relies on the information and rules you provide. That keeps replies grounded in how your server actually works.
 
-- Server-specific documentation and context
-- Configured behavior rules and limits
-- Approved actions and escalation paths
+<AccordionGroup>
+  <Accordion icon="files" title="Server-specific documentation and context">
+    Helply uses the sources you connect, such as docs, uploaded files, and websites, to answer with relevant server knowledge.
+  </Accordion>
+  <Accordion icon="user-shield" title="Configured behavior rules and limits">
+    You control how Helply responds, what tone it uses, where it can reply, and what boundaries it should follow.
+  </Accordion>
+  <Accordion icon="shield-check" title="Approved actions and escalation paths">
+    Helply only performs the actions and escalation flows you enable, so it stays aligned with your support workflow.
+  </Accordion>
+</AccordionGroup>
 
-This keeps responses consistent with your server’s terminology, policies, and workflows.
+<Note>
+  This setup helps Helply stay consistent with your server’s terminology, policies, and workflows.
+</Note>
 
-# What to Read Next
+## Read next
 
-- [**Setup**](/setup): connect Helply to your support channels and ticket flow
-- [**Context Sources**](/context): what Helply can use to answer accurately
-- [**Actions & Automation**](/actions): resolving threads, closing tickets, and other workflows
-- [**Credits & Usage**](/usage): how usage is measured
-- [**Optimize**](/optimize): save Helply credits in responses
+<Columns cols={2}>
+  <Card icon="plug" href="/setup" title="Setup">
+    Connect Helply to your support channels and ticket flow.
+  </Card>
+  <Card icon="newspaper" href="/context" title="Context Sources">
+    Learn what Helply can use to answer accurately.
+  </Card>
+  <Card icon="zap" href="/actions" title="Actions & Automation">
+    Explore resolving threads, closing tickets, and other workflows.
+  </Card>
+  <Card icon="gauge" href="/usage" title="Credits & Usage">
+    See how usage is measured and how credits are consumed.
+  </Card>
+  <Card icon="sparkles" href="/optimize" title="Optimize">
+    Reduce credit usage while keeping answers helpful.
+  </Card>
+</Columns>

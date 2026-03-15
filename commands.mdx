@@ -1,120 +1,119 @@
 ---
 title: "Commands"
+description: "Learn what each Helply slash command does, what permissions it needs, and which features are plan-specific."
 ---
 
 <img
   src="/images/image.png"
-  alt="Image"
-  className="mx-auto"
+  alt="Commands"
+  className="rounded-2xl mx-auto"
 />
 
 Helply includes slash commands for asking questions, training its learning file, managing tickets and forum threads, and opening your dashboard.
 
----
+## How command permissions work
 
-## Permissions
+Command permissions are managed in the **Permissions** tab of your server dashboard.
 
-Command permissions are managed in the **Permissions** tab of your server dashboard. There, you can choose which roles can run each Helply slash command. If you leave a command with no roles selected, access is limited to members with **Manage Server** permissions.
-
-You can also configure optional per-role **/ask cooldowns** in the same tab.
+- You can choose which roles can run each Helply slash command.
+- If you leave a command with no roles selected, access is limited to members with **Manage Server**.
+- You can also configure optional per-role **`/ask cooldowns`** in the same tab.
 
 Read more here: [Permissions](/permissions)
 
----
+## Command reference
 
-## `/ask`
+<AccordionGroup>
+  <Accordion defaultOpen icon="circle-question" title="/ask">
+    Ask Helply a question and get a private answer.
 
-Ask Helply a question and get a private answer.
+    **Options**
 
-**Options**
+    - `message` - required: Your question for Helply
+    - `file` - optional: A file or screenshot to include
+  </Accordion>
+  <Accordion description="Plus / Pro" icon="brain" title="/train">
+    Summarize recent human messages into Helply’s learning file.
 
-- `Message` - required: Your question for Helply
-- `file` - optional: Optional file or screenshot to include
+    **Options**
 
----
+    - `channel` - required: Channel containing the relevant discussion
+    - `focus` - required: Short focus statement about what Helply should learn
+    - `messages` - required: Number of recent human messages to scan, from `1` to `100`
 
-### `/train`
+    <Note>
+      `/train` is a Plus / Pro feature. [Learn more.](/billing)
+    </Note>
+  </Accordion>
+  <Accordion icon="brain-arrow-curved-right" title="/learn">
+    Add a quick manual note to Helply’s custom learning file.
 
-Plus/Pro: summarize recent human messages into Helply's learning file.
+    **Options**
 
-**Options**
+    - `note` - required: Plain-text note Helply should remember
+  </Accordion>
+  <Accordion description="Plus / Pro" icon="chart-column" title="/overview">
+    Show the most common ticket issues over a selected time window.
 
-- `channel` - required: Channel containing the relevant discussion
-- `focus` - required: Short focus statement about what Helply should learn
-- `messages` - required: Number of recent human messages to scan, from `1` to `100`
+    **Options**
 
-<Note>
-  The train command is a **Plus/Pro** feature. [Learn more.](/billing)
-</Note>
+    - `hours` - optional: Number of hours to summarize, from `1` to `168`
+    - `dm` - optional: Send the summary to you in a DM
 
----
+    <Info>
+      Hourly overviews must be enabled in the [Analytics](/analytics) tab for `/overview` to work.
+    </Info>
+    <Note>
+      Overview analytics is a Plus / Pro feature. [Learn more.](/billing)
+    </Note>
+  </Accordion>
+  <Accordion icon="comment-xmark" title="/close">
+    Close the current ticket and save a transcript.
+  </Accordion>
+  <Accordion icon="check-double" title="/resolve">
+    Mark the current forum thread as resolved.
+  </Accordion>
+  <Accordion icon="message-exclamation" title="/unresolve">
+    Mark the current forum thread as unresolved.
+  </Accordion>
+  <Accordion icon="arrow-right-to-bracket" title="/dashboard">
+    Get the link to your Helply dashboard.
+  </Accordion>
+  <Accordion icon="bell-exclamation" title="/reminder stop">
+    Stop inactivity reminders in the current ticket.
+  </Accordion>
+  <Accordion icon="bell-ring" title="/reminder resume">
+    Resume inactivity reminders in the current ticket.
+  </Accordion>
+  <Accordion icon="file-circle-question" title="/help">
+    Get help with how to use Helply.
 
-### `/learn`
+    <Info>
+      By default, anyone can run this command.
+    </Info>
+  </Accordion>
+  <Accordion icon="comments-question-check" title="/support">
+    Access the Helply Discord support server.
 
-Add a quick manual note to Helply's custom learning file.
+    <Info>
+      By default, anyone can run this command.
+    </Info>
+  </Accordion>
+</AccordionGroup>
 
-**Options**
+## Quick notes
 
-- `note` - required: Plain-text note Helply should remember
-
----
-
-### `/overview`
-
-Show the most common ticket issues over a time window.
-
-**Options**
-
-- `hours`  - optional: Number of hours to summarize, from `1` to `168`
-- `dm` - (T/F) optional: Send the summary to you in a DM
-
-<Info>
-  Hourly overviews must be enabled in the [analytics](/analytics) tab for the overview command to function.
-</Info>
-
-<Note>
-  Overview analytics is a **Plus/Pro** feature. [Learn more.](/billing)
-</Note>
-
----
-
-### `/close`
-
-Close this ticket and save a transcript.
-
----
-
-### `/resolve`
-
-Mark this forum thread as resolved.
-
----
-
-### `/unresolve`
-
-Mark this forum thread as unresolved.
-
----
-
-### `/dashboard`
-
-Get the link to your Helply dashboard.
-
----
-
-### `/reminder stop`
-
-Stop inactivity reminders in this ticket.
-
----
-
-### `/reminder resume`
-
-Resume inactivity reminders in this ticket.
-
----
-
-## Notes
-
-- `/ask` supports optional per-role cooldowns in the [**Permissions**](/permissions) tab.
-- Command access can be customized per server in the [**Permissions**](/permissions) tab.
+<Columns cols={2}>
+  <Card icon="timer" href="/permissions" title="/ask cooldowns">
+    Set optional per-role cooldowns for `/ask` in the Permissions tab.
+  </Card>
+  <Card icon="shield-check" href="/permissions" title="Role-based access">
+    Command access can be customized per server in the Permissions tab.
+  </Card>
+  <Card icon="chart-column" href="/analytics" title="Analytics requirement">
+    `/overview` requires hourly overviews to be enabled in Analytics, which is only available on paid plans.
+  </Card>
+  <Card icon="credit-card" href="/billing" title="Plan limits">
+    Some commands, including `/train` and `/overview`, are only available on paid plans.
+  </Card>
+</Columns>
