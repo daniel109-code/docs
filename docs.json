@@ -97,9 +97,11 @@
   "background": {
     "color": {
       "dark": "#05070F"
-    }
+    },
+    "decoration": "grid"
   },
   "appearance": {
-    "default": "system"
+    "default": "system",
+    "strict": true
   }
 }
