@@ -1,108 +1,95 @@
 ---
 title: "Setup"
-description: "Connect Helply, choose where it responds, add context, and finish your server configuration."
+description: "Create a Suppio workspace, add an agent, add context, and choose your deployment method."
 ---
 
-<img
-  src="/images/setup_banner.png"
-  alt="Setup Banner"
-  className="mx-auto"
-  style={{ borderRadius:"16px" }}
-/>
+This guide gets a new Suppio agent ready for users.
 
-Getting Helply ready takes a few steps. Add the bot to your server, open that server in the dashboard, and work through the core configuration tabs.
-
-<Tip>
-  Helply is configured per server, so each community can have its own routing, context, behavior, and permissions.
-</Tip>
+The exact deployment steps depend on where you want users to talk to Suppio, but every setup starts with a workspace, an agent, and context.
 
 ## Setup steps
 
 <Steps>
-  <Step title="Add Helply to your server">
-    Open the [Servers page](https://helplybot.xyz/dashboard/servers) in the dashboard and click **Add server**.
-
-    Once Discord finishes the invite flow, refresh your server list if needed, then open the server you want to configure.
-
-    You can also invite Helply directly [here](https://discord.com/oauth2/authorize?client_id=1432092138526605412&permissions=8&redirect_uri=https%3A%2F%2Fapi.helplybot.xyz%2Fbot-invite%2Fcallback&response_type=code&scope=applications.commands%20bot).
+  <Step title="Create a workspace">
+    Open the [Suppio dashboard](https://suppio.ai/dashboard) and create a workspace. Use the name of the product, community, or business you support.
   </Step>
-  <Step title="Open your server dashboard">
-    Select the server you want to configure from the dashboard.
-
-    If you are having trouble finding it, run `/dashboard` inside your Discord server to open the correct dashboard page more quickly.
+  <Step title="Create an agent">
+    Give the agent a clear name, such as `Support Agent`. If you are adding an agent to an existing workspace, open **Agents** and click **New agent**.
   </Step>
-  <Step title="Choose where Helply should respond">
-    Start by setting your support destinations. Depending on your workflow, you can configure Helply for ticket channels and categories or for forum channels.
-
-    <Columns cols={2}>
-      <Card icon="globe" href="/overview" title="Overview">
-        Configure your main support flow and core routing.
-      </Card>
-      <Card icon="paperclip" href="/forums" title="Forums">
-        Set up Helply for forum-based support workflows.
-      </Card>
-    </Columns>
+  <Step title="Add your website URL">
+    Add your website URL when prompted. Suppio uses this to help understand the workspace and to make website context import easier.
   </Step>
-  <Step title="Set your support roles">
-    Choose which roles count as your support team. Helply uses this to understand when staff are involved and how it should behave in support conversations.
-
-    Read more in [Overview](/overview).
+  <Step title="Choose a plan">
+    Choose the plan for the workspace. Billing is scoped to the workspace, not to individual users.
   </Step>
   <Step title="Add context">
-    Give Helply the information it should use when answering questions. This is where you connect docs, notes, websites, and other knowledge sources so replies stay accurate and grounded.
-
-    Read more in [Context](/context).
-
-    <Warning>
-      Context is required. Helply will not respond unless context has been added.
-    </Warning>
+    Add the information Suppio should use when answering. You can upload text or files, import website pages, connect documentation sources, or add Discord sources after Discord is connected.
   </Step>
-  <Step title="Review the rest of your settings">
-    Once the basics are in place, go through the remaining tabs and adjust the parts of Helply that matter for your server.
-
-    <Columns cols={2}>
-      <Card icon="zap" href="/actions" title="Actions">
-        Configure ticket behavior, automation, and workflow actions.
-      </Card>
-      <Card icon="sparkles" href="/optimize" title="Optimize">
-        Improve FAQ handling and response efficiency.
-      </Card>
-      <Card icon="paintbrush" href="/behavior" title="Behavior">
-        Adjust tone, style, and response behavior.
-      </Card>
-      <Card icon="brain" href="/intelligence" title="Intelligence">
-        Manage model-related settings and response quality options.
-      </Card>
-      <Card icon="shield-check" href="/permissions" title="Permissions">
-        Control who can access commands and configuration features.
-      </Card>
-    </Columns>
+  <Step title="Test in the sandbox">
+    Use the agent sandbox to ask a few real support questions before launching.
   </Step>
-  <Step title="Test Helply">
-    Run a quick test in your server to make sure Helply is responding in the right places and using the context you added.
-
-    <Note>
-      Helply will not respond until it is enabled at the top of the dashboard.
-    </Note>
-    <Warning>
-      Helply will not respond to you if you have an ignored or staff role. Before testing, ensure you are not using a role that Helply is intentionally set to ignore.
-    </Warning>
+  <Step title="Deploy">
+    Open **Deploy** and choose Discord, chat widget, hosted support page, or API.
   </Step>
 </Steps>
 
-## What to configure first
+<Warning>
+  Context is required. Suppio will not respond in deployment methods until the agent has active context.
+</Warning>
 
-<Columns cols={2}>
-  <Card icon="map" href="/overview" title="Routing">
-    Decide which tickets, threads, or forums Helply should handle.
+## Choose a deployment method
+
+<CardGroup cols={2}>
+  <Card title="Discord" icon="messages-square" href="/discord">
+    Best for communities that already handle support in Discord tickets or forums.
   </Card>
-  <Card icon="newspaper" href="/context" title="Context">
-    Add the knowledge Helply should rely on when answering.
+  <Card title="Web chat widget" icon="message-circle" href="/web-chat-widget">
+    Best for adding a floating chat bubble or iframe to your website.
   </Card>
-  <Card icon="users" href="/overview" title="Roles">
-    Define who counts as staff and how Helply should treat support roles.
+  <Card title="Hosted support page" icon="globe" href="/hosted-support-page">
+    Best for a standalone support page or a custom support subdomain.
   </Card>
-  <Card icon="arrow-rotate-right" href="/permissions" title="Testing">
-    Confirm Helply is enabled and behaving correctly before rollout.
+  <Card title="Agent API" icon="code" href="/agent-api">
+    Best for custom backend workflows and your own support UI.
   </Card>
-</Columns>
+</CardGroup>
+
+## What to configure before launch
+
+<AccordionGroup>
+  <Accordion title="Context">
+    Add the docs, policies, FAQs, troubleshooting steps, and product information the agent should use.
+  </Accordion>
+  <Accordion title="Workspace information">
+    In workspace settings, add a short grounding summary for your product or community.
+  </Accordion>
+  <Accordion title="Behavior">
+    Set tone, personality, emoji usage, and custom instructions on supported plans.
+  </Accordion>
+  <Accordion title="Intelligence">
+    Choose Smart or Advanced model access and reasoning settings based on your plan and quality needs.
+  </Accordion>
+  <Accordion title="Usage and billing">
+    Review monthly credits, plan limits, and billing status before rollout.
+  </Accordion>
+</AccordionGroup>
+
+## Launch checklist
+
+- The workspace name and website URL are correct.
+- The agent has at least one active context source.
+- Test questions in the sandbox produce accurate answers.
+- The selected deployment method is enabled.
+- Escalation text and staff handoff behavior are configured.
+- Your team knows where to review conversations and usage.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Context" icon="database" href="/context">
+    Add and manage the knowledge Suppio uses.
+  </Card>
+  <Card title="Deploy" icon="rocket" href="/discord">
+    Start with Discord deployment or choose another deployment method from the navigation.
+  </Card>
+</CardGroup>

@@ -1,98 +1,77 @@
 ---
-title: "Information"
-description: "Learn what Helply is, what it does, and how it stays accurate inside your Discord server."
+title: "What is Suppio?"
+description: "Learn what Suppio is, how agents work, and where you can deploy them."
 ---
 
-<img
-  src="/images/info_banner.png"
-  alt="Info Banner"
-  className="mx-auto"
-  style={{ borderRadius:"16px" }}
-/>
+Suppio is an AI support platform for customer-facing support.
 
-Helply is an AI support agent for Discord communities. It helps your team handle support faster by answering questions inside tickets, threads, and channels using your server’s own context.
+You create a workspace, add one or more agents, give each agent context, and deploy those agents where your users need help: Discord, a web chat widget, a hosted support page, or your own backend through the API.
 
-<Tip>
-  Helply is designed to feel like a real support teammate. It can answer questions, ask clarifying follow-ups, and take selected support actions based on your configuration.
-</Tip>
+## What Suppio is built for
 
-## What Helply is built for
-
-Helply works best in servers that need fast, consistent support at scale.
+Suppio works best when your team needs fast, consistent answers across several support surfaces.
 
 <Columns cols={2}>
-  <Card icon="temperature-high" title="High-volume support">
-    Great for communities that receive frequent repeat questions and want faster first responses.
+  <Card icon="messages-square" title="Answer support questions">
+    Reply to common questions using the context you provide.
   </Card>
-  <Card icon="ticket" title="Ticket and forum workflows">
-    Built for servers that run support through tickets, forum posts, threads, or dedicated help channels.
+  <Card icon="route" title="Deploy in multiple places">
+    Use the same agent across Discord, your website, a support page, or the API.
   </Card>
-  <Card icon="chevrons-down" title="Fewer staff interruptions">
-    Reduces unnecessary pings by handling common questions and routing the right issues to humans.
+  <Card icon="user-check" title="Escalate when needed">
+    Hand off to humans when users ask for a person or the agent cannot confidently continue.
   </Card>
-  <Card icon="brain" title="Server-specific answers">
-    Keeps answers aligned with your own docs, rules, terminology, and support process.
+  <Card icon="chart-column" title="Track usage">
+    Review conversations, credit usage, outcomes, and activity over time.
   </Card>
 </Columns>
 
-## What Helply does day to day
-
-Helply can support your team across the full flow of a conversation.
-
-<Columns cols={2}>
-  <Card icon="block-question" title="Answer questions">
-    Respond to support questions directly inside Discord tickets and support forum threads.
-  </Card>
-  <Card icon="database" title="Use your context">
-    Pull from your configured sources, including documentation, files, and websites.
-  </Card>
-  <Card icon="route" title="Guide users">
-    Suggest next steps and walk users through common fixes or troubleshooting flows.
-  </Card>
-  <Card icon="arrow-up-right" title="Escalate when needed">
-    Hand issues off to staff when a request needs human judgment, review, or access.
-  </Card>
-  <Card icon="paperclip" title="Keep support organized">
-    Help wrap up completed conversations by marking forum posts as resolved or closing finished threads and tickets when enabled.
-  </Card>
-</Columns>
-
-## How Helply stays accurate
-
-Helply relies on the information and rules you provide. That keeps replies grounded in how your server actually works.
+## Core concepts
 
 <AccordionGroup>
-  <Accordion icon="files" title="Server-specific documentation and context">
-    Helply uses the sources you connect, such as docs, uploaded files, and websites, to answer with relevant server knowledge.
+  <Accordion title="Workspace">
+    A workspace represents the product, community, or business you support. Billing, usage, website URL, workspace information, and agents are scoped to the workspace.
   </Accordion>
-  <Accordion icon="user-shield" title="Configured behavior rules and limits">
-    You control how Helply responds, what tone it uses, where it can reply, and what boundaries it should follow.
+  <Accordion title="Agent">
+    An agent is the AI support assistant users talk to. Each agent has its own name, context, sandbox testing controls, behavior settings, and deployment methods.
   </Accordion>
-  <Accordion icon="shield-check" title="Approved actions and escalation paths">
-    Helply only performs the actions and escalation flows you enable, so it stays aligned with your support workflow.
+  <Accordion title="Context">
+    Context is the knowledge Suppio uses to answer. It can include text, files, website pages, documentation sources, Discord forum posts, and followed channels.
+  </Accordion>
+  <Accordion title="Deployment">
+    A deployment is where the agent is available to users. Suppio currently supports Discord, web chat widget, hosted support page, and API deployments.
   </Accordion>
 </AccordionGroup>
 
-<Note>
-  This setup helps Helply stay consistent with your server’s terminology, policies, and workflows.
-</Note>
+## How Suppio stays accurate
+
+Suppio is grounded in the context and settings you configure.
+
+- Add accurate context before launch.
+- Keep synced website and documentation sources current.
+- Use workspace information to describe your product or community.
+- Configure behavior settings so answers match your tone.
+- Review usage logs and conversations to spot missing context.
+
+<Warning>
+  Suppio requires context before it can answer in deployment methods. If an agent has no active context, deployments and API keys are blocked or requests are rejected.
+</Warning>
+
+## What Suppio does not do automatically
+
+Suppio does not automatically change your external systems unless that behavior exists in the selected deployment.
+
+- The Discord deployment can manage Discord ticket and forum workflows when enabled.
+- The chat widget and support page record conversation state in Suppio but do not create external tickets.
+- The API returns action signals. Your backend decides what to do with them.
 
 ## Read next
 
-<Columns cols={2}>
-  <Card icon="plug" href="/setup" title="Setup">
-    Connect Helply to your support channels and ticket flow.
+<CardGroup cols={2}>
+  <Card title="Setup" icon="rocket" href="/setup">
+    Create your workspace, add context, and deploy an agent.
   </Card>
-  <Card icon="newspaper" href="/context" title="Context Sources">
-    Learn what Helply can use to answer accurately.
+  <Card title="Deployment options" icon="boxes" href="/features">
+    Compare Suppio's main support surfaces.
   </Card>
-  <Card icon="zap" href="/actions" title="Actions & Automation">
-    Explore resolving threads, closing tickets, and other workflows.
-  </Card>
-  <Card icon="gauge" href="/usage" title="Credits & Usage">
-    See how usage is measured and how credits are consumed.
-  </Card>
-  <Card icon="sparkles" href="/optimize" title="Optimize">
-    Reduce credit usage while keeping answers helpful.
-  </Card>
-</Columns>
+</CardGroup>

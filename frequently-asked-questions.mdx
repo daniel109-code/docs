@@ -1,4 +1,24 @@
 ---
-title: "Frequently Asked Questions"
-hidden: true
+title: "Frequently asked questions"
+description: "Quick answers to common Suppio setup and usage questions."
 ---
+
+## Does Suppio require context?
+
+Yes. Suppio requires active context before it can respond through deployment methods or the API.
+
+## Can one agent be used in multiple places?
+
+Yes. An agent can be deployed to supported surfaces such as Discord, chat widget, support page, and API. Configure each deployment separately.
+
+## Does the API create tickets automatically?
+
+No. The API returns action signals such as `escalate_to_human`, `mark_resolved`, and `suggest_title`. Your backend decides what to do with them.
+
+## Can I use a custom domain for the support page?
+
+Yes, on Pro and Enterprise plans. Use a public hostname such as `help.example.com`.
+
+## Why did a web chat close?
+
+Chat widget and support page conversations close when Suppio marks them resolved or escalated. Start a new chat to continue.

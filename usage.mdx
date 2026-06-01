@@ -1,121 +1,67 @@
 ---
 title: "Usage"
-description: "Track your server’s monthly Helply credit usage, remaining balance, reset timing, and agent-level activity."
+description: "Track Suppio credits, response logs, conversations, and reset timing."
 ---
 
-<img
-  src="/images/usagebanner.png"
-  alt="Usage Banner"
-  className="rounded-2xl mx-auto"
-/>
+The Usage page shows how your workspace is consuming Suppio credits during the current billing period.
 
-The **Usage** tab shows how many Helply credits your server has used during the current billing period.
+## What usage includes
 
-Use this tab to track monthly credit usage, see how many credits remain, check when limits reset, and review usage activity across Helply’s agents.
+Usage can include AI activity from:
 
-## What the Usage tab does
-
-<Columns cols={2}>
-  <Card icon="chart-column" title="Track monthly usage">
-    See how many Helply credits your server has used in the current billing period.
-  </Card>
-  <Card icon="credit-card" title="Check plan limits">
-    View your server’s plan cap and how close you are to it.
-  </Card>
-  <Card icon="coins" title="Monitor remaining credits">
-    See how many credits are still available before the next reset.
-  </Card>
-  <Card icon="list" title="Review activity sources">
-    Understand which parts of Helply are consuming credits over time.
-  </Card>
-</Columns>
+- Discord tickets
+- Discord forum posts
+- web chat widget conversations
+- hosted support page conversations
+- API responses
+- related workflow agents such as escalation, action, image, or summary flows
 
 ## Monthly credits
 
-At the top of the page, Helply shows your current monthly credit usage for the server.
+At the top of the page, Suppio shows:
 
-This includes:
+- plan cap
+- credits used
+- credits remaining
+- reset timing
+- out-of-credits status
 
-- total credits used
-- total credits remaining
-- percent of plan used
-- time remaining until reset
+Credits reset on a monthly cycle. Usage totals reflect the current billing period for the workspace.
 
-This gives you a quick view of how close the server is to its monthly limit.
+## Conversation log
 
-## Usage summary cards
+The conversation log shows user and assistant messages for supported public and Discord surfaces.
 
-The Usage tab includes summary cards for the most important usage numbers.
+Conversation entries can include:
 
-<Columns cols={2}>
-  <Card icon="comment-captions" title="Plan cap">
-    The total number of credits included in the server’s current plan.
-  </Card>
-  <Card icon="arrow-up-right" title="Used">
-    The number of credits already consumed during the current period.
-  </Card>
-  <Card icon="wallet" title="Remaining">
-    The number of credits still available before the next reset.
-  </Card>
-  <Card icon="arrows-rotate-reverse" title="Resets">
-    How long remains until the monthly credit period resets.
-  </Card>
-</Columns>
+- source, such as chat widget or Discord ticket
+- title
+- status: in progress, resolved, or escalated
+- message count
+- credits used
+- attachments metadata when present
 
-## Monthly reset cycle
+## Response log
 
-Credits reset on a monthly cycle.
+The response log records AI responses and workflow usage. Use it to understand which parts of Suppio are consuming credits.
 
-Credits are rounded to the nearest whole number, and limits reset on the **last day of each month**.
+## What to do when credits run low
 
-<Note>
-  Usage totals and remaining credits always reflect the current monthly credit period for that server.
-</Note>
+- Review recent usage spikes.
+- Check whether repeated questions should become FAQ entries.
+- Tighten retrieval settings if answers pull too much context.
+- Upgrade the workspace if support volume has grown.
 
-## Monthly usage log
+## Troubleshooting
 
-The **Monthly usage log** shows usage activity for the current credit period.
-
-You can expand this section to see the credits used by agent. This helps you understand where usage is coming from and which parts of Helply are consuming the most credits.
-
-The log resets automatically with your monthly credit period.
-
-<Info>
-  Every file search tool call uses **50 Helply credits**.
-</Info>
-
-Read more about lowering credit usage in [Intelligence](/intelligence) and [Optimize](/optimize).
-
-## How to use this page
-
-<Steps>
-  <Step title="Check your current balance">
-    Review your used and remaining credits to see how much room your server has left this month.
-  </Step>
-  <Step title="Compare usage against your plan cap">
-    Look at the percentage used to understand whether your server is approaching its limit.
-  </Step>
-  <Step title="Open the usage log">
-    Review which agents are consuming credits so you can spot heavier usage patterns.
-  </Step>
-  <Step title="Adjust settings if needed">
-    If usage is higher than expected, review your [Intelligence](/intelligence) and [Optimize](/optimize) settings to improve efficiency.
-  </Step>
-</Steps>
-
-## Related pages
-
-<Columns cols={2}>
-  <Card icon="credit-card" href="/billing" title="Billing">
-    Manage your server’s plan and subscription details.
-  </Card>
-  <Card icon="brain" href="/intelligence" title="Intelligence">
-    Adjust model and reasoning settings that can affect credit usage.
-  </Card>
-  <Card icon="atom-simple" href="/optimize" title="Optimize">
-    Tune retrieval and FAQ settings for better efficiency.
-  </Card>
-  <Card icon="chart-line" href="/analytics" title="Analytics">
-    Review support activity trends across your server.
-  </Card>
-</Columns>
+<AccordionGroup>
+  <Accordion title="Suppio stopped responding">
+    Check whether the workspace is out of credits. If it is, upgrade or wait for the monthly reset.
+  </Accordion>
+  <Accordion title="Usage is higher than expected">
+    Review conversation and response logs, then check model choice, reasoning level, FAQ coverage, and context retrieval settings.
+  </Accordion>
+  <Accordion title="A conversation is closed">
+    Widget and support page conversations close after resolution or escalation. Start a new chat to continue.
+  </Accordion>
+</AccordionGroup>

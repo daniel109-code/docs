@@ -1,138 +1,62 @@
 ---
-title: "Overview"
-description: "Configure Helply’s core routing, staff behavior, reply timing, and server-level automation settings."
+title: "Workspace overview"
+description: "Understand how Suppio workspaces, agents, settings, and deployment tabs fit together."
 ---
 
-<img
-  src="/images/overview_banner.png"
-  alt="Overview Banner"
-  className="rounded-2xl mx-auto"
-/>
+The dashboard is organized around workspaces and agents.
 
-The **Overview** tab is the main place to configure Helply’s core routing and automation for a server.
+A workspace holds billing, usage, website URL, workspace information, and agents. Each agent holds context, sandbox testing controls, behavior settings, and deployments.
 
-This is where you decide where Helply should listen, which roles count as staff, how quickly it should reply, and where logs should be sent.
-
-<Tip>
-  Start here before moving into more specialized tabs like **Context**, **Actions**, **Forums**, and **Permissions**.
-</Tip>
-
-## What you can configure
+## Main areas
 
 <Columns cols={2}>
-  <Card icon="ticket" title="Ticket destinations">
-    Choose which categories Helply should monitor for support activity.
+  <Card icon="layout-dashboard" title="Workspace">
+    Manage workspace name, website URL, workspace information, logo, billing, and agents.
   </Card>
-  <Card icon="users" title="Support team roles">
-    Define which roles count as staff, so Helply knows when humans are involved.
+  <Card icon="bot" title="Agent">
+    Manage context, sandbox testing, behavior, deployment, and logs for one support agent.
   </Card>
-  <Card icon="up-from-dotted-line" title="Support team handoff">
-    Pause Helply when a support team member joins the conversation.
+  <Card icon="rocket" title="Deploy">
+    Launch the agent to Discord, chat widget, support page, or API.
   </Card>
-  <Card icon="file-text" title="Server information">
-    Give Helply background on your server, product, or community.
-  </Card>
-  <Card icon="timer" title="Response delay">
-    Control how long Helply waits before replying.
-  </Card>
-  <Card icon="square-1" title="Respond on ticket opening">
-    Let Helply reply to the very first ticket-opening message.
-  </Card>
-  <Card icon="clipboard-list" title="Log channel">
-    Send logs, summaries, and automation events to a chosen channel.
-  </Card>
-  <Card icon="palette" title="Bot customization">
-    Customize how Helply appears in your server.
+  <Card icon="chart-column" title="Usage">
+    Review credits, conversations, and response logs.
   </Card>
 </Columns>
-
-## Settings reference
-
-<AccordionGroup>
-  <Accordion defaultOpen icon="ticket" title="Ticket destinations">
-    Choose the ticket channels or categories where Helply should listen for new tickets.
-
-    Once selected, Helply watches those destinations for support activity and responds based on the rest of your configuration.
-  </Accordion>
-  <Accordion icon="users" title="Support team roles">
-    Choose the roles that count as your support team.
-
-    Messages from these roles do not trigger Helply responses. This helps Helply stay out of the way when human staff are already handling the conversation.
-  </Accordion>
-  <Accordion icon="arrow-up-from-dotted-line" title="Support team handoff">
-    Enable **Support team handoff** if you want Helply to pause automatically when a support team member speaks.
-
-    This creates a smoother handoff from AI to human support and prevents Helply from continuing to reply after staff step in.
-  </Accordion>
-  <Accordion icon="file-text" title="Server information">
-    Add a short summary of your server so Helply has better context when responding.
-
-    This is a simple way to give Helply background on your community, product, or support environment.
-
-    <Note>
-      If Helply has trouble understanding your server or its purpose, adding server information can make a meaningful difference.
-    </Note>
-  </Accordion>
-  <Accordion icon="timer" title="Response delay">
-    Set how long Helply waits before replying.
-
-    This gives human staff a chance to answer first and lets you control how proactive or reserved Helply feels in support channels.
-  </Accordion>
-  <Accordion icon="square-1" title="Respond on ticket opening">
-    Choose whether Helply should respond to the initial ticket-opening message.
-
-    When enabled, Helply can reply as soon as a ticket is created, before the user sends a follow-up message.
-  </Accordion>
-  <Accordion icon="clipboard-list" title="Log channel">
-    Choose the channel where Helply sends logs, summaries, and automation events.
-
-    This gives your team a central place to monitor what Helply is doing across your server.
-  </Accordion>
-  <Accordion description="Pro only" icon="palette" title="Bot customization">
-    Customize how Helply appears in your server.
-
-    <Info>
-      Uploaded images for bot customization must be under 1 MB.
-    </Info>
-    <Note>
-      Bot customization is available on the Pro plan only.
-    </Note>
-  </Accordion>
-</AccordionGroup>
 
 ## Recommended setup order
 
-<Steps>
-  <Step title="Choose where Helply should listen">
-    Set your ticket destinations first so Helply knows which channels or categories it should monitor.
-  </Step>
-  <Step title="Define your staff roles">
-    Add your support team roles and decide whether support team handoff should be enabled.
-  </Step>
-  <Step title="Add server context">
-    Fill in server information so Helply has the background it needs to respond more accurately.
-  </Step>
-  <Step title="Tune reply behavior">
-    Adjust response delay and decide whether Helply should answer the opening ticket message.
-  </Step>
-  <Step title="Set up logging">
-    Choose a log channel so your team can monitor automation, summaries, and support events.
-  </Step>
-</Steps>
+1. Create the workspace.
+2. Create an agent.
+3. Add workspace information.
+4. Add context.
+5. Test in the sandbox and choose the intelligence level for test messages.
+6. Configure behavior.
+7. Deploy to the surface your users need.
+8. Review usage and analytics after launch.
+
+## Workspace information
+
+Workspace information is a short grounding summary for the support agent. It should describe what the workspace supports, who the users are, and what kinds of help the agent should provide.
+
+Good workspace information helps Suppio understand your product or community before it searches detailed context.
+
+## Agent sandbox
+
+Use the sandbox before launching. Ask questions that real users ask and verify:
+
+- the answer is accurate
+- the tone is right
+- missing context is easy to identify
+- escalation behavior matches your expectations
 
 ## Related pages
 
-<Columns cols={2}>
-  <Card icon="message-question" href="/forums" title="Forums">
-    Configure forum-specific routing and thread status flows.
+<CardGroup cols={2}>
+  <Card title="Context" icon="database" href="/context">
+    Add knowledge sources to the agent.
   </Card>
-  <Card icon="newspaper" href="/context" title="Context">
-    Connect docs, notes, and other knowledge sources.
+  <Card title="Deployment" icon="rocket" href="/discord">
+    Choose where users can talk to the agent.
   </Card>
-  <Card icon="zap" href="/actions" title="Actions">
-    Manage ticket workflow behavior and automation actions.
-  </Card>
-  <Card icon="shield-check" href="/permissions" title="Permissions">
-    Control command access and role-based permissions.
-  </Card>
-</Columns>
+</CardGroup>

@@ -1,16 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
+    "title": "Suppio Agent API",
+    "description": "Call a Suppio agent from trusted backend code and receive a support response with optional structured action signals.",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.suppio.ai",
+      "description": "Production API host."
     }
   ],
   "security": [
@@ -19,198 +17,399 @@
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
+    "/v1/agents/{agentId}/responses": {
+      "post": {
+        "summary": "Create an agent response",
+        "description": "Send one support message to a Suppio agent. The response includes the agent answer, usage, and action signals your backend can handle.",
+        "operationId": "createAgentResponse",
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
+            "name": "agentId",
+            "in": "path",
+            "required": true,
+            "description": "The Suppio agent ID. The bearer API key must be scoped to this same agent.",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "example": "agent_123"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAgentResponseRequest"
+              },
+              "examples": {
+                "passwordReset": {
+                  "summary": "Password reset question",
+                  "value": {
+                    "message": "How do I reset my password?"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "The request was processed. Check `outcome` for `success` or `blocked`.",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "The request limit for the current one-minute window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Remaining requests in the current one-minute window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-RateLimit-Reset": {
+                "description": "Unix timestamp when the current rate-limit window resets.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/AgentResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful support answer",
+                    "value": {
+                      "outcome": "success",
+                      "response": "You can reset your password from Account Settings.",
+                      "actions": [
+                        {
+                          "type": "mark_resolved",
+                          "reason": "The request was fully answered."
+                        }
+                      ],
+                      "usage": {
+                        "credits": 12,
+                        "tokens": 1234
+                      }
+                    }
+                  },
+                  "blocked": {
+                    "summary": "Blocked response",
+                    "value": {
+                      "outcome": "blocked",
+                      "response": "I can't help with that request.",
+                      "actions": [],
+                      "usage": {
+                        "credits": 2,
+                        "tokens": 120
+                      }
+                    }
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
+            "$ref": "#/components/responses/BadRequest"
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "402": {
+            "$ref": "#/components/responses/OutOfCredits"
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+          "403": {
+            "$ref": "#/components/responses/WrongAgent"
+          },
+          "404": {
+            "$ref": "#/components/responses/AgentNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ContextRequired"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
           }
         }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "suppio_live API key"
+      }
+    },
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "CreateAgentResponseRequest": {
         "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message"
+        ],
         "properties": {
-          "name": {
-            "description": "The name of the plant",
+          "message": {
+            "type": "string",
+            "description": "The support message. Empty messages are rejected. Input is capped at 12,000 characters after trimming.",
+            "minLength": 1,
+            "maxLength": 12000,
+            "example": "How do I reset my password?"
+          }
+        }
+      },
+      "AgentResponse": {
+        "type": "object",
+        "required": [
+          "outcome",
+          "response",
+          "actions",
+          "usage"
+        ],
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "success",
+              "blocked"
+            ]
+          },
+          "response": {
             "type": "string"
           },
-          "tag": {
-            "description": "Tag to specify the type",
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionSignal"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "ActionSignal": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/EscalateToHumanAction"
+          },
+          {
+            "$ref": "#/components/schemas/MarkResolvedAction"
+          },
+          {
+            "$ref": "#/components/schemas/SuggestTitleAction"
+          }
+        ]
+      },
+      "EscalateToHumanAction": {
+        "type": "object",
+        "required": [
+          "type",
+          "reason"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "escalate_to_human"
+          },
+          "reason": {
             "type": "string"
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "MarkResolvedAction": {
         "type": "object",
+        "required": [
+          "type",
+          "reason"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "mark_resolved"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "SuggestTitleAction": {
+        "type": "object",
+        "required": [
+          "type",
+          "reason",
+          "title"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "suggest_title"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "description": "A short support title for routing or labeling the conversation."
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "required": [
+          "credits",
+          "tokens"
+        ],
+        "properties": {
+          "credits": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tokens": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
         "properties": {
           "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "examples": [
+                  "invalid_request",
+                  "context_required",
+                  "out_of_credits"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
           }
         }
       }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+    "responses": {
+      "BadRequest": {
+        "description": "The request body was invalid.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authentication is missing or the API key is invalid.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "OutOfCredits": {
+        "description": "The workspace is out of credits.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "WrongAgent": {
+        "description": "The key is valid but scoped to another agent.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "AgentNotFound": {
+        "description": "The requested agent was not found for this key.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "ContextRequired": {
+        "description": "The agent has no active context.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "PayloadTooLarge": {
+        "description": "The JSON body exceeded 64 KB.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "The key or agent exceeded a rate limit.",
+        "headers": {
+          "Retry-After": {
+            "description": "Seconds to wait before retrying.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "InternalError": {
+        "description": "Suppio could not generate the response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
       }
     }
   }

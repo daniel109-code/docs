@@ -1,163 +1,77 @@
 ---
 title: "Features"
-description: "Explore Helply’s core features for Discord support, including context-aware answers, workflow automation, permissions, analytics, and billing."
+description: "Explore the major Suppio 2.0 features across agents, deployments, context, automation, analytics, and billing."
 ---
 
-<img
-  src="/images/features.png"
-  alt="Features"
-  className="rounded-2xl mx-auto"
-/>
+Suppio 2.0 is built around agents that can be deployed across multiple support surfaces.
 
-Helply is an AI support bot for Discord that helps communities answer questions, manage support workflows, and keep responses grounded in their actual docs and server knowledge.
-
-## Core support features
+## Core features
 
 <Columns cols={2}>
-  <Card icon="brain-circuit" title="AI support inside Discord">
-    Answer questions directly inside tickets, forum posts, and support channels without leaving Discord.
+  <Card icon="bot" title="AI support agents">
+    Create agents that answer from your uploaded context and workspace information.
   </Card>
-  <Card icon="route" title="Smart routing">
-    Choose exactly where Helply should operate, including ticket channels, categories, and forum workflows.
+  <Card icon="boxes" title="Multiple deployments">
+    Deploy agents to Discord, a web chat widget, a hosted support page, or your backend through the API.
   </Card>
-  <Card icon="newspaper" title="Context-aware answers">
-    Keep responses grounded in your docs, notes, websites, and other connected knowledge sources.
+  <Card icon="database" title="Context management">
+    Add text, files, website pages, documentation sources, Discord forum posts, and followed channels.
   </Card>
-  <Card icon="list-check" title="Workflow support">
-    Support ticket and forum processes with reminders, status handling, escalation flows, and resolution tools.
+  <Card icon="user-check" title="Escalation handling">
+    Escalate to a human when users ask for staff or the agent cannot confidently continue.
   </Card>
-  <Card icon="sliders" title="Custom behavior">
-    Adjust personality, emoji usage, and custom instructions so replies fit your community.
+  <Card icon="sliders" title="Behavior controls">
+    Tune tone, response style, emoji usage, and custom instructions on supported plans.
   </Card>
-  <Card icon="sparkles" title="Optimization controls">
-    Balance speed, quality, and credit usage with intelligence and optimization settings.
-  </Card>
-</Columns>
-
-## AI support inside Discord
-
-Helply can answer member questions directly inside your server and reduce repetitive support work. It is designed around support environments, so the core experience is centered on tickets, forum posts, and other help channels rather than generic chat replies.
-
-Helply also includes slash commands for asking questions, learning from messages, summarizing recent issues, and managing support flows.
-
-<Columns cols={2}>
-  <Card icon="terminal" href="/commands" title="Commands">
-    View all supported slash commands and their options.
-  </Card>
-  <Card icon="info" href="/information" title="Information">
-    Learn what Helply is and how it fits into your support setup.
+  <Card icon="chart-column" title="Usage and analytics">
+    Track conversations, credits, response activity, and support outcomes.
   </Card>
 </Columns>
 
-## Smart routing for support channels
+## Deployment features
 
-Helply can be configured to operate only where you want it. You can set it up for ticket channels, categories, and forum-based support flows, then adjust how it behaves in each space.
+| Deployment | What it is | Best for |
+| --- | --- | --- |
+| Discord | A bot that responds in configured tickets, categories, forums, and commands. | Discord communities and support teams already working in Discord. |
+| Web chat widget | A floating chat bubble or iframe you add to your website. | Product sites, docs sites, portals, and marketing sites. |
+| Hosted support page | A standalone support page hosted by Suppio, with optional custom DNS on Pro and Enterprise. | Shareable help pages and custom support subdomains. |
+| API | A backend endpoint that returns an answer plus action signals. | Custom apps, help desk integrations, and custom routing logic. |
 
-This gives you control over where Helply is active, how it responds, and how it fits into your existing workflow.
+## Conversation features
 
-<Columns cols={2}>
-  <Card icon="plug" href="/setup" title="Setup">
-    Connect Helply and configure where it should respond.
-  </Card>
-  <Card icon="book-open-cover" href="/overview" title="Overview">
-    Manage core support routing and server-level configuration.
-  </Card>
-</Columns>
+Suppio can:
 
-## Knowledge-based answers with context
+- answer support questions using your context
+- ask concise follow-up questions when user details are missing
+- identify when a conversation should be escalated
+- mark website chats as resolved or escalated
+- return API action signals for escalation, resolution, and suggested titles
+- summarize Discord tickets or forum posts with `/summarize`
+- close Discord tickets and mark Discord forum posts resolved when configured
 
-Helply answers questions using the information you provide instead of relying on generic replies. You can connect docs, notes, websites, and other context sources so responses stay grounded in your server’s actual information.
+## Context features
 
-<Columns cols={1}>
-  <Card icon="newspaper" href="/context" title="Context">
-    Learn how to connect the sources Helply uses to answer accurately.
-  </Card>
-</Columns>
+Suppio supports several context sources:
 
-## Ticket and forum workflow support
+- plain text
+- uploaded files
+- website pages
+- Mintlify documentation
+- GitBook spaces
+- Discord forum posts
+- followed Discord channels
+- custom learning notes from `/learn` and `/train`
 
-Helply is built for actual support operations, not just question-and-answer use. It can support ticket-based workflows and forum-based workflows, including status handling, reminders, and escalation paths.
+See [Context](/context) for details and limits.
 
-For forums, Helply supports states such as resolved, unresolved, inactive, and escalated. This makes it easier to keep threads organized and prevent support requests from getting lost.
+## Plan-aware features
 
-<Columns cols={2}>
-  <Card icon="message-question" href="/forums" title="Forums">
-    Set up forum-based support flows and thread states.
-  </Card>
-  <Card icon="zap" href="/actions" title="Actions">
-    Configure reminders, workflow actions, and escalation behavior.
-  </Card>
-</Columns>
+Some features depend on the workspace plan.
 
-## Custom AI behavior
+- API access, Discord support, chat widget support, and core auto resolve and escalation are available on all plans.
+- Support page is available on paid plans according to the current pricing table.
+- Custom DNS for support pages requires Pro or Enterprise.
+- Suppio attribution removal is an Enterprise add-on.
+- Analytics, personality controls, custom instructions, and advanced Discord automation require paid plans.
 
-Helply can be customized to match the tone of your community. You can adjust emoji usage, personality, and custom response instructions so replies feel appropriate for your server.
-
-That makes it easier to shape Helply for different environments, whether you want something more professional, more friendly, or more direct.
-
-<Columns cols={1}>
-  <Card icon="wand-magic-sparkles" href="/behavior" title="Behavior">
-    Customize tone, style, and response instructions.
-  </Card>
-</Columns>
-
-## Model and optimization controls
-
-Helply includes controls for model-related settings and response optimization. This gives you a way to balance quality, speed, and cost based on what your server needs.
-
-There is also a dedicated optimization area for FAQ settings and other efficiency-focused options.
-
-<Columns cols={2}>
-  <Card icon="brain" href="/intelligence" title="Intelligence">
-    Adjust model-related settings and response quality options.
-  </Card>
-  <Card icon="gauge" href="/optimize" title="Optimize">
-    Improve efficiency with FAQ and response optimization controls.
-  </Card>
-</Columns>
-
-## Command permissions and access control
-
-Helply supports role-based command access. You can choose which roles are allowed to use each command and configure additional controls such as `/ask` cooldowns.
-
-This gives server owners more control over both member-facing commands and staff-focused commands.
-
-<Columns cols={1}>
-  <Card icon="shield-check" href="/permissions" title="Permissions">
-    Manage command access, role permissions, and cooldown settings.
-  </Card>
-</Columns>
-
-## Analytics and visibility
-
-Helply includes analytics tools that help you understand what is happening across your support system. This includes issue summary views and dashboard-level visibility into usage and activity.
-
-The dashboard also surfaces high-level stats such as AI responses, connected servers, and overall reach.
-
-<Columns cols={1}>
-  <Card icon="chart-column" href="/analytics" title="Analytics">
-    Track issue trends, activity, and support visibility across your server.
-  </Card>
-</Columns>
-
-## Usage tracking
-
-Helply tracks usage on a per-server basis so you can see how many credits have been used, how many remain, and when limits reset.
-
-This makes it easier to manage activity across communities and understand how heavily Helply is being used.
-
-<Columns cols={1}>
-  <Card icon="coins" href="/usage" title="Usage">
-    Monitor credit usage, remaining balance, and reset timing.
-  </Card>
-</Columns>
-
-## Billing and plan management
-
-Helply includes billing tools for managing paid plans across servers. You can view which servers are subscribed, access receipts, and manage subscription status from the dashboard.
-
-<Columns cols={1}>
-  <Card icon="credit-card" href="/billing" title="Billing">
-    Manage subscriptions, receipts, and paid plan access.
-  </Card>
-</Columns>
+See [Plans and billing](/billing) for the current comparison.

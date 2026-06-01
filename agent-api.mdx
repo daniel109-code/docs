@@ -1,0 +1,344 @@
+---
+title: "Agent API"
+description: "Call a Suppio agent from your backend and receive an answer plus structured action signals."
+---
+
+The Suppio Agent API lets your backend send a support message to one Suppio agent and receive a generated response.
+
+Use the API when you want to build Suppio into your own support workflow, route messages through your own app, or decide what to do when Suppio suggests escalation, resolution, or a title.
+
+<Warning>
+  API keys are secrets. Use them only from trusted backend code. Do not put Suppio API keys in browsers, mobile apps, frontend bundles, or public repositories.
+</Warning>
+
+## What it is
+
+The Agent API is a server-to-server endpoint:
+
+```http
+POST /v1/agents/{agentId}/responses
+```
+
+You send a `message`. Suppio answers using the selected agent's context and returns:
+
+- `outcome`: whether the request succeeded or was blocked
+- `response`: the text answer
+- `actions`: structured signals your app can act on
+- `usage`: credits and tokens consumed
+
+## When to use it
+
+Use the API when:
+
+- you already have a custom chat UI
+- you want to create tickets in your own system after Suppio escalates
+- you want to label or route conversations using `suggest_title`
+- you need a backend integration instead of the Discord bot, chat widget, or hosted support page
+
+## Set it up
+
+<Steps>
+  <Step title="Create or open an agent">
+    Open the Suppio dashboard, choose your workspace, and open the agent.
+  </Step>
+  <Step title="Add context">
+    Add at least one context source. API keys cannot be created until the agent has context.
+  </Step>
+  <Step title="Open Deploy">
+    Open **Deploy** and choose **API**.
+  </Step>
+  <Step title="Generate an API key">
+    Click **Generate API Key**. Copy the key immediately. Suppio shows the full key only once.
+  </Step>
+  <Step title="Copy the agent ID">
+    Copy the agent ID from the agent page URL. In `/dashboard/workspace/{workspaceId}/agent/{agentId}`, the `{agentId}` value is the ID you use in API requests.
+  </Step>
+  <Step title="Call the endpoint from your backend">
+    Send the key as a bearer token to the documented endpoint and include a JSON body with `message`.
+  </Step>
+</Steps>
+
+## Authentication
+
+Send the API key in the `Authorization` header.
+
+```http
+Authorization: Bearer suppio_live_your_key
+Content-Type: application/json
+```
+
+API keys:
+
+- start with `suppio_live_`
+- are scoped to exactly one agent
+- stop working immediately after deletion
+- are shown in full only when created
+- are stored by Suppio as a hash, a display prefix, and the last four characters
+
+## Endpoint
+
+```http
+POST https://api.suppio.ai/v1/agents/{agentId}/responses
+```
+
+Build the URL with the production API host and your agent ID:
+
+```text
+https://api.suppio.ai/v1/agents/{agentId}/responses
+```
+
+For example, if your agent ID is `agent_123`, use:
+
+```text
+https://api.suppio.ai/v1/agents/agent_123/responses
+```
+
+<Tip>
+  You can find the agent ID in the dashboard URL when the agent is open. It is the value after `/agent/`.
+</Tip>
+
+### Path parameters
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `agentId` | Yes | The ID of the Suppio agent to call. The API key must be scoped to this same agent. |
+
+### Headers
+
+| Header | Required | Description |
+| --- | --- | --- |
+| `Authorization` | Yes | `Bearer suppio_live_your_key` |
+| `Content-Type` | Yes | Must be `application/json` |
+
+### Request body
+
+```json
+{
+  "message": "How do I reset my password?"
+}
+```
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `message` | Yes | The support message to send to the agent. Leading and trailing whitespace is trimmed. Empty messages are rejected. The model input is capped at 12,000 characters after trimming. |
+
+The JSON body limit is 64 KB.
+
+### Current API limitations
+
+- The API endpoint accepts text messages only.
+- Attachments are not supported on this endpoint.
+- Caller-defined tools are not supported.
+- Suppio does not mutate your system through the API. Your app decides what to do with returned action signals.
+
+## Example requests
+
+<CodeGroup>
+
+```bash curl
+curl -X POST "https://api.suppio.ai/v1/agents/agent_123/responses" \
+  -H "Authorization: Bearer suppio_live_your_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "How do I reset my password?"
+  }'
+```
+
+```javascript Node.js
+const endpoint = "https://api.suppio.ai/v1/agents/agent_123/responses";
+
+async function askSuppio(message) {
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.SUPPIO_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message }),
+  });
+
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const code = payload?.error?.code ?? "unknown_error";
+    const detail = payload?.error?.message ?? `Request failed (${response.status})`;
+    throw new Error(`${code}: ${detail}`);
+  }
+
+  return payload;
+}
+
+askSuppio("How do I reset my password?")
+  .then((payload) => {
+    console.log(payload.response);
+
+    for (const action of payload.actions ?? []) {
+      if (action.type === "escalate_to_human") {
+        console.log("Escalate:", action.reason);
+      }
+    }
+  })
+  .catch((error) => {
+    console.error("Suppio API error:", error.message);
+  });
+```
+
+</CodeGroup>
+
+## Example success response
+
+```json
+{
+  "outcome": "success",
+  "response": "You can reset your password from Account Settings.",
+  "actions": [
+    {
+      "type": "mark_resolved",
+      "reason": "The request was fully answered."
+    }
+  ],
+  "usage": {
+    "credits": 12,
+    "tokens": 1234
+  }
+}
+```
+
+## Example blocked response
+
+Blocked responses still use HTTP 200 because the request was processed successfully.
+
+```json
+{
+  "outcome": "blocked",
+  "response": "I can't help with that request.",
+  "actions": [],
+  "usage": {
+    "credits": 2,
+    "tokens": 120
+  }
+}
+```
+
+## Action signals
+
+Suppio returns action signals so your application can decide what to do next.
+
+<AccordionGroup>
+  <Accordion title="escalate_to_human">
+    The user asked for a person or the agent cannot confidently continue.
+
+    ```json
+    {
+      "type": "escalate_to_human",
+      "reason": "The user asked to talk to support."
+    }
+    ```
+  </Accordion>
+  <Accordion title="mark_resolved">
+    The request was fully answered or the user indicated the issue is resolved.
+
+    ```json
+    {
+      "type": "mark_resolved",
+      "reason": "The request was fully answered."
+    }
+    ```
+  </Accordion>
+  <Accordion title="suggest_title">
+    The agent identified a short support title that can help your app label or route the conversation.
+
+    ```json
+    {
+      "type": "suggest_title",
+      "reason": "The user has a clear billing issue.",
+      "title": "Billing Error"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Handling escalations
+
+The API does not automatically notify staff or create tickets. Your backend should inspect `actions` and run your own workflow.
+
+```javascript escalation-handler.js
+const payload = await askSuppio("I need to talk to a human.");
+
+if (payload.actions?.some((action) => action.type === "escalate_to_human")) {
+  await createTicket({
+    subject:
+      payload.actions.find((action) => action.type === "suggest_title")?.title ??
+      "Support request",
+    firstMessage: payload.response,
+    source: "suppio_api",
+  });
+}
+```
+
+## Errors
+
+API errors use this shape:
+
+```json
+{
+  "error": {
+    "code": "out_of_credits",
+    "message": "This workspace is out of credits for the current billing period."
+  }
+}
+```
+
+| Code | HTTP status | What it means |
+| --- | ---: | --- |
+| `authentication_required` | 401 | The authorization header is missing, malformed, too long, or does not use a `suppio_live_` key. |
+| `invalid_api_key` | 401 | The key is malformed, deleted, revoked, unknown, or does not match the stored hash. |
+| `wrong_agent` | 403 | The key is valid but is scoped to a different agent. |
+| `agent_not_found` | 404 | The requested agent could not be found for this key. |
+| `invalid_request` | 400 | The JSON body did not include a usable `message`. |
+| `invalid_json` | 400 | The request body was not valid JSON. |
+| `payload_too_large` | 413 | The JSON body exceeded 64 KB. |
+| `context_required` | 409 | The agent has no active context. Add context before sending API requests. |
+| `out_of_credits` | 402 | The workspace has no credits left for the current billing period. |
+| `rate_limited` | 429 | The API key exceeded its requests-per-minute limit. |
+| `daily_rate_limited` | 429 | The agent exceeded its daily request limit for the current UTC day. |
+| `internal_error` | 500 | Suppio could not generate the response. |
+
+## Rate limits
+
+Rate limits are enforced per API key with a one-minute window. The effective limit is the lower of the key's stored limit and the current workspace plan limit.
+
+| Plan | Requests per minute |
+| --- | ---: |
+| Free | 20 |
+| Plus | 60 |
+| Pro | 180 |
+| Enterprise | 600 |
+
+Authenticated API responses include:
+
+```http
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 59
+X-RateLimit-Reset: 1780343190
+```
+
+Rate-limited responses also include:
+
+```http
+Retry-After: 12
+```
+
+Daily dashboard counters are tracked per UTC day across all API keys for an agent. The daily limit is the plan's requests-per-minute limit multiplied by 1,440 minutes.
+
+## Key management
+
+- You can have up to 5 active API keys per agent.
+- You can create up to 5 API keys per day.
+- Rotate keys by creating a new key, updating your backend, then deleting the old key.
+- Deleted keys stop working immediately.
+- The dashboard shows key prefix, last four characters, created time, last used time, total requests, requests today, and active key count.
+
+## Related reference
+
+The generated endpoint reference is available in the **API Reference** tab.

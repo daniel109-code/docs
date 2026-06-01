@@ -1,112 +1,51 @@
 ---
-title: "Permissions"
-description: "Control which roles can use Helply’s slash commands and set optional per-role `/ask` cooldowns."
+title: "Discord permissions"
+description: "Control which Discord roles can use Suppio slash commands and configure /ask cooldowns."
 ---
 
-<img
-  src="/images/permissions_banner.png"
-  alt="Permissions Banner"
-  className="rounded-2xl mx-auto"
-/>
+Discord permissions control access to Suppio slash commands in a connected Discord server.
 
-The **Permissions** tab is where you control which roles can use Helply’s slash commands in a server.
+Use this page when you want to limit staff commands, open selected commands to trusted roles, or rate limit `/ask`.
 
-Use this tab to decide who can access each command and to optionally limit how often different roles can use `/ask`.
+## Command access
 
-## What the Permissions tab does
+Each command can be assigned one or more Discord roles.
 
-<Columns cols={2}>
-  <Card icon="shield-check" title="Control command access">
-    Choose which roles are allowed to run each Helply slash command.
-  </Card>
-  <Card icon="users" title="Restrict staff commands">
-    Keep staff-only commands limited to the right roles.
-  </Card>
-  <Card icon="lock" title="Use server manager fallback">
-    Leave commands empty to keep them limited to members with **Manage Server**.
-  </Card>
-  <Card icon="timer" title="Set `/ask` cooldowns">
-    Add optional per-role usage limits for `/ask`.
-  </Card>
-</Columns>
+- If a command has roles selected, only those roles can use it.
+- If a command has no roles selected, access is limited to members with **Manage Server**.
+- `/help` and `/support` are available to everyone by default.
 
-## Command permissions
-
-Each command in the Permissions tab can be assigned to one or more Discord roles.
-
-Click a command to choose which roles are allowed to run it.
-
-<AccordionGroup>
-  <Accordion defaultOpen icon="key" title="How command access works">
-    - If a command has one or more roles selected, only those roles can use it.
-    - If a command is left empty, access is limited to members with **Manage Server**.
-    - The exceptions are `/help` and `/support`, which anyone can run by default.
-
-    This makes it easy to keep commands restricted until you are ready to open them up more broadly.
-  </Accordion>
-  <Accordion icon="terminal" title="Available commands">
-    The Permissions tab shows the Helply slash commands currently available for your server.
-
-    To view the full command list and what each command does, see [Commands](/commands).
-  </Accordion>
-</AccordionGroup>
+See [Discord commands](/commands) for the current command list.
 
 ## `/ask` cooldowns
 
-The Permissions tab also includes **`/ask cooldowns`**.
+You can set per-role `/ask` limits measured in messages per hour.
 
-This lets you add optional per-role limits for `/ask`, measured in **messages per hour**.
+Use cooldowns to:
 
-For example, you can give trusted roles a higher limit while keeping a stricter limit for general members.
+- give staff or trusted users a higher limit
+- reduce spam from general members
+- create a default limit with `@everyone`
 
-## How `/ask` cooldowns work
+## Role priority
 
-<Columns cols={2}>
-  <Card icon="arrow-up-a-z" title="Per-role limits">
-    Cooldowns are configured per role.
-  </Card>
-  <Card icon="arrow-down-short-wide" title="Role priority">
-    Higher roles override lower roles.
-  </Card>
-  <Card icon="list" title="Up to 10 roles">
-    You can configure cooldowns for up to **10 roles**.
-  </Card>
-  <Card icon="globe" title="Default with `@everyone`">
-    Add `@everyone` if you want a default cooldown for the whole server.
-  </Card>
-</Columns>
+Higher Discord roles override lower roles. If a member has several configured roles, Suppio uses the highest applicable role.
 
-<Note>
-  If no `/ask` cooldowns are configured, `/ask` will not have a role-based rate limit from this section.
-</Note>
+## Limits
 
-## Recommended setup
+- You can configure cooldowns for up to 10 roles.
+- If no `/ask` cooldowns are configured, this section does not add a role-based rate limit.
 
-<Steps>
-  <Step title="Lock down staff commands first">
-    Start by assigning sensitive commands to staff or admin roles only.
-  </Step>
-  <Step title="Decide which member commands should be public">
-    Review whether broader roles should be allowed to use commands like `/ask`.
-  </Step>
-  <Step title="Add `/ask` cooldowns if needed">
-    Set stricter limits for general members and higher limits for trusted roles.
-  </Step>
-  <Step title="Use `@everyone` for a default limit">
-    Add `@everyone` if you want a baseline cooldown that applies across the server.
-  </Step>
-</Steps>
+## Troubleshooting
 
-## Related pages
-
-<Columns cols={3}>
-  <Card icon="terminal" href="/commands" title="Commands">
-    Learn what each Helply command does.
-  </Card>
-  <Card icon="align-center" href="/overview" title="Overview">
-    Configure core routing and support settings.
-  </Card>
-  <Card icon="zap" href="/actions" title="Actions">
-    Manage ticket workflow automation.
-  </Card>
-</Columns>
+<AccordionGroup>
+  <Accordion title="A role cannot run a command">
+    Add that role to the command in **Discord permissions** or make sure the member has **Manage Server** when the command has no roles selected.
+  </Accordion>
+  <Accordion title="/help or /support is public">
+    This is expected. Those commands are available to everyone by default.
+  </Accordion>
+  <Accordion title="Cooldowns do not match expectations">
+    Check the member's highest role. Higher roles override lower cooldown settings.
+  </Accordion>
+</AccordionGroup>

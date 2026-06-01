@@ -1,0 +1,161 @@
+---
+title: "Hosted support page"
+description: "Deploy a standalone Suppio support page and connect a custom support domain on supported plans."
+---
+
+The hosted support page gives your agent a standalone ChatGPT-style support page.
+
+Use it when you want a full-page support experience that you can share directly, link from your site, or place behind a custom support domain.
+
+<Warning>
+  Add context before deploying the support page. Suppio will not deploy or enable the page without context.
+</Warning>
+
+## What it is
+
+The hosted support page is a public page served by Suppio for one agent. It includes a hero area, chat input, optional suggestions, optional link cards, theming, images, and attachment support.
+
+After deployment, Suppio gives you a hosted link in the dashboard. On Pro and Enterprise plans, you can also connect a custom domain.
+
+## When to use it
+
+Use a hosted support page when:
+
+- you want a shareable support URL
+- you do not want to install a widget script on your website
+- you want a dedicated help page for a product, workspace, or agent
+- you want support at a subdomain such as `help.example.com`
+
+## Set it up
+
+<Steps>
+  <Step title="Open the agent">
+    In the dashboard, choose your workspace and open the agent you want to deploy.
+  </Step>
+  <Step title="Add context">
+    Add at least one context source in **Context**.
+  </Step>
+  <Step title="Open Deploy">
+    Open **Deploy** and choose **Support page**.
+  </Step>
+  <Step title="Configure settings">
+    Set the page title, escalated message, favicon, theme, colors, attachment support, logos, and hero images.
+  </Step>
+  <Step title="Deploy">
+    Click **Deploy**. Suppio creates the hosted page and enables it.
+  </Step>
+  <Step title="Copy the hosted link">
+    Open **Domain setup** and copy the **Suppio hosted link**.
+  </Step>
+</Steps>
+
+## Hosted link
+
+The hosted page URL uses this format:
+
+```text
+https://api.suppio.ai/help/agent_123
+```
+
+Use the link shown in your dashboard because the API host can differ between environments.
+
+## Custom DNS
+
+Custom DNS is available on Pro and Enterprise plans.
+
+<Steps>
+  <Step title="Deploy the page first">
+    Domain setup is only available after the support page has a hosted Suppio link.
+  </Step>
+  <Step title="Enter a support subdomain">
+    In **Domain setup**, enter a public hostname such as `help.example.com`.
+  </Step>
+  <Step title="Save changes">
+    Save the page settings so Suppio can prepare the DNS records.
+  </Step>
+  <Step title="Add DNS records">
+    Add the CNAME record shown in the dashboard. If the dashboard shows a TXT record, add that too.
+  </Step>
+  <Step title="Check DNS">
+    Click **Check DNS**. Suppio marks the domain verified when DNS and SSL are ready.
+  </Step>
+</Steps>
+
+### DNS records
+
+The dashboard shows the exact records for your domain. The CNAME target depends on the deployed environment.
+
+```text Example CNAME format
+Type: CNAME
+Name: help.example.com
+Target: shown in the Suppio dashboard
+Proxy: DNS only
+```
+
+```text Example TXT format
+Type: TXT
+Name: _suppio.help.example.com
+Value: suppio-site-verification=...
+```
+
+## How conversations work
+
+Visitors can start a chat from the hosted page. Suppio stores recent page chat history in the visitor's browser and sends conversation history with each message.
+
+If attachments are enabled, visitors can attach files. When Suppio resolves or escalates the conversation, the conversation is closed and the visitor must start a new chat to continue.
+
+## How escalations work
+
+When the agent escalates from the support page, it returns your configured **Escalated message** and marks the conversation as escalated in Suppio usage logs.
+
+<Note>
+  The hosted support page does not automatically create a Discord ticket or external help desk ticket.
+</Note>
+
+## Settings and customization
+
+<AccordionGroup>
+  <Accordion title="Page title">
+    Appears in the browser tab and hosted page metadata.
+  </Accordion>
+  <Accordion title="Escalated message">
+    The exact message shown when the agent escalates to a human.
+  </Accordion>
+  <Accordion title="Theme">
+    Choose dark or light as the default theme. You can also enable a theme switch for visitors.
+  </Accordion>
+  <Accordion title="Colors and images">
+    Configure light and dark primary colors, favicon, logos, and hero images.
+  </Accordion>
+  <Accordion title="Attachments">
+    Enable or disable visitor file attachments.
+  </Accordion>
+  <Accordion title="Suggestions and link cards">
+    Add suggested prompts and up to four link cards from the page editor.
+  </Accordion>
+</AccordionGroup>
+
+## Limits
+
+- Custom DNS requires Pro or Enterprise.
+- Custom domains must be public hostnames. Localhost, IP addresses, wildcard domains, and domains with paths are rejected.
+- Up to 5 attachments per message.
+- Attachment uploads are limited to 10 MB total per message.
+- Voice to text and text to speech are present in settings but disabled in the current app.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Deploy is disabled">
+    Add at least one context source to the agent.
+  </Accordion>
+  <Accordion title="The page returns unavailable">
+    Confirm the page is deployed, enabled, and opened from the hosted Suppio link or verified custom domain.
+  </Accordion>
+  <Accordion title="DNS verification fails">
+    Confirm the CNAME target matches the dashboard, add the TXT record if shown, use DNS-only proxy mode when required, and wait for DNS propagation.
+  </Accordion>
+  <Accordion title="Custom DNS is unavailable">
+    Upgrade the workspace to Pro or Enterprise.
+  </Accordion>
+</AccordionGroup>

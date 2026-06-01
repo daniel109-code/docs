@@ -1,0 +1,127 @@
+---
+title: "Web chat widget"
+description: "Add Suppio as a floating chat widget or iframe on your website."
+---
+
+The web chat widget lets visitors talk to your Suppio agent directly on your website.
+
+Use it when you want support inside your product site, marketing site, documentation site, or customer portal without sending visitors to Discord.
+
+<Warning>
+  Add context before enabling the chat widget. Suppio will not let you enable it without context.
+</Warning>
+
+## What it is
+
+The chat widget is a small embeddable script. It loads a floating launcher bubble on your site. You can also use the iframe embed if you want the chat interface to appear inline on a page.
+
+The dashboard gives you the exact setup snippet for the selected agent.
+
+## When to use it
+
+Use the chat widget when:
+
+- visitors need quick answers while browsing your site
+- you want a low-friction support option before opening a ticket
+- you want a branded chat surface with your agent name, colors, icons, and intro message
+- you can paste a script tag or iframe into your website
+
+## Set it up
+
+<Steps>
+  <Step title="Open the agent">
+    In the dashboard, choose your workspace and open the agent you want to embed.
+  </Step>
+  <Step title="Add context">
+    Add at least one context source in **Context**.
+  </Step>
+  <Step title="Open Deploy">
+    Open **Deploy** and choose **Chat widget**.
+  </Step>
+  <Step title="Review content">
+    In **Content**, set the display name, initial message, escalated message, placeholder, optional notice text, and optional footer text.
+  </Step>
+  <Step title="Customize style">
+    In **Style**, choose light or dark appearance, upload the profile image or chat icon, choose colors, and set the launcher alignment.
+  </Step>
+  <Step title="Copy the embed code">
+    Open **Embed**, choose **Chat widget** or **Iframe**, then copy the setup instructions.
+  </Step>
+  <Step title="Install it on your site">
+    Paste the script before the closing `</body>` tag, or paste the iframe wherever the inline chat should appear.
+  </Step>
+</Steps>
+
+## Embed examples
+
+Use the exact URLs shown in your dashboard. The examples below show the format.
+
+```html Chat widget
+<script src="https://api.suppio.ai/embed/agents/agent_123/widget.js" async></script>
+```
+
+```html Iframe
+<iframe
+  src="https://api.suppio.ai/embed/agents/agent_123/iframe"
+  style="width: 100%; height: 700px; border: 0; border-radius: 24px;"
+  allow="clipboard-write"
+></iframe>
+```
+
+## How conversations work
+
+The widget stores a visitor's current chat in the browser. The visitor can send text and, if enabled, attachments.
+
+Suppio sends conversation history with each message so answers stay grounded in the current chat. The widget keeps recent chat history in the visitor's browser and sends the recent conversation to the agent.
+
+When Suppio resolves or escalates a widget conversation, the chat is closed for that conversation. The visitor must start a new chat to send another message.
+
+## How escalations work
+
+When the agent escalates from the widget, it returns your configured **Escalated message** and marks the conversation as escalated in Suppio usage logs.
+
+<Note>
+  The widget does not automatically create a ticket in your external help desk. Use the [API](/agent-api) if you need to connect Suppio action signals to a custom ticketing workflow.
+</Note>
+
+## Settings and customization
+
+<AccordionGroup>
+  <Accordion title="Content settings">
+    Configure display name, initial message, escalated message, input placeholder, notice text, footer text, and attachment support.
+  </Accordion>
+  <Accordion title="Style settings">
+    Configure light or dark appearance, profile image, chat icon, primary color, header color usage, launcher bubble color, and left or right launcher alignment.
+  </Accordion>
+  <Accordion title="Embed type">
+    Choose the default floating **Chat widget** or the advanced **Iframe** embed.
+  </Accordion>
+  <Accordion title="Domain restrictions">
+    Enable **Only allow embedding on specific domains** and add domains such as `example.com`. Suppio allows the exact domain and subdomains of each allowed domain.
+  </Accordion>
+</AccordionGroup>
+
+## Limits
+
+- Up to 5 attachments per message.
+- Attachment uploads are limited to 10 MB total per message.
+- Readable text attachments are capped before they are sent to the agent.
+- Images can be sent as image attachments when attachment support is enabled.
+- Domain restrictions rely on browser origin or referrer headers. If they are missing and restrictions are enabled, the widget session is rejected.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The widget does not appear">
+    Confirm the widget is enabled, the script URL uses the correct agent ID, and your site allows the script to load from the Suppio API host.
+  </Accordion>
+  <Accordion title="This domain is not allowed">
+    Open **Chat widget > Embed**, check whether domain restrictions are enabled, and add the site domain without `https://` or a path.
+  </Accordion>
+  <Accordion title="Messages fail to send">
+    Check that the agent has context, the workspace has credits, the widget is enabled, and the visitor is not hitting rate limits.
+  </Accordion>
+  <Accordion title="Attachments fail">
+    Confirm attachments are enabled and the files are within the 5-file and 10 MB limits.
+  </Accordion>
+</AccordionGroup>

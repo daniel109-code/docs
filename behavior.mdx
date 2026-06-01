@@ -1,192 +1,75 @@
 ---
 title: "Behavior"
-description: "Customize how Helply communicates, including tone, personality, emoji usage, and agent-specific instructions."
+description: "Customize Suppio's tone, personality, emoji usage, and instructions."
 ---
 
-<img
-  src="/images/behaviorbanner.png"
-  alt="Behavior Banner"
-  className="rounded-2xl mx-auto"
-/>
+Behavior settings control how Suppio communicates.
 
-The **Behavior** tab is where you customize how Helply communicates in your server.
-
-This tab controls Helply’s tone, writing style, emoji usage, personality traits, and custom instructions for different parts of the system.
+Use these settings when you want answers to match your brand, support style, or community norms.
 
 <Note>
-  Editing Helply behavior is a **Plus / Pro** feature. [Learn more.](/billing)
+  Behavior controls and custom instructions are paid-plan features.
 </Note>
 
-## What the Behavior tab does
+## What you can control
 
 <Columns cols={2}>
-  <Card icon="file-text" title="Add agent-specific instructions">
-    Write separate guidance for replies, escalations, and action suggestions.
+  <Card icon="sliders" title="Tone and style">
+    Choose whether Suppio should be more concise, detailed, direct, friendly, or professional.
   </Card>
-  <Card icon="sliders" title="Adjust tone and personality">
-    Control how friendly, professional, direct, or conversational Helply feels.
+  <Card icon="smile" title="Emoji usage">
+    Control how expressive replies should be.
   </Card>
-  <Card icon="smile" title="Control emoji usage">
-    Choose how expressive Helply should be in replies.
+  <Card icon="file-text" title="Custom instructions">
+    Add targeted guidance for support replies, escalations, and action suggestions.
   </Card>
-  <Card icon="square-sliders-vertical" title="Tune response style">
-    Decide how concise, detailed, reactive, or proactive Helply should be.
+  <Card icon="message-circle" title="Deployment consistency">
+    Keep replies consistent across Discord, web chat, support page, and API surfaces.
   </Card>
 </Columns>
 
-## Agent instruction fields
-
-The Behavior tab includes separate instruction fields for different Helply agents.
-
-This gives you more precise control over different parts of Helply instead of applying one global rule to everything.
+## Instruction areas
 
 <AccordionGroup>
-  <Accordion defaultOpen icon="clipboard-user" title="Main agent instructions">
-    These apply to **ticket replies** and **forum replies**.
-
-    Use this field when you want to change how Helply answers support questions directly.
-
-    **This can affect:**
-
-    - overall response style
-    - how much detail Helply gives
-    - how formal or casual replies feel
-    - whether replies are more direct or more conversational
-    - how Helply explains steps to users
-
-    **This does not affect:**
-
-    - when Helply escalates to a human
-    - how Helply decides to rename or close tickets
-    - action suggestions made by the actions agent
+  <Accordion title="Main agent instructions">
+    These affect normal support replies. Use them for tone, formatting, language, boundaries, and how much detail Suppio should include.
   </Accordion>
-  <Accordion icon="caret-up" title="Human escalation instructions">
-    By default, Helply already understands when a human is needed. These settings let you guide how Helply should behave when escalation decisions come up.
-
-    Use this field for escalation-specific rules, such as:
-
-    - when your team should be looped in
-    - what kinds of issues should be escalated faster
-    - exceptions or special handoff rules
-
-    **This can affect:**
-
-    - escalation decision guidance
-    - handoff expectations
-    - rules around when human intervention is preferred
-
-    **This does not affect:**
-
-    - normal ticket or forum replies
-    - ticket renaming or auto-close behavior
+  <Accordion title="Human escalation instructions">
+    These guide when Suppio should hand off to humans. Use them for support policies, exceptions, high-risk topics, or issues that should always be escalated.
   </Accordion>
-  <Accordion icon="zap" title="Actions agent instructions">
-    These apply to **ticket and forum action suggestions**.
-
-    Use this field when you want to influence operational actions instead of message tone.
-
-    **This can affect:**
-
-    - ticket renaming guidance
-    - ticket closing guidance
-    - action-related rules and exceptions
-
-    **This does not affect:**
-
-    - the tone of Helply’s normal replies
-    - how Helply answers user questions
-    - when Helply escalates to a human
+  <Accordion title="Action instructions">
+    These guide action suggestions such as ticket rename, close, resolve, and API action signals.
   </Accordion>
 </AccordionGroup>
 
-## Which instruction field should you use?
+## Good instructions
 
-<Columns cols={3}>
-  <Card icon="bullseye-arrow" title="Main agent instructions">
-    Use this when you want to change how Helply talks to users and what it mentions inside its responses.
-  </Card>
-  <Card icon="users" title="Human escalation instructions">
-    Use this when you want to shape how Helply handles handoff behavior.
-  </Card>
-  <Card icon="wrench" title="Actions agent instructions">
-    Use this when you want to adjust operational suggestions, like renaming or closing.
-  </Card>
-</Columns>
+Good behavior instructions are specific and user-facing.
 
-## AI behavior
+```text
+Answer in a calm, concise tone. Use numbered steps for setup instructions.
+If a billing issue mentions a failed charge, escalate to a human after giving
+the user the basic billing page steps.
+```
 
-Below the custom instruction fields, the **AI behavior** section lets you tune how Helply talks in your server.
+Avoid instructions that depend on hidden system details or ask Suppio to ignore safety rules.
+
+## What behavior settings cannot fix
+
+Behavior settings change style and decision guidance. They do not replace missing context.
+
+If Suppio gives incorrect factual answers, update the agent's context first.
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion description="Pro only" defaultOpen icon="anchor-circle-check" title="Custom response guidance">
-    You can add short written guidance for how Helply should answer, including:
-
-    - tone preferences
-    - wording preferences
-    - things to avoid
-    - general style rules
-
-    This field supports up to **500 characters**.
-
-    <Note>
-      Custom response guidance is a **Pro** feature. [Learn more.](/billing)
-    </Note>
+  <Accordion title="Replies are too long">
+    Lower verbosity or add a main instruction such as `Keep answers under five sentences unless the user asks for detail.`
   </Accordion>
-  <Accordion icon="smile-plus" title="Emoji usage">
-    You can control how expressive Helply should be with emojis.
-
-    Available options include:
-
-    - **Minimal** for only using emojis when necessary
-    - **Elevated** for occasional emojis
-    - **High** for frequent emoji usage
+  <Accordion title="Suppio escalates too often">
+    Review human escalation instructions and make sure context includes the answers users are asking for.
   </Accordion>
-  <Accordion icon="palette" title="Personality palette">
-    The **Personality palette** lets you choose one trait per category so Helply’s replies match the style you want.
-
-    Available categories include:
-
-    - **Tone:** Friendly or Professional
-    - **Clarity:** Concise or Detailed
-    - **Confidence:** Assertive or Gentle
-    - **Structure:** Step-by-step or Summary
-    - **Voice:** Conversational or Direct
-    - **Initiative:** Reactive or Proactive
-
-    These settings shape the feel of Helply’s replies without requiring you to write custom prompts yourself.
+  <Accordion title="Suppio does not escalate enough">
+    Add clear escalation rules for the topics your team wants reviewed by a human.
   </Accordion>
 </AccordionGroup>
-
-## Recommended way to customize behavior
-
-<Steps>
-  <Step title="Set the broad style first">
-    Start with the personality palette and emoji usage to shape Helply’s default tone.
-  </Step>
-  <Step title="Add targeted instructions where needed">
-    Use the agent-specific instruction fields only for rules that need more precision.
-  </Step>
-  <Step title="Keep instructions scoped to the right agent">
-    Put reply style in the main agent field, escalation rules in the escalation field, and operational guidance in the actions field.
-  </Step>
-  <Step title="Test in real support conversations">
-    Run a few sample tickets or forum threads to confirm the behavior matches your server’s tone and workflow.
-  </Step>
-</Steps>
-
-## Related pages
-
-<Columns cols={2}>
-  <Card icon="align-center" href="/overview" title="Overview">
-    Configure core routing and server-wide automation settings.
-  </Card>
-  <Card icon="zap" href="/actions" title="Actions">
-    Manage ticket workflow automation and operational behavior.
-  </Card>
-  <Card icon="comment-question" href="/forums" title="Forums">
-    Configure forum-specific support behavior and thread flows.
-  </Card>
-  <Card icon="brain" href="/intelligence" title="Intelligence">
-    Adjust model and reasoning settings per agent.
-  </Card>
-</Columns>

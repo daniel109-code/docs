@@ -1,162 +1,118 @@
 ---
 title: "Context"
-description: "Add the knowledge Helply uses to answer accurately, manage your sources, and understand your server’s context limits."
+description: "Add and manage the knowledge Suppio uses to answer support questions."
 ---
 
-<img
-  src="/images/context_banner.png"
-  alt="Context Banner"
-  className="rounded-2xl mx-auto"
-/>
+Context is the knowledge your agent uses when it answers.
 
-The **Context** tab is where you give Helply the information it uses to answer questions.
-
-Context is required for Helply to send messages. If a server has no context, Helply will not respond. Once context is added, Helply can use that knowledge to generate grounded answers instead of generic replies.
+Suppio requires context before an agent can be deployed or used through the API. Without active context, Suppio cannot generate grounded support replies.
 
 <Warning>
-  Helply requires context to function. Without it, Helply will not respond.
+  If an agent has no context, deployment methods are blocked or requests are rejected.
 </Warning>
 
-## What the Context tab does
-
-<Columns cols={2}>
-  <Card icon="database" title="Add knowledge sources">
-    Upload the information Helply should use when answering questions in your server.
-  </Card>
-  <Card icon="folder-open" title="Manage active context">
-    Review and manage the files and sources Helply can reference in responses.
-  </Card>
-  <Card icon="water-arrow-down" title="Keep answers grounded">
-    Use docs, notes, websites, and server content to improve response accuracy.
-  </Card>
-  <Card icon="hard-drive" title="Track limits and storage">
-    See how many context slots and how much storage your server has used.
-  </Card>
-</Columns>
-
-## Supported upload methods
-
-Helply supports several ways to add context.
+## Supported context sources
 
 <AccordionGroup>
-  <Accordion defaultOpen icon="file-text" title="Plain text">
-    Paste raw text directly into Helply.
-
-    This works well for short notes, policies, FAQs, instructions, or any other information you want Helply to learn without uploading a file.
+  <Accordion title="Plain text">
+    Paste short notes, policies, FAQs, troubleshooting steps, or instructions directly into Suppio.
   </Accordion>
-  <Accordion icon="upload" title="File upload">
-    Upload a TXT file from your device.
-
-    This is useful when you already have support content, guides, or notes saved locally and want to add them as context.
+  <Accordion title="File upload">
+    Upload local support content, guides, notes, or documentation files.
   </Accordion>
-  <Accordion icon="globe" title="Website upload">
-    Paste direct URLs to scrape live pages into a single webdata file.
-
-    This works well for help centers, public docs, landing pages, or any other web content you want Helply to reference.
+  <Accordion title="Website upload">
+    Import website pages from public URLs. This works well for help centers, docs, landing pages, and product pages.
   </Accordion>
-  <Accordion icon="book-bookmark" title="Mintlify docs">
-    Connect a Mintlify docs site to sync documentation into Helply.
-
-    This is useful if your product docs already live in Mintlify and you want Helply to answer from that source directly. Paste the link to any page in your documentation to connect it.
+  <Accordion title="Mintlify docs">
+    Connect a Mintlify documentation site by pasting a documentation URL.
   </Accordion>
-  <Accordion icon="book-open-cover" title="GitBook">
-    Import a GitBook space into Helply.
-
-    This is useful for teams that keep their documentation in GitBook and want Helply to use it for support replies. Paste the link to any page in your documentation to connect it.
+  <Accordion title="GitBook">
+    Import a GitBook space by pasting a GitBook URL.
   </Accordion>
-  <Accordion icon="message-question" title="Discord forum posts">
-    Index selected forum posts and tags.
-
-    This is useful when important answers already live inside your server’s forum channels and you want Helply to learn from them.
+  <Accordion title="Discord forum posts">
+    After Discord is connected, index selected forum posts and tags so Suppio can learn from useful past answers.
   </Accordion>
-  <Accordion icon="radio" title="Follow channels">
-    Track the latest messages from selected channels.
-
-    This is useful when your server has announcement, update, or knowledge channels that Helply should stay aware of over time.
+  <Accordion title="Follow channels">
+    After Discord is connected, follow selected channels so Suppio can stay aware of updates and announcements.
+  </Accordion>
+  <Accordion title="Shared agent context">
+    When creating another agent in the same workspace, you can sync context from an existing agent instead of uploading everything again.
   </Accordion>
 </AccordionGroup>
 
+## Add context
+
+<Steps>
+  <Step title="Open the agent">
+    Go to the workspace, choose the agent, and open **Context**.
+  </Step>
+  <Step title="Choose a source">
+    Add text, upload files, import website pages, or choose an available documentation or Discord source.
+  </Step>
+  <Step title="Wait for processing">
+    Suppio shows context source status while it processes and indexes content.
+  </Step>
+  <Step title="Test the agent">
+    Ask real support questions in the sandbox to confirm the agent can find the right information.
+  </Step>
+</Steps>
+
 ## Custom learning feed
 
-The Context tab also includes a **Custom learning feed**.
+The custom learning feed stores small notes and summaries that should influence future replies.
 
-This is a special context file that Helply builds from:
+It can be updated from Discord with:
 
-- `/train`, which summarizes recent channel logs
-- `/learn`, which adds quick manual notes
+- `/learn` to save a manual note
+- `/train` to summarize recent human messages into the learning file on supported plans
+- message actions such as remember or analyze when configured
 
-One context slot is reserved for this file.
+Use the custom learning feed for high-value corrections, repeated support guidance, and short policy notes. Do not use it as a replacement for full documentation.
 
-Use the **View / Edit** button to review and manage what has been added to the learning feed.
+## Source quality tips
 
-<Note>
-  The custom learning feed gives Helply a simple way to retain high-value notes and summaries without creating a separate file every time.
-</Note>
+- Prefer current docs over old chat messages.
+- Remove outdated setup instructions before uploading.
+- Keep one source focused on one topic when possible.
+- Include exact names for plans, commands, products, and settings.
+- Add screenshots or images only where the deployment supports image understanding.
+- Re-test common questions after major context changes.
 
-Read more here: [Commands](/commands)
+## Limits
 
-## Context limits
+Limits vary by plan. The pricing table currently lists:
 
-Each server has context limits based on its plan.
+| Plan | Context uploads |
+| --- | ---: |
+| Free | 6 |
+| Plus | 10 |
+| Pro | 20 |
+| Enterprise | 40 |
 
-<Columns cols={3}>
-  <Card horizontal title="Free:">
-    **6 files**\
-    Max size: **800KB** per file
-  </Card>
-  <Card horizontal title="Plus:">
-    **10 files**\
-    Max size: **3 MB** per file
-  </Card>
-  <Card horizontal title="Pro:">
-    **20 files**\
-    Max size: **5 MB** per file
-  </Card>
-</Columns>
+File size limits also vary by plan:
 
-If you reach your plan limit, you will need to remove an existing context item or upgrade your plan before adding another.
+| Plan | Maximum file size |
+| --- | ---: |
+| Free | 800 KB |
+| Plus | 3 MB |
+| Pro | 5 MB |
+| Enterprise | 10 MB |
 
-## Refreshing and syncing
+Website context can include up to 100 selected pages from the full dashboard context manager. Onboarding website import uses a smaller first-run crawl.
 
-Some context sources can stay up to date automatically after upload.
+## Troubleshooting
 
-For supported web-based sources, Helply can refresh synced content on an interval so your docs stay current over time.
-
-## What to put in Context
-
-Good context usually includes the same information a strong human support team member would rely on.
-
-<Columns cols={2}>
-  <Card icon="book" title="Documentation">
-    Product docs, setup steps, and troubleshooting guides.
-  </Card>
-  <Card icon="clipboard-list" title="Policies and playbooks">
-    Policy notes, support playbooks, and internal instructions.
-  </Card>
-  <Card icon="seal-question" title="FAQs and known issues">
-    Repeated questions, known issue explanations, and reusable answers.
-  </Card>
-  <Card icon="clipboard-question" title="Server knowledge">
-    Forum answers, update posts, and important channel content worth reusing.
-  </Card>
-</Columns>
-
-**The better your context is, the more accurate Helply’s responses will be.**
-
-<Info>
-  If Helply’s responses are inaccurate, the most common cause is missing or incomplete context around the question being asked.
-</Info>
-
-## Related pages
-
-<Columns cols={3}>
-  <Card icon="plug" href="/setup" title="Setup">
-    Connect Helply and complete your initial server setup.
-  </Card>
-  <Card icon="terminal" href="/commands" title="Commands">
-    Learn how `/train` and `/learn` interact with context.
-  </Card>
-  <Card icon="calendar-range" href="/overview" title="Overview">
-    Configure routing, staff roles, and other core server settings.
-  </Card>
-</Columns>
+<AccordionGroup>
+  <Accordion title="Suppio says context is required">
+    Add at least one active context source to the agent, then retry deployment or API key creation.
+  </Accordion>
+  <Accordion title="Answers are inaccurate">
+    Add the missing policy or troubleshooting detail as context, remove outdated sources, and test again in the sandbox.
+  </Accordion>
+  <Accordion title="Discord context sources are unavailable">
+    Connect Discord first. Forum posts and followed channels require a Discord deployment connection.
+  </Accordion>
+  <Accordion title="Website upload fails">
+    Confirm the URL is public, reachable, and not blocked by the website upload filters.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,143 @@
+---
+title: "Discord deployment"
+description: "Connect a Suppio agent to Discord and configure ticket, forum, command, escalation, and automation behavior."
+---
+
+Discord deployment connects a Suppio agent to a Discord server so it can answer support questions in real time.
+
+Use Discord deployment when your community already handles support in ticket channels, ticket categories, or Discord forum posts.
+
+<Warning>
+  Add at least one context source before deploying to Discord. Suppio will not respond without context.
+</Warning>
+
+## What it is
+
+Suppio runs as a Discord bot in your server. After you connect it, you choose where it should listen and which roles count as your support team.
+
+Suppio can work in:
+
+- ticket channels
+- ticket categories created by ticket bots
+- Discord forum channels
+- one-off `/ask` command replies
+
+## When to use it
+
+Use Discord when:
+
+- your users already ask for help inside Discord
+- staff members resolve issues in ticket channels or forum posts
+- you want Suppio to pause when a human support role joins the conversation
+- you want Discord commands such as `/ask`, `/summarize`, `/close`, `/resolve`, and `/dashboard`
+
+## Set it up
+
+<Steps>
+  <Step title="Create or open your agent">
+    Open the Suppio dashboard, choose your workspace, and open the agent you want to deploy.
+  </Step>
+  <Step title="Add context">
+    Open **Context** and add the docs, notes, files, website pages, or Discord sources Suppio should use when answering.
+  </Step>
+  <Step title="Open Deploy">
+    Open **Deploy** and choose **Discord**.
+  </Step>
+  <Step title="Connect Discord">
+    If your Discord account is not linked yet, click **Connect** and finish the Discord login flow.
+  </Step>
+  <Step title="Add Suppio to your server">
+    Click **Setup** or **Open Discord**. Discord opens so you can choose the server and add the Suppio bot.
+  </Step>
+  <Step title="Configure Discord settings">
+    Use the Discord settings tabs to choose ticket routing, forum routing, command permissions, actions, and bot customization.
+  </Step>
+</Steps>
+
+## How conversations work
+
+In ticket channels and configured categories, Suppio watches new support messages and answers after your configured response delay.
+
+If a user sends multiple messages while Suppio is preparing a reply, Suppio uses the latest conversation state before responding. Messages from configured support team roles do not trigger normal AI replies.
+
+For forums, Suppio answers inside the forum thread and can update the thread state through tags when the forum workflow is configured.
+
+For `/ask`, Suppio sends a private one-off answer. `/ask` does not manage ticket state, close tickets, or mark issues resolved.
+
+## How escalations work
+
+Suppio escalates when a user asks for a person or when the agent cannot confidently continue.
+
+For Discord tickets, escalation can:
+
+- send a staff notification to the configured channel
+- ping selected roles
+- include an AI issue summary on supported plans
+- pause AI handling when a support team member responds
+
+For Discord forums, escalation can apply the configured escalation tag and show the escalation button or status flow you configured.
+
+## Settings and customization
+
+<AccordionGroup>
+  <Accordion title="Discord setup">
+    Shows connection status, whether the bot is in the server, and whether Discord routing is ready.
+  </Accordion>
+  <Accordion title="Discord routing">
+    Controls ticket destinations, support team roles, response delay, first-message replies, server information, and log channel.
+  </Accordion>
+  <Accordion title="Discord forums">
+    Controls forum channels, allowed forum tags, status tags, resolved and inactive behavior, and forum embed text.
+  </Accordion>
+  <Accordion title="Discord permissions">
+    Controls which Discord roles can run each Suppio slash command and optional `/ask` cooldowns.
+  </Accordion>
+  <Accordion title="Discord actions">
+    Controls ticket rename, auto-close, transcripts, escalation alerts, inactivity reminders, and reminder pause or resume behavior.
+  </Accordion>
+  <Accordion title="Discord bot">
+    Controls the server-specific bot display options available on your plan.
+  </Accordion>
+</AccordionGroup>
+
+## Limitations
+
+- Discord deployment requires the Suppio bot to be in the server.
+- Suppio needs permission to read and send messages in the channels it manages.
+- Context is required before deployment.
+- Discord-only features do not apply to the chat widget, hosted support page, or API.
+- Some automation and customization settings depend on your plan. See [Plans and billing](/billing).
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Suppio is not responding">
+    Confirm the agent has context, the Discord deployment is connected, the target channel or forum is configured, the agent is enabled, and the test user does not have a support team role that Suppio is configured to ignore.
+  </Accordion>
+  <Accordion title="The bot is missing from the server">
+    Re-open **Deploy**, choose **Discord**, and run the invite flow again.
+  </Accordion>
+  <Accordion title="Commands are not available">
+    Confirm the bot was invited with application command scope and check the **Discord permissions** tab for role access.
+  </Accordion>
+  <Accordion title="Escalations do not notify staff">
+    Check the escalation notification destination and role pings in **Discord actions**.
+  </Accordion>
+</AccordionGroup>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Actions" icon="bell-ring" href="/actions">
+    Configure ticket automation, escalation alerts, transcripts, and inactivity reminders.
+  </Card>
+  <Card title="Forums" icon="messages-square" href="/forums">
+    Configure forum support workflows and forum status handling.
+  </Card>
+  <Card title="Commands" icon="terminal" href="/commands">
+    Review the current Discord slash commands.
+  </Card>
+  <Card title="Permissions" icon="shield-check" href="/permissions">
+    Control which roles can use each command.
+  </Card>
+</CardGroup>

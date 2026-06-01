@@ -1,13 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Helply Documentation",
+  "name": "Suppio Documentation",
   "colors": {
-    "primary": "#803fe6",
-    "light": "#8c56e2",
-    "dark": "#722ae6"
+    "primary": "#2563eb",
+    "light": "#3b82f6",
+    "dark": "#1d4ed8"
   },
-  "favicon": "/images/Helply_Circle.png",
+  "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
@@ -18,8 +18,17 @@
             "pages": [
               "info",
               "setup",
-              "commands",
-              "features"
+              "features",
+              "billing"
+            ]
+          },
+          {
+            "group": "Deployment",
+            "pages": [
+              "discord",
+              "web-chat-widget",
+              "hosted-support-page",
+              "agent-api"
             ]
           },
           {
@@ -27,52 +36,54 @@
             "pages": [
               "overview",
               "context",
-              "forums",
               "intelligence",
-              "actions",
               "behavior",
-              "permissions",
               "analytics",
-              "optimize",
-              "usage"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": []
-          },
-          {
-            "group": "Miscellaneous",
-            "pages": [
-              "billing"
+              "usage",
+              "commands",
+              "actions",
+              "forums",
+              "permissions"
             ]
           }
         ]
       },
       {
-        "tab": "Changelog",
-        "pages": [
-          "what-is-new"
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Guide",
+            "pages": [
+              "agent-api"
+            ]
+          },
+          {
+            "group": "Reference",
+            "openapi": "/api-reference/openapi.json",
+            "pages": [
+              "POST /v1/agents/{agentId}/responses"
+            ]
+          }
         ]
       }
     ]
   },
-  "logo": "/images/Artboard_1_62x_light.png",
+  "logo": "/favicon.svg",
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "https://discord.gg/RA99tbwdW3"
+        "href": "https://discord.gg/ZNRej7tDgZ"
       },
       {
         "label": "Website",
-        "href": "https://helplybot.xyz/"
+        "href": "https://suppio.ai/"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://helplybot.xyz/dashboard"
+      "href": "https://suppio.ai/dashboard"
     }
   },
   "contextual": {
@@ -87,7 +98,7 @@
      "vscode"
    ]
   },
-  "description": "Learn how to set up and use Helply in your Discord Server",
+  "description": "Learn how to set up and use Suppio across Discord, your website, hosted support pages, and the API",
   "fonts": {
     "family": "Sora",
     "heading": {

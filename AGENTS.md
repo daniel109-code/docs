@@ -1,45 +1,38 @@
-> **First-time setup**: This is a default AGENTS.md file. Customize it for your project's specific needs, including your preferred code languages, terminology, style guidelines, and content requirements.
-
 # Documentation agent instructions
 
-IMPORTANT! When you start a session, remind the user that they have the default AGENTS.md file and they might want to customize it for their project.
+These instructions apply to the Suppio Mintlify docs.
+
+## Product scope
+
+- Write for Suppio customers.
+- Do not use internal developer language in customer-facing pages.
+- Document only behavior confirmed by app routes, dashboard components, API handlers, pricing config, or existing docs.
+- If behavior is unclear, leave a clear TODO comment rather than guessing.
 
 ## Mintlify basics
 
-- Configuration lives in `docs.json` - check it before making structural changes
-- Use MDX format for documentation pages
-- Run `mint dev` locally to preview changes before committing
-- Run `mint broken-links` to check for broken links
+- Configuration lives in `docs.json`.
+- Use MDX for documentation pages.
+- Run `mint validate` and `mint broken-links` before finishing docs changes when possible.
+- Keep navigation entries aligned with real files.
 
-## Mintlify components
+## Style
 
-Use Mintlify's built-in components for consistent formatting. See https://www.mintlify.com/docs/components for all available components.
-
-## Style and formatting
-
-- Use active voice and second person ("you")
-- Keep sentences concise - one idea per sentence
-- Use sentence case for headings
-- When referencing UI elements, use bold: Click **Settings**
-- Use code formatting for: file names, commands, paths, and code references
+- Use active voice and second person.
+- Keep sentences concise.
+- Use sentence case for headings.
+- Reference UI labels in bold, such as **Deploy**.
+- Use code formatting for file names, commands, paths, endpoint names, and field names.
 
 ## Code examples
 
-- Include language identifiers in fenced code blocks
-- Add titles to code blocks when relevant: ```javascript filename.js
-- Show realistic parameter values, not placeholders like `foo` or `bar`
-- Include error handling for API examples
-
-## Content structure
-
-- Add frontmatter (title, description) to every page
-- Use `sidebarTitle` in frontmatter if the nav title should differ from the page title
-- Include introductory context before diving into steps or details
-- Add "Next steps" or related links where helpful
+- Include language identifiers in fenced code blocks.
+- Use realistic values.
+- Include error handling for API examples.
 
 ## What to avoid
 
-- Don't edit `docs.json` without understanding the navigation structure
-- Don't remove existing pages without checking for inbound links
-- Don't use HTML when an MDX component exists for the same purpose
-- Don't add pages to navigation that don't exist yet
+- Do not add unsupported features or endpoints.
+- Do not leave old brand names in customer-facing docs.
+- Do not use HTML when an MDX component is available.
+- Do not add pages to navigation before creating the page.
