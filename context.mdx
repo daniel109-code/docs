@@ -18,7 +18,7 @@ Suppio requires context before an agent can be deployed or used through the API.
     Paste short notes, policies, FAQs, troubleshooting steps, or instructions directly into Suppio.
   </Accordion>
   <Accordion title="File upload">
-    Upload local support content, guides, notes, or documentation files.
+    Upload a local `.txt` file. Other file formats are not accepted by the context uploader.
   </Accordion>
   <Accordion title="Website upload">
     Import website pages from public URLs. This works well for help centers, docs, landing pages, and product pages.
@@ -30,10 +30,13 @@ Suppio requires context before an agent can be deployed or used through the API.
     Import a GitBook space by pasting a GitBook URL.
   </Accordion>
   <Accordion title="Discord forum posts">
-    After Discord is connected, index selected forum posts and tags so Suppio can learn from useful past answers.
+    After Discord is connected, import the starter content from up to 30 selected forum posts so Suppio can learn from useful past answers.
   </Accordion>
   <Accordion title="Follow channels">
-    After Discord is connected, follow selected channels so Suppio can stay aware of updates and announcements.
+    After Discord is connected, follow up to 10 selected channels so Suppio can retain their latest messages. New messages and edits to retained messages update the source automatically.
+  </Accordion>
+  <Accordion title="Live status page">
+    Connect Atlassian Statuspage, Better Stack, Instatus, incident.io, or Status.io. Suppio checks the live provider when a user asks about outages, incidents, maintenance, or service health.
   </Accordion>
   <Accordion title="Shared agent context">
     When creating another agent in the same workspace, you can sync context from an existing agent instead of uploading everything again.
@@ -47,7 +50,7 @@ Suppio requires context before an agent can be deployed or used through the API.
     Go to the workspace, choose the agent, and open **Context**.
   </Step>
   <Step title="Choose a source">
-    Add text, upload files, import website pages, or choose an available documentation or Discord source.
+    Add text, upload a TXT file, import website pages, or choose an available documentation, Discord, or live status source.
   </Step>
   <Step title="Wait for processing">
     Suppio shows context source status while it processes and indexes content.
@@ -57,17 +60,32 @@ Suppio requires context before an agent can be deployed or used through the API.
   </Step>
 </Steps>
 
-## Custom learning feed
+## Manage existing context
 
-The custom learning feed stores small notes and summaries that should influence future replies.
+Open a context card's menu to view, rename, or remove it. Plain-text and imported text content can be edited in the dashboard. Followed-channel sources use **Manage** to change which channels are tracked.
+
+If agents share synced context, uploads, edits, renames, and removals apply to every agent in that sync group.
+
+## Adaptive memory
+
+Adaptive memory stores small notes and summaries that should influence future replies.
 
 It can be updated from Discord with:
 
 - `/learn` to save a manual note
-- `/train` to summarize recent human messages into the learning file on supported plans
-- message actions such as remember or analyze when configured
+- `/train` to propose reusable staff-confirmed guidance from the current ticket or forum post on supported plans
+- a reply that mentions Suppio with `remember`
+- approved knowledge suggestions created after supported ticket or forum handoffs
 
-Use the custom learning feed for high-value corrections, repeated support guidance, and short policy notes. Do not use it as a replacement for full documentation.
+Use adaptive memory for high-value corrections, repeated support guidance, and short policy notes. Do not use it as a replacement for full documentation.
+
+Adaptive memory has an 800 KB limit and does not count as the active context required to unlock deployment methods.
+
+## Knowledge quality
+
+On Plus, Pro, and Enterprise, **Context** surfaces missing knowledge, conflicting sources, and learning suggestions. You can inspect the supporting conversation or source, enter a correction, apply proposed context edits, or ignore the issue.
+
+See [Knowledge gaps and conflicts](/knowledge-gaps).
 
 ## Source quality tips
 
@@ -98,7 +116,7 @@ File size limits also vary by plan:
 | Pro | 5 MB |
 | Enterprise | 10 MB |
 
-Website context can include up to 100 selected pages from the full dashboard context manager. Onboarding website import uses a smaller first-run crawl.
+Website context can include up to 100 selected pages from the full dashboard context manager. The onboarding importer accepts up to five starting links. Website, Mintlify, and GitBook sources can be configured to refresh automatically.
 
 ## Troubleshooting
 
@@ -114,5 +132,11 @@ Website context can include up to 100 selected pages from the full dashboard con
   </Accordion>
   <Accordion title="Website upload fails">
     Confirm the URL is public, reachable, and not blocked by the website upload filters.
+  </Accordion>
+  <Accordion title="A file format is rejected">
+    Convert the content to UTF-8 plain text and upload a `.txt` file, or paste it with **Plain text**.
+  </Accordion>
+  <Accordion title="A followed message edit is missing">
+    Edits update only messages still inside the followed channel's retained recent-message window. Editing an older message does not re-add it ahead of newer updates.
   </Accordion>
 </AccordionGroup>

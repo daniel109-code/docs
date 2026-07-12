@@ -5,7 +5,7 @@ description: "Learn what Suppio is, how agents work, and where you can deploy th
 
 Suppio is an AI support platform for customer-facing support.
 
-You create a workspace, add one or more agents, give each agent context, and deploy those agents where your users need help: Discord, a web chat widget, a hosted support page, or your own backend through the API.
+You create a workspace, add one or more agents, give each agent context, and deploy those agents where your users need help: Discord, a web chat widget, a support page, or your own backend through the API.
 
 ## What Suppio is built for
 
@@ -36,10 +36,10 @@ Suppio works best when your team needs fast, consistent answers across several s
     An agent is the AI support assistant users talk to. Each agent has its own name, context, sandbox testing controls, behavior settings, and deployment methods.
   </Accordion>
   <Accordion title="Context">
-    Context is the knowledge Suppio uses to answer. It can include text, files, website pages, documentation sources, Discord forum posts, and followed channels.
+    Context is the knowledge Suppio uses to answer. It can include text, TXT files, website pages, documentation sources, Discord forum-post snapshots, followed channels, and live status pages.
   </Accordion>
   <Accordion title="Deployment">
-    A deployment is where the agent is available to users. Suppio currently supports Discord, web chat widget, hosted support page, and API deployments.
+    A deployment is where the agent is available to users. Suppio currently supports Discord, web chat widget, support page, and API deployments. After you set up a web or API deployment, it stays in the agent sidebar for direct access.
   </Accordion>
 </AccordionGroup>
 
@@ -52,6 +52,7 @@ Suppio is grounded in the context and settings you configure.
 - Use workspace information to describe your product or community.
 - Configure behavior settings so answers match your tone.
 - Review usage logs and conversations to spot missing context.
+- Review knowledge gaps and conflicting sources in **Context** on paid plans.
 
 <Warning>
   Suppio requires context before it can answer in deployment methods. If an agent has no active context, deployments and API keys are blocked or requests are rejected.

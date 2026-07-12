@@ -17,19 +17,19 @@ The exact deployment steps depend on where you want users to talk to Suppio, but
     Give the agent a clear name, such as `Support Agent`. If you are adding an agent to an existing workspace, open **Agents** and click **New agent**.
   </Step>
   <Step title="Add your website URL">
-    Add your website URL when prompted. Suppio uses this to help understand the workspace and to make website context import easier.
+    Add your website URL when prompted. Suppio uses it to help understand the workspace and prefill website context import.
   </Step>
   <Step title="Choose a plan">
     Choose the plan for the workspace. Billing is scoped to the workspace, not to individual users.
   </Step>
   <Step title="Add context">
-    Add the information Suppio should use when answering. You can upload text or files, import website pages, connect documentation sources, or add Discord sources after Discord is connected.
+    Add the information Suppio should use when answering. You can paste text, upload TXT files, import website pages, connect documentation or status-page sources, or add Discord sources after Discord is connected.
   </Step>
   <Step title="Test in the sandbox">
     Use the agent sandbox to ask a few real support questions before launching.
   </Step>
   <Step title="Deploy">
-    Open **Deploy** and choose Discord, chat widget, hosted support page, or API.
+    Open **Deploy** and choose Discord, **Chat widget**, **Support page**, or **API**. Enabled web and API deployments then appear in the agent sidebar.
   </Step>
 </Steps>
 
@@ -46,7 +46,7 @@ The exact deployment steps depend on where you want users to talk to Suppio, but
   <Card title="Web chat widget" icon="message-circle" href="/web-chat-widget">
     Best for adding a floating chat bubble or iframe to your website.
   </Card>
-  <Card title="Hosted support page" icon="globe" href="/hosted-support-page">
+  <Card title="Support page" icon="globe" href="/hosted-support-page">
     Best for a standalone support page or a custom support subdomain.
   </Card>
   <Card title="Agent API" icon="code" href="/agent-api">
@@ -66,8 +66,8 @@ The exact deployment steps depend on where you want users to talk to Suppio, but
   <Accordion title="Behavior">
     Set tone, personality, emoji usage, and custom instructions on supported plans.
   </Accordion>
-  <Accordion title="Intelligence">
-    Choose Smart or Advanced model access and reasoning settings based on your plan and quality needs.
+  <Accordion title="Sandbox intelligence">
+    Compare Smart or Advanced model access and reasoning settings while testing. These controls apply to each sandbox message and are not a saved agent tab.
   </Accordion>
   <Accordion title="Usage and billing">
     Review monthly credits, plan limits, and billing status before rollout.
@@ -80,6 +80,7 @@ The exact deployment steps depend on where you want users to talk to Suppio, but
 - The agent has at least one active context source.
 - Test questions in the sandbox produce accurate answers.
 - The selected deployment method is enabled.
+- Enabled chat, support-page, and API methods appear in the agent sidebar.
 - Escalation text and staff handoff behavior are configured.
 - Your team knows where to review conversations and usage.
 

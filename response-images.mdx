@@ -1,0 +1,63 @@
+---
+title: "Discord response images"
+description: "Add approved images that Suppio can attach to Discord support replies."
+---
+
+Response images let a Discord agent attach an approved screenshot, diagram, or other visual when its description matches the support question.
+
+<Note>
+  Response images are available on Plus, Pro, and Enterprise plans and apply to Discord replies.
+</Note>
+
+## Add an image
+
+<Steps>
+  <Step title="Open Images">
+    Open a Discord-connected agent and select **Images** in the agent navigation.
+  </Step>
+  <Step title="Add a source">
+    Upload a PNG, JPEG, or WebP file, or paste a direct HTTPS image URL.
+  </Step>
+  <Step title="Name the image">
+    Add a unique title that your team can recognize.
+  </Step>
+  <Step title="Describe when to use it">
+    Write a precise description, such as `Attach when explaining where to find the API key in Deploy > API.`
+  </Step>
+  <Step title="Save changes">
+    Keep the image enabled and save. You can also disable all response images without deleting them.
+  </Step>
+</Steps>
+
+## Limits
+
+- Up to 25 response images per Discord-connected agent.
+- Uploaded files must be PNG, JPEG, or WebP and no larger than 2 MB.
+- Titles can contain up to 80 characters.
+- Descriptions can contain up to 500 characters.
+- Direct URLs must be valid HTTPS image URLs.
+- Titles and URLs must be unique.
+
+## Write useful descriptions
+
+Suppio selects an image from its title and description. Describe the exact situation and what the image shows. Avoid vague descriptions such as `useful screenshot`.
+
+```text
+Title: Create an API key
+Description: Attach when a user asks where to create an Agent API key. Shows
+the Generate API Key button on the agent's API deployment page.
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="An image is never attached">
+    Confirm response images are enabled, the individual image is enabled, and its description clearly matches the question.
+  </Accordion>
+  <Accordion title="A URL is invalid">
+    Use a direct public HTTPS image URL that loads the image itself, not a webpage containing the image.
+  </Accordion>
+  <Accordion title="An upload is rejected">
+    Convert it to PNG, JPEG, or WebP and keep the file at or below 2 MB. GIF and SVG uploads are not supported here.
+  </Accordion>
+</AccordionGroup>

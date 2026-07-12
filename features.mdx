@@ -12,10 +12,10 @@ Suppio 2.0 is built around agents that can be deployed across multiple support s
     Create agents that answer from your uploaded context and workspace information.
   </Card>
   <Card icon="boxes" title="Multiple deployments">
-    Deploy agents to Discord, a web chat widget, a hosted support page, or your backend through the API.
+    Deploy agents to Discord, a web chat widget, a support page, or your backend through the API.
   </Card>
   <Card icon="database" title="Context management">
-    Add text, files, website pages, documentation sources, Discord forum posts, and followed channels.
+    Add text, TXT files, website pages, documentation sources, Discord sources, and live status pages.
   </Card>
   <Card icon="user-check" title="Escalation handling">
     Escalate to a human when users ask for staff or the agent cannot confidently continue.
@@ -26,6 +26,12 @@ Suppio 2.0 is built around agents that can be deployed across multiple support s
   <Card icon="chart-column" title="Usage and analytics">
     Track conversations, credits, response activity, and support outcomes.
   </Card>
+  <Card icon="triangle-alert" title="Knowledge quality">
+    Detect missing or conflicting context, review examples, and apply corrections on paid plans.
+  </Card>
+  <Card icon="image" title="Response images">
+    Let paid-plan Discord agents attach approved images when a visual answer helps.
+  </Card>
 </Columns>
 
 ## Deployment features
@@ -34,7 +40,7 @@ Suppio 2.0 is built around agents that can be deployed across multiple support s
 | --- | --- | --- |
 | Discord | A bot that responds in configured tickets, categories, forums, and commands. | Discord communities and support teams already working in Discord. |
 | Web chat widget | A floating chat bubble or iframe you add to your website. | Product sites, docs sites, portals, and marketing sites. |
-| Hosted support page | A standalone support page hosted by Suppio, with optional custom DNS on Pro and Enterprise. | Shareable help pages and custom support subdomains. |
+| Support page | A standalone support page hosted by Suppio, with optional custom DNS on Pro and Enterprise. | Shareable help pages and custom support subdomains. |
 | API | A backend endpoint that returns an answer plus action signals. | Custom apps, help desk integrations, and custom routing logic. |
 
 ## Conversation features
@@ -48,19 +54,23 @@ Suppio can:
 - return API action signals for escalation, resolution, and suggested titles
 - summarize Discord tickets or forum posts with `/summarize`
 - close Discord tickets and mark Discord forum posts resolved when configured
+- show temporary message reactions while preparing Discord replies
 
 ## Context features
 
 Suppio supports several context sources:
 
 - plain text
-- uploaded files
+- uploaded TXT files
 - website pages
 - Mintlify documentation
 - GitBook spaces
-- Discord forum posts
+- Discord forum-post snapshots
 - followed Discord channels
-- custom learning notes from `/learn` and `/train`
+- Atlassian Statuspage, Better Stack, Instatus, incident.io, and Status.io
+- adaptive memory notes from `/learn` and `/train`
+
+Suppio updates retained followed-channel messages when the original Discord message is edited. Forum-post imports are refreshed from their source when you re-import them.
 
 See [Context](/context) for details and limits.
 
@@ -72,6 +82,6 @@ Some features depend on the workspace plan.
 - Support page is available on paid plans according to the current pricing table.
 - Custom DNS for support pages requires Pro or Enterprise.
 - Suppio attribution removal is an Enterprise add-on.
-- Analytics, personality controls, custom instructions, and advanced Discord automation require paid plans.
+- Analytics, response images, knowledge gap detection, personality controls, custom instructions, and advanced Discord automation require paid plans.
 
 See [Plans and billing](/billing) for the current comparison.

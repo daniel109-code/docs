@@ -38,16 +38,16 @@ Use Discord when:
     Open the Suppio dashboard, choose your workspace, and open the agent you want to deploy.
   </Step>
   <Step title="Add context">
-    Open **Context** and add the docs, notes, files, website pages, or Discord sources Suppio should use when answering.
+    Open **Context** and add the docs, notes, TXT files, website pages, or Discord sources Suppio should use when answering.
   </Step>
   <Step title="Open Deploy">
-    Open **Deploy** and choose **Discord**.
+    Open **Deploy** and choose **Discord**. If your account is already linked, choose the server you manage.
   </Step>
   <Step title="Connect Discord">
     If your Discord account is not linked yet, click **Connect** and finish the Discord login flow.
   </Step>
   <Step title="Add Suppio to your server">
-    Click **Setup** or **Open Discord**. Discord opens so you can choose the server and add the Suppio bot.
+    Finish the Discord invite. After the bot joins, mention Suppio or run `/setup` for a guided checklist.
   </Step>
   <Step title="Configure Discord settings">
     Use the Discord settings tabs to choose ticket routing, forum routing, command permissions, actions, and bot customization.
@@ -58,7 +58,9 @@ Use Discord when:
 
 In ticket channels and configured categories, Suppio watches new support messages and answers after your configured response delay.
 
-If a user sends multiple messages while Suppio is preparing a reply, Suppio uses the latest conversation state before responding. Messages from configured support team roles do not trigger normal AI replies.
+The default response delay is 5 seconds. If a user is still typing, Suppio waits for typing to stop before it continues. When **Reactions while typing** is enabled, temporary reactions show that the message is queued, being searched, or being processed.
+
+If a user sends multiple messages while Suppio is preparing a reply, Suppio interrupts the pending run and uses the newest conversation state. Opening messages before Suppio's first reply remain pinned as the core issue, while later history keeps the most recent conversation window. Messages from configured support team roles do not trigger normal AI replies.
 
 For forums, Suppio answers inside the forum thread and can update the thread state through tags when the forum workflow is configured.
 
@@ -81,7 +83,7 @@ For Discord forums, escalation can apply the configured escalation tag and show 
 
 <AccordionGroup>
   <Accordion title="Discord routing">
-    Shows connection status and controls ticket destinations, support team roles, response delay, first-message replies, server information, and log channel.
+    Controls ticket destinations, support team roles, response delay, first-message replies, the log channel, and automatic handoff when a support role speaks.
   </Accordion>
   <Accordion title="Discord forums">
     Controls forum channels, allowed forum tags, status tags, resolved and inactive behavior, and forum embed text.
@@ -95,6 +97,9 @@ For Discord forums, escalation can apply the configured escalation tag and show 
   <Accordion title="Discord bot">
     Controls the server-specific bot display options available on your plan.
   </Accordion>
+  <Accordion title="Images">
+    On paid plans, stores approved response images that Suppio can attach when their descriptions match the user's question.
+  </Accordion>
 </AccordionGroup>
 
 ## Limitations
@@ -102,7 +107,7 @@ For Discord forums, escalation can apply the configured escalation tag and show 
 - Discord deployment requires the Suppio bot to be in the server.
 - Suppio needs permission to read and send messages in the channels it manages.
 - Context is required before deployment.
-- Discord-only features do not apply to the chat widget, hosted support page, or API.
+- Discord-only features do not apply to the chat widget, support page, or API.
 - Some automation and customization settings depend on your plan. See [Plans and billing](/billing).
 
 ## Troubleshooting
@@ -115,7 +120,7 @@ For Discord forums, escalation can apply the configured escalation tag and show 
     Re-open **Deploy**, choose **Discord**, and run the invite flow again.
   </Accordion>
   <Accordion title="Commands are not available">
-    Confirm the bot was invited with application command scope and check the **Discord permissions** tab for role access.
+    Confirm the bot was invited with application command scope, try `/setup`, and check **Discord > Permissions** for role access.
   </Accordion>
   <Accordion title="Escalations do not notify staff">
     Check the escalation notification destination and role pings in **Discord actions**.

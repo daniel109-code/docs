@@ -26,21 +26,20 @@ Use these settings when you want answers to match your brand, support style, or 
   <Card icon="message-circle" title="Deployment consistency">
     Keep replies consistent across Discord, web chat, support page, and API surfaces.
   </Card>
+  <Card icon="message-circle-more" title="Typing reactions">
+    Show temporary Discord message reactions while Suppio queues, searches, and prepares a reply.
+  </Card>
 </Columns>
 
-## Instruction areas
+## Custom instructions
 
-<AccordionGroup>
-  <Accordion title="Main agent instructions">
-    These affect normal support replies. Use them for tone, formatting, language, boundaries, and how much detail Suppio should include.
-  </Accordion>
-  <Accordion title="Human escalation instructions">
-    These guide when Suppio should hand off to humans. Use them for support policies, exceptions, high-risk topics, or issues that should always be escalated.
-  </Accordion>
-  <Accordion title="Action instructions">
-    These guide action suggestions such as ticket rename, close, resolve, and API action signals.
-  </Accordion>
-</AccordionGroup>
+The **Instructions** section contains one shared custom-instructions field. It guides normal replies, escalation decisions, and action suggestions wherever the agent uses custom guidance.
+
+The field accepts up to 1,000 characters. Keep it focused; context remains the source of factual product knowledge.
+
+## Personality and style
+
+Paid plans can configure emoji usage, typing reactions, and one choice from each personality pair shown in the dashboard. The available pairs cover tone, detail, confidence, answer structure, conversation style, and initiative.
 
 ## Good instructions
 
@@ -48,8 +47,8 @@ Good behavior instructions are specific and user-facing.
 
 ```text
 Answer in a calm, concise tone. Use numbered steps for setup instructions.
-If a billing issue mentions a failed charge, escalate to a human after giving
-the user the basic billing page steps.
+If a billing issue mentions a failed charge, escalate after giving the user
+the basic billing page steps.
 ```
 
 Avoid instructions that depend on hidden system details or ask Suppio to ignore safety rules.
@@ -67,9 +66,9 @@ If Suppio gives incorrect factual answers, update the agent's context first.
     Lower verbosity or add a main instruction such as `Keep answers under five sentences unless the user asks for detail.`
   </Accordion>
   <Accordion title="Suppio escalates too often">
-    Review human escalation instructions and make sure context includes the answers users are asking for.
+    Review the escalation guidance in **Custom instructions** and make sure context includes the answers users are asking for.
   </Accordion>
   <Accordion title="Suppio does not escalate enough">
-    Add clear escalation rules for the topics your team wants reviewed by a human.
+    Add clear escalation rules to **Custom instructions** for the topics your team wants reviewed by a human.
   </Accordion>
 </AccordionGroup>

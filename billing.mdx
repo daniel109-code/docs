@@ -15,7 +15,7 @@ Suppio billing is scoped to a workspace. When you upgrade, the plan and credits 
     Best for growing workspaces that need more credits, more agents, analytics, custom instructions, knowledge gap detection, the support page, and advanced Discord automation.
   </Accordion>
   <Accordion title="Pro">
-    Best for workspaces that need higher limits, Advanced model access, and custom DNS for the hosted support page.
+    Best for workspaces that need higher limits, Advanced model access, and custom DNS for the support page.
   </Accordion>
   <Accordion title="Enterprise">
     Best for higher-volume teams that need configurable credits, more agents, and optional Suppio attribution removal.
@@ -28,10 +28,10 @@ Suppio billing is scoped to a workspace. When you upgrade, the plan and credits 
 | --- | --- | --- | --- | --- |
 | Monthly price | $0 | $5.99/mo | $12.99/mo | Configurable |
 | Yearly price | $0 | $4.99/mo billed yearly | $10.99/mo billed yearly | Configurable |
-| Credits per month | 4,000 | 30,000 | 80,000 | Configurable, default 200,000 |
+| Credits per month | 4,000 | 30,000 | 80,000 | Configurable from 100,000 |
 | Agents | 2 | 3 | 6 | 10 |
 | Context uploads | 6 | 10 | 20 | 40 |
-| Model access | Smart | Smart | Advanced | Advanced |
+| Model access | Smart | Smart | Smart and Advanced | Smart and Advanced |
 | Model reasoning | Medium | High | High | High |
 | Discord support | Yes | Yes | Yes | Yes |
 | Chat widget support | Yes | Yes | Yes | Yes |
@@ -39,6 +39,7 @@ Suppio billing is scoped to a workspace. When you upgrade, the plan and credits 
 | Auto resolve and escalate | Yes | Yes | Yes | Yes |
 | Analytics dashboard | No | Yes | Yes | Yes |
 | Personality and custom instructions | No | Yes | Yes | Yes |
+| Response images | No | Yes | Yes | Yes |
 | Knowledge gap detection | No | Yes | Yes | Yes |
 | Support page | No | Yes | Yes | Yes |
 | Advanced Discord automation | No | Yes | Yes | Yes |
@@ -56,7 +57,9 @@ Suppio billing is scoped to a workspace. When you upgrade, the plan and credits 
 
 ## Credits
 
-Suppio credits measure AI usage. The exact credits consumed by a response depend on the model, reasoning setting, input size, output size, context search, and enabled workflow features.
+Suppio credits measure AI usage. The exact credits consumed by a request depend on the model, reasoning setting, input and output tokens, image inputs, context searches, and supporting workflow agents.
+
+Every counted model and file-search event contributes to usage, not only the final message shown to a user. Open **Usage > All usage** to inspect those events.
 
 Credits reset monthly. The Usage page shows:
 
@@ -64,11 +67,13 @@ Credits reset monthly. The Usage page shows:
 - credits remaining
 - plan cap
 - reset timing
-- conversation and response logs
+- conversation and all-usage logs
 
 ## Enterprise pricing
 
 Enterprise pricing is based on configurable monthly credits. Current supported credit packages range from 100,000 to 2,000,000 credits in 100,000-credit steps.
+
+The monthly credit rate decreases at higher volume tiers. Annual Enterprise billing charges the equivalent of 11 monthly payments.
 
 The Enterprise pricing flow also supports optional Suppio attribution removal. When selected, it applies a 1.5x multiplier and removes the small **Powered by Suppio** attribution from the chat widget, support page, and Discord message footer.
 

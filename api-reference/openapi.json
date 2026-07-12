@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Suppio Agent API",
-    "description": "Call a Suppio agent from trusted backend code and receive a support response with optional structured action signals.",
-    "version": "1.0.0"
+    "description": "Call a Suppio agent from trusted backend code with text and optional base64 image attachments, then receive a support response with optional structured action signals.",
+    "version": "1.1.0"
   },
   "servers": [
     {
@@ -20,7 +20,7 @@
     "/v1/agents/{agentId}/responses": {
       "post": {
         "summary": "Create an agent response",
-        "description": "Send one support message to a Suppio agent. The response includes the agent answer, usage, and action signals your backend can handle.",
+        "description": "Send one support message with optional base64 image attachments to a Suppio agent. The response includes the agent answer, usage, and action signals your backend can handle.",
         "operationId": "createAgentResponse",
         "parameters": [
           {
@@ -46,6 +46,20 @@
                   "summary": "Password reset question",
                   "value": {
                     "message": "How do I reset my password?"
+                  }
+                },
+                "imageQuestion": {
+                  "summary": "Question with an image attachment",
+                  "value": {
+                    "message": "What does this error screenshot mean?",
+                    "attachments": [
+                      {
+                        "type": "image",
+                        "name": "error.png",
+                        "media_type": "image/png",
+                        "data": "iVBORw0KGgoAAAANSUhEUgAA..."
+                      }
+                    ]
                   }
                 }
               }
@@ -124,7 +138,7 @@
             "$ref": "#/components/responses/OutOfCredits"
           },
           "403": {
-            "$ref": "#/components/responses/WrongAgent"
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
             "$ref": "#/components/responses/AgentNotFound"
@@ -167,6 +181,49 @@
             "minLength": 1,
             "maxLength": 12000,
             "example": "How do I reset my password?"
+          },
+          "attachments": {
+            "type": "array",
+            "description": "Optional base64-encoded image inputs. Images count toward input tokens and Suppio credit usage.",
+            "maxItems": 5,
+            "items": {
+              "$ref": "#/components/schemas/ImageAttachment"
+            }
+          }
+        }
+      },
+      "ImageAttachment": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "media_type",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "image"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "Optional display name for the image."
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "image/png",
+              "image/jpeg",
+              "image/webp",
+              "image/gif"
+            ]
+          },
+          "data": {
+            "type": "string",
+            "contentEncoding": "base64",
+            "maxLength": 6990508,
+            "description": "Raw base64 image data without a data URL prefix. Each decoded image is limited to 5 MB, and all decoded images are limited to 10 MB per request."
           }
         }
       },
@@ -343,8 +400,8 @@
           }
         }
       },
-      "WrongAgent": {
-        "description": "The key is valid but scoped to another agent.",
+      "Forbidden": {
+        "description": "The key is scoped to another agent, or the requested agent is disabled.",
         "content": {
           "application/json": {
             "schema": {
@@ -374,7 +431,7 @@
         }
       },
       "PayloadTooLarge": {
-        "description": "The JSON body exceeded 64 KB.",
+        "description": "The JSON body exceeded 16 MB.",
         "content": {
           "application/json": {
             "schema": {

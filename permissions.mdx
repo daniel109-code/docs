@@ -1,9 +1,9 @@
 ---
 title: "Discord permissions"
-description: "Control which Discord roles can use Suppio slash commands and configure /ask cooldowns."
+description: "Control which Discord roles can use Suppio commands and message-based staff tools, and configure /ask cooldowns."
 ---
 
-Discord permissions control access to Suppio slash commands in a connected Discord server.
+Discord permissions control access to Suppio slash commands and staff message tools in a connected Discord server.
 
 Use this page when you want to limit staff commands, open selected commands to trusted roles, or rate limit `/ask`.
 
@@ -14,6 +14,7 @@ Each command can be assigned one or more Discord roles.
 - If a command has roles selected, only those roles can use it.
 - If a command has no roles selected, access is limited to members with **Manage Server**.
 - `/help` and `/support` are available to everyone by default.
+- `remember` and `analyze` appear in the permission list even though staff invoke them by replying to a message and mentioning Suppio.
 
 See [Discord commands](/commands) for the current command list.
 

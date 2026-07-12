@@ -50,6 +50,9 @@ Use the chat widget when:
   <Step title="Install it on your site">
     Paste the script before the closing `</body>` tag, or paste the iframe wherever the inline chat should appear.
   </Step>
+  <Step title="Return from the sidebar">
+    After the widget is enabled, **Chat widget** remains in the agent sidebar so you can edit it without reopening **Deploy**.
+  </Step>
 </Steps>
 
 ## Embed examples
@@ -70,7 +73,7 @@ Use the exact URLs shown in your dashboard. The examples below show the format.
 
 ## How conversations work
 
-The widget stores a visitor's current chat in the browser. The visitor can send text and, if enabled, attachments.
+The widget stores a visitor's current chat in the browser. The visitor can send text and, if enabled, images or readable text files.
 
 Suppio sends conversation history with each message so answers stay grounded in the current chat. The widget keeps recent chat history in the visitor's browser and sends the recent conversation to the agent.
 
@@ -105,7 +108,7 @@ When the agent escalates from the widget, it returns your configured **Escalated
 
 - Up to 5 attachments per message.
 - Attachment uploads are limited to 10 MB total per message.
-- Readable text attachments are capped before they are sent to the agent.
+- Readable text attachments are capped at 120,000 characters before they are sent to the agent.
 - Images can be sent as image attachments when attachment support is enabled.
 - Domain restrictions rely on browser origin or referrer headers. If they are missing and restrictions are enabled, the widget session is rejected.
 

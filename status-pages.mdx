@@ -1,0 +1,63 @@
+---
+title: "Live status pages"
+description: "Connect a public status provider so Suppio can answer with current incident and maintenance information."
+---
+
+A live status page gives Suppio current service-health information without turning a periodically scraped page into static context.
+
+## Supported providers
+
+| Provider | What to enter |
+| --- | --- |
+| Atlassian Statuspage | The public status-page URL |
+| Better Stack | The public status-page URL |
+| Instatus | The public status-page URL |
+| incident.io | The public Widget API URL and the user-facing status-page URL |
+| Status.io | The Public Status API URL and the user-facing status-page URL |
+
+## Connect a status page
+
+<Steps>
+  <Step title="Open Context">
+    Open the agent and select **Context**, then click **Upload context**.
+  </Step>
+  <Step title="Choose the provider">
+    Select the card for your status-page provider.
+  </Step>
+  <Step title="Enter the public endpoint">
+    Enter the HTTPS URL requested by the form. incident.io and Status.io also require the public page users should visit.
+  </Step>
+  <Step title="Test the connection">
+    Suppio shows the overall status, affected components, active incidents, and maintenance returned by the provider.
+  </Step>
+  <Step title="Connect">
+    Save the tested source. It appears as a live status-page card in **Context**.
+  </Step>
+</Steps>
+
+## How answers use live status
+
+When a user asks about uptime, an outage, an incident, maintenance, or an affected component, Suppio can check the connected provider during the support workflow. The result includes the public status-page link so users can verify current details.
+
+Live status is separate from uploaded context files. It does not use one of the plan's context upload slots and does not replace the active context required for deployment.
+
+## Limits
+
+- A workspace has one connected live status-page source at a time.
+- The endpoint and public page must use public HTTPS URLs.
+- Provider data is cached briefly to avoid unnecessary requests.
+- If a check fails, Suppio can report that live status is unavailable instead of inventing a status.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The test does not recognize the provider">
+    Confirm you copied the provider endpoint requested by the form. For incident.io, enable the Widget API. For Status.io, use the Public Status API URL.
+  </Accordion>
+  <Accordion title="The public link is wrong">
+    Reconnect incident.io or Status.io with the customer-facing status page in the separate public URL field.
+  </Accordion>
+  <Accordion title="Suppio cannot retrieve live status">
+    Open **Context**, remove the status source, and reconnect it after confirming the endpoint is public and still returns provider data.
+  </Accordion>
+</AccordionGroup>

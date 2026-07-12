@@ -1,6 +1,6 @@
 ---
 title: "Usage"
-description: "Track Suppio credits, response logs, conversations, and reset timing."
+description: "Track Suppio credits, conversations, all usage events, and reset timing."
 ---
 
 The Usage page shows how your workspace is consuming Suppio credits during the current billing period.
@@ -12,9 +12,9 @@ Usage can include AI activity from:
 - Discord tickets
 - Discord forum posts
 - web chat widget conversations
-- hosted support page conversations
+- support page conversations
 - API responses
-- related workflow agents such as escalation, action, image, or summary flows
+- related workflow agents such as safety checks, escalation, actions, images, summaries, `/ask`, `/train`, and analysis flows
 
 ## Monthly credits
 
@@ -41,15 +41,15 @@ Conversation entries can include:
 - credits used
 - attachments metadata when present
 
-## Response log
+## All usage log
 
-The response log records AI responses and workflow usage. Use it to understand which parts of Suppio are consuming credits.
+The **All usage** tab records every credit-generating event for the period, including supporting workflows that do not appear as a standalone conversation. Tokens from all counted model calls and file-search activity are converted to credits and included in the workspace total.
 
 ## What to do when credits run low
 
 - Review recent usage spikes.
 - Check whether repeated questions should become FAQ entries.
-- Tighten retrieval settings if answers pull too much context.
+- Compare Smart and Advanced model usage in the log.
 - Upgrade the workspace if support volume has grown.
 
 ## Troubleshooting
@@ -59,7 +59,7 @@ The response log records AI responses and workflow usage. Use it to understand w
     Check whether the workspace is out of credits. If it is, upgrade or wait for the monthly reset.
   </Accordion>
   <Accordion title="Usage is higher than expected">
-    Review conversation and response logs, then check model choice, reasoning level, FAQ coverage, and context retrieval settings.
+    Review **Conversations** and **All usage**, then check model choice, reasoning level, repeated commands, image inputs, and context-search activity.
   </Accordion>
   <Accordion title="A conversation is closed">
     Widget and support page conversations close after resolution or escalation. Start a new chat to continue.

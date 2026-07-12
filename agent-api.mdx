@@ -3,7 +3,7 @@ title: "Agent API"
 description: "Call a Suppio agent from your backend and receive an answer plus structured action signals."
 ---
 
-The Suppio Agent API lets your backend send a support message to one Suppio agent and receive a generated response.
+The Suppio Agent API lets your backend send a support message with optional image attachments to one Suppio agent and receive a generated response.
 
 Use the API when you want to build Suppio into your own support workflow, route messages through your own app, or decide what to do when Suppio suggests escalation, resolution, or a title.
 
@@ -19,7 +19,7 @@ The Agent API is a server-to-server endpoint:
 POST /v1/agents/{agentId}/responses
 ```
 
-You send a `message`. Suppio answers using the selected agent's context and returns:
+You send a `message` and can include base64-encoded images. Suppio answers using the selected agent's context and returns:
 
 - `outcome`: whether the request succeeded or was blocked
 - `response`: the text answer
@@ -33,7 +33,7 @@ Use the API when:
 - you already have a custom chat UI
 - you want to create tickets in your own system after Suppio escalates
 - you want to label or route conversations using `suggest_title`
-- you need a backend integration instead of the Discord bot, chat widget, or hosted support page
+- you need a backend integration instead of the Discord bot, chat widget, or support page
 
 ## Set it up
 
@@ -54,7 +54,10 @@ Use the API when:
     Copy the agent ID from the agent page URL. In `/dashboard/workspace/{workspaceId}/agent/{agentId}`, the `{agentId}` value is the ID you use in API requests.
   </Step>
   <Step title="Call the endpoint from your backend">
-    Send the key as a bearer token to the documented endpoint and include a JSON body with `message`.
+    Send the key as a bearer token to the documented endpoint and include a JSON body with `message` and any image `attachments`.
+  </Step>
+  <Step title="Return from the sidebar">
+    After the first key is created, **API** remains in the agent sidebar for key management.
   </Step>
 </Steps>
 
@@ -114,20 +117,34 @@ https://api.suppio.ai/v1/agents/agent_123/responses
 
 ```json
 {
-  "message": "How do I reset my password?"
+  "message": "What does this error screenshot mean?",
+  "attachments": [
+    {
+      "type": "image",
+      "name": "error.png",
+      "media_type": "image/png",
+      "data": "iVBORw0KGgoAAAANSUhEUgAA..."
+    }
+  ]
 }
 ```
 
 | Field | Required | Description |
 | --- | --- | --- |
 | `message` | Yes | The support message to send to the agent. Leading and trailing whitespace is trimmed. Empty messages are rejected. The model input is capped at 12,000 characters after trimming. |
+| `attachments` | No | Up to five base64-encoded image attachment objects. |
+| `attachments[].type` | Yes | Must be `image`. |
+| `attachments[].name` | No | A display name of up to 120 characters. Suppio generates a name when omitted. |
+| `attachments[].media_type` | Yes | `image/png`, `image/jpeg`, `image/webp`, or `image/gif`. |
+| `attachments[].data` | Yes | The raw base64 string only. Do not include a `data:image/...;base64,` prefix. |
 
-The JSON body limit is 64 KB.
+Each decoded image can be up to 5 MB, with a 10 MB decoded total per request. The JSON body limit is 16 MB. Base64 encoding increases the transferred size, and Suppio processes the images directly from the request without storing them.
+
+Image inputs count toward model input tokens. Those tokens are included in `usage.tokens`, converted to Suppio credits using the normal model rate, and deducted from the workspace just like text input tokens.
 
 ### Current API limitations
 
-- The API endpoint accepts text messages only.
-- Attachments are not supported on this endpoint.
+- Only image attachments are supported. PDFs and other document attachments are not accepted.
 - Caller-defined tools are not supported.
 - Suppio does not mutate your system through the API. Your app decides what to do with returned action signals.
 
@@ -145,16 +162,29 @@ curl -X POST "https://api.suppio.ai/v1/agents/agent_123/responses" \
 ```
 
 ```javascript Node.js
+import fs from "node:fs";
+
 const endpoint = "https://api.suppio.ai/v1/agents/agent_123/responses";
 
-async function askSuppio(message) {
+async function askSuppio(message, imagePath) {
+  const attachments = imagePath
+    ? [
+        {
+          type: "image",
+          name: "screenshot.png",
+          media_type: "image/png",
+          data: fs.readFileSync(imagePath, "base64"),
+        },
+      ]
+    : [];
+
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.SUPPIO_API_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ message, attachments }),
   });
 
   const payload = await response.json().catch(() => null);
@@ -168,7 +198,7 @@ async function askSuppio(message) {
   return payload;
 }
 
-askSuppio("How do I reset my password?")
+askSuppio("What does this error mean?", "./screenshot.png")
   .then((payload) => {
     console.log(payload.response);
 
@@ -294,10 +324,12 @@ API errors use this shape:
 | `authentication_required` | 401 | The authorization header is missing, malformed, too long, or does not use a `suppio_live_` key. |
 | `invalid_api_key` | 401 | The key is malformed, deleted, revoked, unknown, or does not match the stored hash. |
 | `wrong_agent` | 403 | The key is valid but is scoped to a different agent. |
+| `agent_disabled` | 403 | The agent is disabled in Sandbox. Enable it before sending API requests. |
 | `agent_not_found` | 404 | The requested agent could not be found for this key. |
 | `invalid_request` | 400 | The JSON body did not include a usable `message`. |
+| `invalid_attachment` | 400 | An attachment was malformed, unsupported, too large, or did not match its declared media type. |
 | `invalid_json` | 400 | The request body was not valid JSON. |
-| `payload_too_large` | 413 | The JSON body exceeded 64 KB. |
+| `payload_too_large` | 413 | The JSON body exceeded 16 MB. |
 | `context_required` | 409 | The agent has no active context. Add context before sending API requests. |
 | `out_of_credits` | 402 | The workspace has no credits left for the current billing period. |
 | `rate_limited` | 429 | The API key exceeded its requests-per-minute limit. |
@@ -308,12 +340,12 @@ API errors use this shape:
 
 Rate limits are enforced per API key with a one-minute window. The effective limit is the lower of the key's stored limit and the current workspace plan limit.
 
-| Plan | Requests per minute |
-| --- | ---: |
-| Free | 20 |
-| Plus | 60 |
-| Pro | 180 |
-| Enterprise | 600 |
+| Plan | Requests per minute | Requests per day |
+| --- | ---: | ---: |
+| Free | 20 | 7,200 |
+| Plus | 60 | 21,600 |
+| Pro | 180 | 64,800 |
+| Enterprise | 600 | 216,000 |
 
 Authenticated API responses include:
 
@@ -329,7 +361,7 @@ Rate-limited responses also include:
 Retry-After: 12
 ```
 
-Daily dashboard counters are tracked per UTC day across all API keys for an agent. The daily limit is the plan's requests-per-minute limit multiplied by 1,440 minutes.
+Daily dashboard counters are tracked per UTC day across all API keys for an agent. The daily limit is the plan's requests-per-minute limit multiplied by 360 minutes.
 
 ## Key management
 

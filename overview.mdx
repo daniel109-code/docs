@@ -5,7 +5,7 @@ description: "Understand how Suppio workspaces, agents, settings, and deployment
 
 The dashboard is organized around workspaces and agents.
 
-A workspace holds billing, usage, website URL, workspace information, and agents. Each agent holds context, sandbox testing controls, behavior settings, and deployments.
+A workspace holds billing, usage, website URL, workspace information, and agents. Each agent holds context, sandbox testing controls, behavior settings, and deployments. Discord-specific routing remains grouped under **Discord** after an agent is connected to a server.
 
 ## Main areas
 
@@ -17,10 +17,10 @@ A workspace holds billing, usage, website URL, workspace information, and agents
     Manage context, sandbox testing, behavior, deployment, and logs for one support agent.
   </Card>
   <Card icon="rocket" title="Deploy">
-    Launch the agent to Discord, chat widget, support page, or API.
+    Set up Discord, chat widget, support page, or API. Active web and API methods become direct sidebar tabs.
   </Card>
   <Card icon="chart-column" title="Usage">
-    Review credits, conversations, and response logs.
+    Review credits, conversations, and all usage events.
   </Card>
 </Columns>
 
@@ -33,13 +33,16 @@ A workspace holds billing, usage, website URL, workspace information, and agents
 5. Test in the sandbox and choose the intelligence level for test messages.
 6. Configure behavior.
 7. Deploy to the surface your users need.
-8. Review usage and analytics after launch.
+8. Open the live deployment from its sidebar tab when you need to edit it.
+9. Review usage, analytics, and knowledge gaps after launch.
 
 ## Workspace information
 
 Workspace information is a short grounding summary for the support agent. It should describe what the workspace supports, who the users are, and what kinds of help the agent should provide.
 
 Good workspace information helps Suppio understand your product or community before it searches detailed context.
+
+Workspace information is not a replacement for context. Deployment methods remain unavailable until the agent has at least one active context source.
 
 ## Agent sandbox
 

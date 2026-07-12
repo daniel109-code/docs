@@ -2,7 +2,7 @@
 
 This folder contains the Mintlify documentation for Suppio.
 
-The docs are written for Suppio customers. They explain how to set up, deploy, manage, and troubleshoot Suppio across Discord, the web chat widget, hosted support pages, and the Agent API.
+The docs are written for Suppio customers. They explain how to set up, deploy, manage, and troubleshoot Suppio across Discord, the web chat widget, support pages, and the Agent API.
 
 ## Development
 

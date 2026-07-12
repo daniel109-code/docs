@@ -22,7 +22,8 @@
               "info",
               "setup",
               "features",
-              "billing"
+              "billing",
+              "frequently-asked-questions"
             ]
           },
           {
@@ -39,8 +40,11 @@
             "pages": [
               "overview",
               "context",
+              "status-pages",
+              "knowledge-gaps",
               "intelligence",
               "behavior",
+              "response-images",
               "analytics",
               "usage",
               "commands",
@@ -105,7 +109,7 @@
      "vscode"
    ]
   },
-  "description": "Learn how to set up and use Suppio across Discord, your website, hosted support pages, and the API",
+  "description": "Learn how to set up and use Suppio across Discord, your website, support pages, and the API",
   "fonts": {
     "family": "Sora",
     "heading": {
