@@ -16,7 +16,7 @@ Suppio can surface context problems from real support conversations so your team
     Suppio could not find a reliable answer in current context. The issue includes the core question, what was missing, and example conversation details when available.
   </Accordion>
   <Accordion title="Conflicting information">
-    Two context sources appear to disagree. Suppio shows the conflicting source excerpts and can propose edits that reconcile the sources.
+    A newly added or edited context source appears to disagree with existing context. Suppio shows the conflicting source excerpts and can propose edits that reconcile the sources.
   </Accordion>
   <Accordion title="Knowledge suggestion">
     After a supported Discord ticket or forum handoff, Suppio can analyze staff-confirmed guidance and propose reusable knowledge. A team member must approve it before it becomes context.
@@ -50,8 +50,8 @@ Only the selected roles can approve from Discord. The same issue remains availab
 
 When Suppio escalates or a configured support-team role takes over a Discord ticket or forum post, it can retain the relevant conversation until the issue closes. After closure, Suppio analyzes staff-confirmed facts, policies, procedures, corrections, and troubleshooting steps.
 
-Customer-specific details, credentials, payment information, unconfirmed claims, and ordinary chatter are excluded from proposed knowledge. Suggestions still require human approval.
+Customer-specific details, credentials, payment information, unconfirmed claims, and ordinary chatter are excluded from proposed knowledge. Suppio also skips learned guidance that is already covered, conflicts with current context, or cannot be compared confidently. Suggestions still require human approval.
 
 ## Conflicting context
 
-For a conflict, review every proposed edit before applying it. Applying a resolution can update the affected editable context sources and marks the conflict resolved. If the sources cannot be safely edited, update them manually and ignore the issue after verifying the correction.
+Suppio checks new context files and direct context edits against your existing sources. For a conflict, review every proposed edit before applying it. Applying a resolution can update the affected editable context sources and marks the conflict resolved. If the sources cannot be safely edited, update them manually and ignore the issue after verifying the correction.
