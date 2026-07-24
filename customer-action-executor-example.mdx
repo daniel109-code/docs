@@ -1,0 +1,516 @@
+---
+title: "Complete customer action executor example"
+description: "Build a secure Node.js executor with signature verification, validation, authorization, and durable idempotency."
+---
+
+This example is a runnable starting point for a customer action executor. It:
+
+- listens only on `127.0.0.1` by default
+- keeps the exact raw request body for signature verification
+- enforces the 64 KB request limit
+- rejects stale timestamps and invalid signatures before parsing JSON
+- validates the event envelope and matches the header and body action IDs
+- handles `customer_action.test` without changing data
+- dispatches only explicitly allowlisted action names
+- validates arguments with JSON Schema
+- checks the Discord actor before claiming an action
+- atomically claims every `action_id` in a persistent SQLite database
+- stores and replays completed results without repeating a side effect
+- returns known action failures as structured HTTP `200` results
+
+<Warning>
+  The example plan-change handler deliberately returns `handler_not_configured`. Replace that handler with your application transaction and replace the sample Discord allowlist with resource-level authorization before enabling the action.
+</Warning>
+
+## Requirements
+
+Use Node.js 24 or later. The example uses Node's built-in SQLite module, Express, Ajv, and `ajv-formats`.
+
+Create an empty application directory:
+
+```bash
+mkdir customer-action-executor
+cd customer-action-executor
+```
+
+## Create `package.json`
+
+```json
+{
+  "name": "customer-action-executor",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test:connection": "node smoke-test.mjs"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "express": "^5.1.0"
+  }
+}
+```
+
+Install the locked dependencies and commit the generated lockfile:
+
+```bash
+npm install
+```
+
+## Create `server.mjs`
+
+```js
+import express from "express";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { mkdirSync } from "node:fs";
+import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+
+const host = process.env.HOST?.trim() || "127.0.0.1";
+const port = Number(process.env.PORT || "8787");
+const signingSecret = process.env.SUPPIO_ACTION_SECRET?.trim();
+const dataDirectory = process.env.DATA_DIR?.trim() || "./data";
+const allowedDiscordUserIds = new Set(
+  (process.env.ALLOWED_DISCORD_USER_IDS || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+);
+
+if (!signingSecret) throw new Error("SUPPIO_ACTION_SECRET is required");
+if (!Number.isInteger(port) || port < 1 || port > 65535) {
+  throw new Error("PORT must be a valid TCP port");
+}
+
+mkdirSync(dataDirectory, { recursive: true, mode: 0o700 });
+const database = new DatabaseSync(join(dataDirectory, "action-results.sqlite"));
+database.exec(`
+  PRAGMA journal_mode = WAL;
+  PRAGMA synchronous = FULL;
+  CREATE TABLE IF NOT EXISTS action_results (
+    action_id TEXT PRIMARY KEY,
+    request_hash TEXT NOT NULL,
+    state TEXT NOT NULL CHECK (state IN ('executing', 'completed')),
+    response_json TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+`);
+
+const findResult = database.prepare(`
+  SELECT request_hash, state, response_json
+  FROM action_results
+  WHERE action_id = ?
+`);
+const claimResult = database.prepare(`
+  INSERT OR IGNORE INTO action_results (
+    action_id, request_hash, state, response_json, created_at, updated_at
+  ) VALUES (?, ?, 'executing', NULL, ?, ?)
+`);
+const completeResult = database.prepare(`
+  UPDATE action_results
+  SET state = 'completed', response_json = ?, updated_at = ?
+  WHERE action_id = ? AND state = 'executing'
+`);
+
+const ajv = new Ajv({ allErrors: true, strict: true });
+addFormats(ajv);
+
+const changeCustomerPlanSchema = {
+  type: "object",
+  properties: {
+    customer_id: {
+      type: "string",
+      minLength: 1
+    },
+    plan: {
+      type: "string",
+      enum: ["starter", "plus", "pro"]
+    },
+    effective_at: {
+      type: ["string", "null"],
+      format: "date-time"
+    }
+  },
+  required: ["customer_id", "plan", "effective_at"],
+  additionalProperties: false
+};
+
+const handlers = new Map([
+  [
+    "change_customer_plan",
+    {
+      validate: ajv.compile(changeCustomerPlanSchema),
+      async authorize(event, arguments_) {
+        // Replace this global allowlist with your own lookup that proves this
+        // Discord user may change arguments_.customer_id.
+        return (
+          allowedDiscordUserIds.has(event.actor.user_id) &&
+          typeof arguments_.customer_id === "string"
+        );
+      },
+      async execute(_event, _arguments) {
+        // Replace this safe failure with one explicit application transaction.
+        // Return succeeded only after your transaction commits.
+        return {
+          status: "failed",
+          summary: "The plan-change handler is not connected yet.",
+          code: "handler_not_configured",
+          retryable: false
+        };
+      }
+    }
+  ]
+]);
+
+const isObject = (value) =>
+  Boolean(value) && typeof value === "object" && !Array.isArray(value);
+
+function validEventEnvelope(event) {
+  return (
+    isObject(event) &&
+    event.version === "1" &&
+    ["customer_action.execute", "customer_action.test"].includes(event.event) &&
+    typeof event.action_id === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      event.action_id
+    ) &&
+    isObject(event.action) &&
+    typeof event.action.name === "string" &&
+    isObject(event.action.arguments) &&
+    isObject(event.actor) &&
+    event.actor.provider === "discord" &&
+    typeof event.actor.user_id === "string" &&
+    isObject(event.conversation) &&
+    ["ticket", "forum"].includes(event.conversation.surface) &&
+    ["guild_id", "channel_id", "message_id"].every(
+      (key) => typeof event.conversation[key] === "string"
+    ) &&
+    isObject(event.agent) &&
+    typeof event.agent.id === "string" &&
+    typeof event.agent.workspace_id === "string"
+  );
+}
+
+function validSignature(rawBody, timestamp, suppliedSignature) {
+  const timestampSeconds = Number(timestamp);
+  if (
+    !Number.isInteger(timestampSeconds) ||
+    Math.abs(Date.now() / 1000 - timestampSeconds) > 300
+  ) {
+    return false;
+  }
+
+  const expectedSignature = `v1=${createHmac("sha256", signingSecret)
+    .update(timestamp, "utf8")
+    .update(".", "utf8")
+    .update(rawBody)
+    .digest("hex")}`;
+  const expected = Buffer.from(expectedSignature, "utf8");
+  const supplied = Buffer.from(suppliedSignature, "utf8");
+  return (
+    expected.length === supplied.length &&
+    timingSafeEqual(expected, supplied)
+  );
+}
+
+function protocolError(response, status, message) {
+  response.status(status).json({ error: message });
+}
+
+function knownFailure(summary, code) {
+  return {
+    status: "failed",
+    summary,
+    code,
+    retryable: false
+  };
+}
+
+function validExecutorResult(value) {
+  return (
+    isObject(value) &&
+    ["succeeded", "failed"].includes(value.status) &&
+    typeof value.summary === "string" &&
+    value.summary.trim().length > 0 &&
+    value.summary.length <= 2000
+  );
+}
+
+function replayOrClaim(actionId, requestHash) {
+  const existing = findResult.get(actionId);
+  if (existing) {
+    if (existing.request_hash !== requestHash) {
+      return { kind: "conflict" };
+    }
+    if (existing.state === "completed" && existing.response_json) {
+      return {
+        kind: "replay",
+        result: JSON.parse(existing.response_json)
+      };
+    }
+    return {
+      kind: "replay",
+      result: knownFailure(
+        "A previous delivery may still be running or may have completed without recording its result.",
+        "execution_unconfirmed"
+      )
+    };
+  }
+
+  const now = new Date().toISOString();
+  const claimed = claimResult.run(actionId, requestHash, now, now);
+  if (claimed.changes === 1) return { kind: "claimed" };
+
+  // Another process won the INSERT OR IGNORE race. Read its durable row.
+  return replayOrClaim(actionId, requestHash);
+}
+
+const app = express();
+
+app.get("/health", (_request, response) => {
+  response.json({ ok: true });
+});
+
+app.post(
+  "/suppio/actions",
+  express.raw({ type: "application/json", limit: "64kb" }),
+  async (request, response) => {
+    const rawBody = request.body;
+    if (!Buffer.isBuffer(rawBody)) {
+      protocolError(response, 415, "Content-Type must be application/json");
+      return;
+    }
+
+    const timestamp = request.get("X-Suppio-Timestamp") || "";
+    const signature = request.get("X-Suppio-Signature") || "";
+    if (!validSignature(rawBody, timestamp, signature)) {
+      protocolError(response, 401, "Invalid or expired signature");
+      return;
+    }
+
+    let event;
+    try {
+      event = JSON.parse(rawBody.toString("utf8"));
+    } catch {
+      protocolError(response, 400, "Invalid JSON");
+      return;
+    }
+    if (!validEventEnvelope(event)) {
+      protocolError(response, 400, "Invalid customer action event");
+      return;
+    }
+
+    const headerActionId = request.get("X-Suppio-Action-Id") || "";
+    if (headerActionId !== event.action_id) {
+      protocolError(response, 400, "Action ID mismatch");
+      return;
+    }
+
+    if (event.event === "customer_action.test") {
+      response.status(200).json({
+        status: "succeeded",
+        summary: "Connection verified."
+      });
+      return;
+    }
+
+    const handler = handlers.get(event.action.name);
+    if (!handler) {
+      response
+        .status(200)
+        .json(knownFailure("This action is not supported.", "unknown_action"));
+      return;
+    }
+    if (!handler.validate(event.action.arguments)) {
+      response.status(200).json(
+        knownFailure(
+          "The action arguments did not match the required schema.",
+          "invalid_arguments"
+        )
+      );
+      return;
+    }
+    if (!(await handler.authorize(event, event.action.arguments))) {
+      response
+        .status(200)
+        .json(knownFailure("You are not allowed to perform this action.", "forbidden"));
+      return;
+    }
+
+    const requestHash = createHash("sha256").update(rawBody).digest("hex");
+    const claim = replayOrClaim(event.action_id, requestHash);
+    if (claim.kind === "conflict") {
+      protocolError(response, 409, "Action ID was reused with a different request");
+      return;
+    }
+    if (claim.kind === "replay") {
+      response.status(200).json(claim.result);
+      return;
+    }
+
+    let result;
+    let serializedResult;
+    try {
+      result = await handler.execute(event, event.action.arguments);
+      if (!validExecutorResult(result)) {
+        throw new Error("Handler returned an invalid result");
+      }
+      serializedResult = JSON.stringify(result);
+      if (Buffer.byteLength(serializedResult, "utf8") > 64 * 1024) {
+        throw new Error("Handler result exceeded 64 KB");
+      }
+    } catch (error) {
+      console.error("Customer action handler failed", {
+        actionId: event.action_id,
+        actionName: event.action.name,
+        error
+      });
+      result = knownFailure(
+        "The requested action could not be completed.",
+        "action_failed"
+      );
+      serializedResult = JSON.stringify(result);
+    }
+
+    completeResult.run(
+      serializedResult,
+      new Date().toISOString(),
+      event.action_id
+    );
+    response.status(200).type("application/json").send(serializedResult);
+  }
+);
+
+app.use((error, _request, response, _next) => {
+  if (error?.type === "entity.too.large") {
+    protocolError(response, 413, "Request body is too large");
+    return;
+  }
+  console.error("Executor request failed", error);
+  protocolError(response, 500, "Executor request failed");
+});
+
+const server = app.listen(port, host, () => {
+  console.log(`Customer action executor listening on http://${host}:${port}`);
+});
+
+server.on("error", (error) => {
+  console.error("Customer action executor failed to start", error);
+  process.exitCode = 1;
+});
+```
+
+The example records the `action_id` before it calls the handler. If the process stops after a side effect but before the result is stored, a duplicate returns `execution_unconfirmed` and does not run the handler again. Reconcile that action manually from your application records.
+
+## Create `smoke-test.mjs`
+
+This script sends the same signed connection-test event shape that the dashboard uses:
+
+```js
+import { createHmac, randomUUID } from "node:crypto";
+
+const secret = process.env.SUPPIO_ACTION_SECRET?.trim();
+if (!secret) throw new Error("SUPPIO_ACTION_SECRET is required");
+
+const actionId = randomUUID();
+const event = {
+  version: "1",
+  event: "customer_action.test",
+  action_id: actionId,
+  action: {
+    name: "connection_test",
+    arguments: {}
+  },
+  actor: {
+    provider: "discord",
+    user_id: "local_smoke_test"
+  },
+  conversation: {
+    surface: "ticket",
+    guild_id: "local_smoke_test",
+    channel_id: "local_smoke_test",
+    message_id: "local_smoke_test"
+  },
+  agent: {
+    id: "local_smoke_test",
+    workspace_id: "local_smoke_test"
+  }
+};
+const rawBody = JSON.stringify(event);
+const timestamp = String(Math.floor(Date.now() / 1000));
+const signature = `v1=${createHmac("sha256", secret)
+  .update(timestamp, "utf8")
+  .update(".", "utf8")
+  .update(rawBody, "utf8")
+  .digest("hex")}`;
+
+const response = await fetch("http://127.0.0.1:8787/suppio/actions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-Suppio-Action-Id": actionId,
+    "X-Suppio-Timestamp": timestamp,
+    "X-Suppio-Signature": signature
+  },
+  body: rawBody
+});
+const result = await response.json();
+if (
+  response.status !== 200 ||
+  result.status !== "succeeded"
+) {
+  throw new Error(`Connection test failed: ${response.status} ${JSON.stringify(result)}`);
+}
+console.log(result.summary);
+```
+
+Start the executor in one terminal and run the smoke test in another:
+
+```bash
+export SUPPIO_ACTION_SECRET='use-a-temporary-local-secret'
+npm start
+```
+
+```bash
+export SUPPIO_ACTION_SECRET='use-a-temporary-local-secret'
+npm run test:connection
+```
+
+The test should print `Connection verified.`
+
+## Connect your real handler
+
+Before enabling `change_customer_plan`:
+
+1. Replace the `handler_not_configured` result with one narrow application transaction.
+2. Keep the handler mapped to the exact imported action name.
+3. Validate identifiers and enums against your application's current state.
+4. Replace the global Discord allowlist with a lookup that proves `actor.user_id` may change the specific `customer_id`.
+5. Make the business operation idempotent as a second layer of protection when possible.
+6. Do not pass user arguments into shell commands, SQL text, arbitrary URLs, dynamic imports, or unrestricted operation names.
+7. Test with a non-production customer and keep **Require confirmation** on for mutations.
+
+The imported action schema and the executor schema should describe the same arguments. Update both sides together.
+
+## Publish it
+
+For a VPS or private server, continue with [Connect a customer action executor over HTTPS](/customer-actions-https). That guide creates a writable `/var/lib/customer-actions` state directory, keeps the Node service on loopback, and publishes it through Caddy or Cloudflare Tunnel.
+
+For managed hosting, set these environment variables in the provider's secret and configuration settings:
+
+| Variable | Value |
+| --- | --- |
+| `SUPPIO_ACTION_SECRET` | The one-time secret shown after **Save endpoint** |
+| `ALLOWED_DISCORD_USER_IDS` | Temporary comma-separated allowlist until you add resource-level authorization |
+| `DATA_DIR` | A path on persistent storage, not an ephemeral filesystem |
+| `HOST` | The bind address required by the platform |
+| `PORT` | The port assigned by the platform |
+
+Do not deploy this SQLite example to a platform that runs several independent instances against separate disks. Use one shared transactional database for `action_id` claims and stored results in a horizontally scaled deployment.

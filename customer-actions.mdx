@@ -36,9 +36,12 @@ Select **Add action** and provide:
 - **Description**: When the agent should choose the action.
 - **Additional instructions**: Optional rules for choosing the action or filling its arguments.
 - **Require confirmation**: Whether the requesting Discord user must select **Confirm** before execution. This is on by default.
+- **Enabled**: Whether the action is available to the agent. Keep a new action off until its handler is ready and tested.
 - **Arguments**: The typed values sent to your executor.
 
 The argument editor generates a strict JSON Schema. Every property is required by the schema. Turn on **Allow null** when a value is optional.
+
+If an imported action uses advanced JSON Schema keywords that the visual editor cannot represent, Suppio opens its arguments in **raw JSON** mode. Edit and save the schema there to preserve keywords such as `format`, `pattern`, numeric limits, `$defs`, `$ref`, and `anyOf`. Switching that action to the form editor requires confirmation because the form removes unsupported keywords.
 
 ## Import actions
 
@@ -308,7 +311,9 @@ Suppio sends an HTTPS `POST` with `Content-Type: application/json`:
   "action": {
     "name": "change_customer_plan",
     "arguments": {
-      "plan": "pro"
+      "customer_id": "cus_01J7QX9AMV2N4R8K3Y6T",
+      "plan": "pro",
+      "effective_at": null
     }
   },
   "actor": {
@@ -345,65 +350,50 @@ HMAC_SHA256(secret, timestamp + "." + rawBody)
 Always verify the raw request body before parsing JSON. Reject timestamps more than five minutes away from your server time.
 
 ```ts
-import express from "express";
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-const app = express();
 const secret = process.env.SUPPIO_ACTION_SECRET;
-
 if (!secret) {
   throw new Error("SUPPIO_ACTION_SECRET is required");
 }
 
-app.post(
-  "/suppio/actions",
-  express.raw({ type: "application/json", limit: "64kb" }),
-  async (req, res) => {
-    const timestamp = req.header("X-Suppio-Timestamp") ?? "";
-    const supplied = req.header("X-Suppio-Signature") ?? "";
-    const ageSeconds = Math.abs(Date.now() / 1000 - Number(timestamp));
-
-    if (!Number.isFinite(ageSeconds) || ageSeconds > 300) {
-      res.status(401).json({ error: "Expired request" });
-      return;
-    }
-
-    const expected = `v1=${createHmac("sha256", secret)
-      .update(timestamp)
-      .update(".")
-      .update(req.body)
-      .digest("hex")}`;
-    const expectedBuffer = Buffer.from(expected);
-    const suppliedBuffer = Buffer.from(supplied);
-
-    if (
-      expectedBuffer.length !== suppliedBuffer.length ||
-      !timingSafeEqual(expectedBuffer, suppliedBuffer)
-    ) {
-      res.status(401).json({ error: "Invalid signature" });
-      return;
-    }
-
-    const event = JSON.parse(req.body.toString("utf8"));
-
-    if (event.event === "customer_action.test") {
-      res.json({ status: "succeeded", summary: "Connection verified." });
-      return;
-    }
-
-    // Deduplicate event.action_id before making a change.
-    await executeYourAction(event.action.name, event.action.arguments);
-    res.json({
-      status: "succeeded",
-      summary: "The requested action completed."
-    });
+function hasValidSuppioSignature(
+  rawBody: Buffer,
+  timestamp: string,
+  suppliedSignature: string
+): boolean {
+  const timestampSeconds = Number(timestamp);
+  if (
+    !Number.isInteger(timestampSeconds) ||
+    Math.abs(Date.now() / 1000 - timestampSeconds) > 300
+  ) {
+    return false;
   }
-);
+
+  const expectedSignature = `v1=${createHmac("sha256", secret)
+    .update(timestamp, "utf8")
+    .update(".", "utf8")
+    .update(rawBody)
+    .digest("hex")}`;
+  const expected = Buffer.from(expectedSignature, "utf8");
+  const supplied = Buffer.from(suppliedSignature, "utf8");
+
+  return (
+    expected.length === supplied.length &&
+    timingSafeEqual(expected, supplied)
+  );
+}
 ```
+
+This helper is only the signature check. Your route must also validate the event envelope, match the header and body action IDs, allowlist the action name, validate its arguments, authorize the Discord actor, and claim the action ID in durable storage before making a change.
+
+<Card title="Build the complete executor" icon="code" href="/customer-action-executor-example">
+  Start with the runnable Node.js example, including raw-body handling, schema validation, actor authorization, durable SQLite idempotency, structured errors, and safe service configuration.
+</Card>
 
 ## Return a result
 
-For success, return a `2xx` response with:
+For success, return an HTTP `2xx` response with:
 
 ```json
 {
@@ -415,7 +405,7 @@ For success, return a `2xx` response with:
 }
 ```
 
-For a known failure, return:
+For a known failure, also return HTTP `2xx` with:
 
 ```json
 {
@@ -426,7 +416,9 @@ For a known failure, return:
 }
 ```
 
-Suppio uses `summary` and optional `data` to write the final answer. Your response can be up to 64 KB, and `summary` can be up to 2,000 characters.
+Suppio reads structured executor results only from `2xx` responses. For any `4xx` or `5xx` response, Suppio discards the response body and reports a generic `executor_http_error`. Use non-`2xx` responses for protocol or authentication failures. Use a `2xx` response with `status: "failed"` for an action-level failure that the agent should explain to the user.
+
+Suppio sends no more than 64 KB in an action request. Your response can also be up to 64 KB, and `summary` can be up to 2,000 characters.
 
 Executor output is treated as untrusted result data. It is never used as an instruction for the agent to follow.
 
@@ -437,6 +429,17 @@ Your executor has 15 seconds to respond. Suppio does not automatically retry cus
 Store each `action_id` before applying a side effect. If you receive the same ID again, return the result of the original execution instead of repeating it.
 
 If Suppio loses the connection or reaches the timeout after sending a request, it reports that completion could not be confirmed. The action may still have completed in your system.
+
+## Availability, limits, and history
+
+- The endpoint must be enabled, and the individual action must be enabled, before the action is available to the agent.
+- Suppio can request at most one customer action in one workflow run.
+- A ticket or forum conversation can have only one action awaiting confirmation or executing at a time.
+- One agent can execute up to five customer actions concurrently across conversations.
+- An agent can have up to 10 action definitions.
+- **Recent activity** shows action runs retained for 30 days.
+
+Saving or toggling the executor endpoint, rotating or deleting its secret, or updating or deleting an action expires every pending confirmation for that agent. The user must request the action again under the new configuration. Creating a separate new action does not expire existing confirmations.
 
 ## Discord behavior
 

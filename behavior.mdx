@@ -3,7 +3,7 @@ title: "Behavior"
 description: "Customize Suppio's tone, personality, emoji usage, and instructions."
 ---
 
-Behavior settings control how Suppio communicates.
+Behavior settings control how Suppio communicates in a connected Discord server.
 
 Use these settings when you want answers to match your brand, support style, or community norms.
 
@@ -23,8 +23,8 @@ Use these settings when you want answers to match your brand, support style, or 
   <Card icon="file-text" title="Custom instructions">
     Add targeted guidance for support replies, escalations, and action suggestions.
   </Card>
-  <Card icon="message-circle" title="Deployment consistency">
-    Keep replies consistent across Discord, web chat, support page, and API surfaces.
+  <Card icon="message-circle" title="Discord replies">
+    Apply the selected style to new ticket and forum replies in this Discord server.
   </Card>
   <Card icon="message-circle-more" title="Typing reactions">
     Show temporary Discord message reactions while Suppio queues, searches, and prepares a reply.
@@ -33,13 +33,17 @@ Use these settings when you want answers to match your brand, support style, or 
 
 ## Custom instructions
 
-The **Instructions** section contains one shared custom-instructions field. It guides normal replies, escalation decisions, and action suggestions wherever the agent uses custom guidance.
+The **Instructions** section contains one shared custom-instructions field for the connected Discord server. It guides normal Discord replies, escalation decisions, and action suggestions.
 
 The field accepts up to 1,000 characters. Keep it focused; context remains the source of factual product knowledge.
 
 ## Personality and style
 
-Paid plans can configure emoji usage, typing reactions, and one choice from each personality pair shown in the dashboard. The available pairs cover tone, detail, confidence, answer structure, conversation style, and initiative.
+Paid plans can configure emoji usage, typing reactions, and one choice from each personality pair shown in the dashboard. The available pairs cover tone, detail, confidence, answer structure, conversation style, and initiative for new replies in that Discord server.
+
+<Note>
+  These controls do not currently change web chat, support page, Agent API, or Sandbox behavior. Those surfaces use their own default behavior.
+</Note>
 
 ## Good instructions
 

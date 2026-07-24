@@ -41,14 +41,19 @@ Your configured executor URL must meet every requirement below.
 | Authentication | Verify `X-Suppio-Timestamp`, `X-Suppio-Signature`, and `X-Suppio-Action-Id`. |
 | Redirects | Return a response directly. Suppio does not follow `301`, `302`, `307`, or `308` redirects. |
 | Response time | Respond within 15 seconds. |
+| Request size | Accept action request bodies up to 64 KB. |
 | Response size | Return no more than 64 KB. Keep `summary` at or below 2,000 characters. |
 | Response format | Return a JSON success or failure result described in [Return a result](/customer-actions#return-a-result). |
 
-Suppio resolves the hostname before connecting and pins the request to the resolved public address. A hostname that resolves to any private or reserved address is rejected.
+Before each request, Suppio's production relay resolves both `A` and `AAAA` records and continues only when every returned address is public. A hostname that has no public answer or includes any private or reserved answer is rejected. Outbound executor requests use a strictly public network path, and the relay never follows redirects.
 
 <Warning>
   Do not put a browser login, basic authentication prompt, CAPTCHA, or interactive access page in front of the action path. Suppio authenticates with its signature headers and cannot complete an interactive challenge.
 </Warning>
+
+<Card title="Start with the complete Node.js executor" icon="code" href="/customer-action-executor-example">
+  Use the runnable secure template before publishing the endpoint. It includes every request, signature, schema, authorization, and idempotency check required by the lifecycle below.
+</Card>
 
 ## Choose how to publish the executor
 
@@ -75,7 +80,7 @@ You need:
 - a VPS with a public IPv4 address or properly configured public IPv6 address
 - SSH access with `sudo`
 - a domain or subdomain you control
-- your executor application from [Verify signatures](/customer-actions#verify-signatures)
+- the [complete Node.js executor example](/customer-action-executor-example), or an equivalent implementation in your stack
 - the signing secret shown by the Suppio dashboard
 
 Do not use `CUSTOMER_ACTION_ENCRYPTION_KEY` in the executor. Your executor only needs the per-agent signing secret shown when you save or rotate the endpoint.
@@ -125,16 +130,18 @@ Do not use `CUSTOMER_ACTION_ENCRYPTION_KEY` in the executor. Your executor only 
 
     ```dotenv
     SUPPIO_ACTION_SECRET=PASTE_THE_SIGNING_SECRET_FROM_THE_DASHBOARD
+    ALLOWED_DISCORD_USER_IDS=123456789012345678
     HOST=127.0.0.1
     PORT=8787
+    DATA_DIR=/var/lib/customer-actions
     NODE_ENV=production
     ```
 
-    Never commit this file, paste its contents into support messages, or include it in application logs. If your application needs other credentials, store them in the same protected secret system or your provider's secret manager.
+    `ALLOWED_DISCORD_USER_IDS` is only the example's temporary global allowlist. Replace it with resource-level authorization in your handler. Never commit this file, paste its contents into support messages, or include it in application logs. If your application needs other credentials, store them in the same protected secret system or your provider's secret manager.
   </Step>
 
   <Step title="Run the executor as a service">
-    Build your application and place its production files in `/opt/customer-actions`. Create `/etc/systemd/system/customer-actions.service`:
+    Place `package.json`, its lockfile, and `server.mjs` in `/opt/customer-actions`, then install production dependencies with `npm ci --omit=dev`. Create `/etc/systemd/system/customer-actions.service`:
 
     ```ini
     [Unit]
@@ -148,7 +155,7 @@ Do not use `CUSTOMER_ACTION_ENCRYPTION_KEY` in the executor. Your executor only 
     Group=customer-actions
     WorkingDirectory=/opt/customer-actions
     EnvironmentFile=/etc/customer-actions.env
-    ExecStart=/usr/bin/node /opt/customer-actions/dist/server.js
+    ExecStart=/usr/bin/node /opt/customer-actions/server.mjs
     Restart=on-failure
     RestartSec=5
     UMask=0077
@@ -156,12 +163,14 @@ Do not use `CUSTOMER_ACTION_ENCRYPTION_KEY` in the executor. Your executor only 
     PrivateTmp=true
     ProtectHome=true
     ProtectSystem=strict
+    StateDirectory=customer-actions
+    StateDirectoryMode=0700
 
     [Install]
     WantedBy=multi-user.target
     ```
 
-    Update `ExecStart` if your runtime or built entry file uses a different path. Then enable the service:
+    `StateDirectory=customer-actions` creates `/var/lib/customer-actions` and keeps that path writable even with `ProtectSystem=strict`. Store the durable idempotency database there. Update `ExecStart` if your entry file uses a different path. Then enable the service:
 
     ```bash
     sudo systemctl daemon-reload
@@ -330,6 +339,7 @@ A managed container, application, or serverless platform can work when it provid
 - your framework exposes the original raw request body before JSON parsing
 - the platform does not redirect the configured action path
 - cold starts and action execution finish within 15 seconds
+- the application accepts request bodies up to 64 KB
 - the response body stays below 64 KB
 - the application has a persistent database or durable store for `action_id` deduplication
 - logs exclude signature headers, secrets, raw request bodies, arguments, and result data
@@ -350,12 +360,12 @@ For every real action, your executor should follow this order:
 6. Parse JSON only after the signature succeeds.
 7. Confirm that the header action ID matches `action_id` in the body.
 8. Return success without mutating data when `event` is `customer_action.test`.
-9. Atomically claim `action_id` in durable storage. Return the original result if that ID was already processed.
-10. Reject action names that are not in an explicit handler allowlist.
-11. Validate every argument again in your application.
-12. Authorize `actor.user_id` for the targeted account or resource.
+9. Reject action names that are not in an explicit handler allowlist.
+10. Validate every argument again in your application.
+11. Authorize `actor.user_id` for the targeted account or resource.
+12. Atomically claim `action_id` in durable storage. Return the stored result if that ID already completed, and never repeat a result whose completion is uncertain.
 13. Perform the action once.
-14. Return a `succeeded` or `failed` JSON result within 15 seconds.
+14. Store and return a `succeeded` or `failed` JSON result within 15 seconds. Return both known outcomes with HTTP `2xx`.
 
 The signature proves that Suppio sent an unchanged request. It does not prove that the Discord user is authorized to modify a record in your application. Your executor remains responsible for that authorization decision.
 
@@ -417,8 +427,7 @@ Before enabling production actions, confirm that:
 - signature, timestamp, action ID, schema, and authorization checks run in the correct order
 - every action name maps to one explicit handler
 - durable idempotency is working
-- known failures return structured failure results
+- known failures return HTTP `2xx` with structured failure results
 - the executor responds in less than 15 seconds
 - **Test connection** succeeds
 - the endpoint and intended actions are enabled
-

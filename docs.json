@@ -50,6 +50,7 @@
               "commands",
               "actions",
               "customer-actions",
+              "customer-action-executor-example",
               "customer-actions-https",
               "forums",
               "permissions"
