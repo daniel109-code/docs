@@ -31,8 +31,7 @@
             "pages": [
               "discord",
               "web-chat-widget",
-              "hosted-support-page",
-              "agent-api"
+              "hosted-support-page"
             ]
           },
           {
@@ -126,7 +125,7 @@
     "decoration": "grid"
   },
   "appearance": {
-    "default": "system",
+    "default": "dark",
     "strict": true
   }
 }
