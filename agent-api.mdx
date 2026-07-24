@@ -1,9 +1,9 @@
 ---
 title: "Agent API"
-description: "Call a Suppio agent from your backend and receive an answer plus structured action signals."
+description: "Call a Suppio agent from your backend and receive an answer, action signals, and caller-defined tool calls."
 ---
 
-The Suppio Agent API lets your backend send a support message with optional image attachments to one Suppio agent and receive a generated response.
+The Suppio Agent API lets your backend send a support message with optional image attachments and function tools to one Suppio agent and receive a generated response.
 
 Use the API when you want to build Suppio into your own support workflow, route messages through your own app, or decide what to do when Suppio suggests escalation, resolution, or a title.
 
@@ -24,6 +24,7 @@ You send a `message` and can include base64-encoded images. Suppio answers using
 - `outcome`: whether the request succeeded or was blocked
 - `response`: the text answer
 - `actions`: structured signals your app can act on
+- `tool_calls`: caller-defined action signals your app can execute
 - `usage`: credits and tokens consumed
 
 ## When to use it
@@ -54,7 +55,7 @@ Use the API when:
     Copy the agent ID from the agent page URL. In `/dashboard/workspace/{workspaceId}/agent/{agentId}`, the `{agentId}` value is the ID you use in API requests.
   </Step>
   <Step title="Call the endpoint from your backend">
-    Send the key as a bearer token to the documented endpoint and include a JSON body with `message` and any image `attachments`.
+    Send the key as a bearer token to the documented endpoint and include a JSON body with `message`, optional image `attachments`, and optional function `tools`.
   </Step>
   <Step title="Return from the sidebar">
     After the first key is created, **API** remains in the agent sidebar for key management.
@@ -125,6 +126,26 @@ https://api.suppio.ai/v1/agents/agent_123/responses
       "media_type": "image/png",
       "data": "iVBORw0KGgoAAAANSUhEUgAA..."
     }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "name": "create_ticket",
+      "description": "Create a support ticket.",
+      "instructions": "Call when the user needs human follow-up.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "string",
+            "enum": ["low", "high"]
+          }
+        },
+        "required": ["priority"],
+        "additionalProperties": false
+      }
+    }
   ]
 }
 ```
@@ -137,16 +158,42 @@ https://api.suppio.ai/v1/agents/agent_123/responses
 | `attachments[].name` | No | A display name of up to 120 characters. Suppio generates a name when omitted. |
 | `attachments[].media_type` | Yes | `image/png`, `image/jpeg`, `image/webp`, or `image/gif`. |
 | `attachments[].data` | Yes | The raw base64 string only. Do not include a `data:image/...;base64,` prefix. |
+| `tools` | No | Up to 10 caller-defined function tools for this request. Definitions are not saved to the agent. |
+| `tools[].type` | Yes | Must be `function`. |
+| `tools[].name` | Yes | A unique name of up to 64 characters. Start with a letter and use only letters, numbers, underscores, or hyphens. Suppio-owned names are reserved. |
+| `tools[].description` | Yes | A concise purpose of up to 1,024 characters. |
+| `tools[].instructions` | Yes | When and how the agent should call the tool, up to 4,000 characters. |
+| `tools[].strict` | No | May be omitted or set to `true`. `false` is rejected. |
+| `tools[].parameters` | Yes | A strict object JSON Schema describing the arguments. Each schema can be up to 16 KB. |
 
 Each decoded image can be up to 5 MB, with a 10 MB decoded total per request. The JSON body limit is 16 MB. Base64 encoding increases the transferred size, and Suppio processes the images directly from the request without storing them.
 
 Image inputs count toward model input tokens. Those tokens are included in `usage.tokens`, converted to Suppio credits using the normal model rate, and deducted from the workspace just like text input tokens.
 
+### Caller-defined tools
+
+Caller-defined tools are action signals. Suppio adds each tool's `instructions` to the agent instructions for that request and exposes its `name`, `description`, and `parameters` as a function tool.
+
+When the agent calls one, Suppio records the name and arguments, then continues generating the text response. Suppio does not call your services, run a webhook, or confirm that the external action succeeded. Your backend receives the calls in `tool_calls` and decides whether to execute them.
+
+Use caller-defined tools for actions such as creating a ticket, adding a routing tag, or requesting a callback. They are not synchronous data-retrieval tools because your backend cannot return a tool result during the same request.
+
+Tool schemas must use strict mode:
+
+- The root must be an object schema.
+- Every object, including nested objects, must set `additionalProperties` to `false`.
+- Every property must appear in that object's `required` array.
+- Represent an optional value with a nullable type, such as `"type": ["string", "null"]`, while keeping the field in `required`.
+
+The complete `tools` array can be up to 64 KB. Tool definitions count toward model input usage. Duplicate names, reserved names, unsupported fields, invalid schemas, and definitions over the limits return `invalid_tools` before the agent runs.
+
+The agent can call multiple tools or the same tool more than once. Suppio preserves the calls in invocation order.
+
 ### Current API limitations
 
 - Only image attachments are supported. PDFs and other document attachments are not accepted.
-- Caller-defined tools are not supported.
-- Suppio does not mutate your system through the API. Your app decides what to do with returned action signals.
+- Caller-defined tools cannot return data to the agent during the same request.
+- Suppio does not mutate your system through the API. Your app decides what to do with returned actions and tool calls.
 
 ## Example requests
 
@@ -166,6 +213,24 @@ import fs from "node:fs";
 
 const endpoint = "https://api.suppio.ai/v1/agents/agent_123/responses";
 
+const tools = [
+  {
+    type: "function",
+    name: "create_ticket",
+    description: "Create a support ticket.",
+    instructions: "Call when the user needs human follow-up.",
+    strict: true,
+    parameters: {
+      type: "object",
+      properties: {
+        priority: { type: "string", enum: ["low", "high"] },
+      },
+      required: ["priority"],
+      additionalProperties: false,
+    },
+  },
+];
+
 async function askSuppio(message, imagePath) {
   const attachments = imagePath
     ? [
@@ -184,7 +249,7 @@ async function askSuppio(message, imagePath) {
       Authorization: `Bearer ${process.env.SUPPIO_API_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ message, attachments }),
+    body: JSON.stringify({ message, attachments, tools }),
   });
 
   const payload = await response.json().catch(() => null);
@@ -207,6 +272,10 @@ askSuppio("What does this error mean?", "./screenshot.png")
         console.log("Escalate:", action.reason);
       }
     }
+
+    for (const toolCall of payload.tool_calls ?? []) {
+      console.log("Tool call:", toolCall.name, toolCall.arguments);
+    }
   })
   .catch((error) => {
     console.error("Suppio API error:", error.message);
@@ -220,11 +289,19 @@ askSuppio("What does this error mean?", "./screenshot.png")
 ```json
 {
   "outcome": "success",
-  "response": "You can reset your password from Account Settings.",
+  "response": "I’ll pass this to the support team.",
   "actions": [
     {
-      "type": "mark_resolved",
-      "reason": "The request was fully answered."
+      "type": "escalate_to_human",
+      "reason": "The user requested human follow-up."
+    }
+  ],
+  "tool_calls": [
+    {
+      "name": "create_ticket",
+      "arguments": {
+        "priority": "high"
+      }
     }
   ],
   "usage": {
@@ -243,6 +320,7 @@ Blocked responses still use HTTP 200 because the request was processed successfu
   "outcome": "blocked",
   "response": "I can't help with that request.",
   "actions": [],
+  "tool_calls": [],
   "usage": {
     "credits": 2,
     "tokens": 120
@@ -288,6 +366,24 @@ Suppio returns action signals so your application can decide what to do next.
   </Accordion>
 </AccordionGroup>
 
+## Handling caller-defined tool calls
+
+Inspect `tool_calls` and allowlist the names your backend supports before executing anything. Arguments are JSON objects that follow the schema sent with the request.
+
+```javascript custom-tool-handler.js
+for (const toolCall of payload.tool_calls ?? []) {
+  if (toolCall.name === "create_ticket") {
+    await createTicket({
+      priority: toolCall.arguments.priority,
+      firstMessage: payload.response,
+      source: "suppio_api",
+    });
+  }
+}
+```
+
+Blocked responses always return an empty `tool_calls` array.
+
 ## Handling escalations
 
 The API does not automatically notify staff or create tickets. Your backend should inspect `actions` and run your own workflow.
@@ -328,6 +424,7 @@ API errors use this shape:
 | `agent_not_found` | 404 | The requested agent could not be found for this key. |
 | `invalid_request` | 400 | The JSON body did not include a usable `message`. |
 | `invalid_attachment` | 400 | An attachment was malformed, unsupported, too large, or did not match its declared media type. |
+| `invalid_tools` | 400 | Caller-defined tools were malformed, duplicated, reserved, non-strict, or over a documented limit. |
 | `invalid_json` | 400 | The request body was not valid JSON. |
 | `payload_too_large` | 413 | The JSON body exceeded 16 MB. |
 | `context_required` | 409 | The agent has no active context. Add context before sending API requests. |

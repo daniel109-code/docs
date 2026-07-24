@@ -1,0 +1,445 @@
+---
+title: "Customer actions"
+description: "Let your Discord support agent run signed actions in your own system."
+---
+
+Customer actions let your Suppio agent perform work in your system from Discord tickets and forum threads. You define each action and its arguments. Suppio decides when the action matches a customer's request and sends a signed HTTPS request to your executor.
+
+Customer actions are available on every plan. They are separate from caller-defined tools in the Suppio Agent API.
+
+<Card title="Connect an executor over HTTPS" icon="server" href="/customer-actions-https">
+  Publish your executor from a VPS, private server, or managed host and review every network and security requirement.
+</Card>
+
+## Set up an executor
+
+1. Open your agent and select **Customer actions**.
+2. Enter the HTTPS URL that will receive action requests.
+3. Leave the endpoint off and select **Save endpoint**.
+4. Copy the signing secret. Suppio only shows it once.
+5. Add signature verification to your executor.
+6. Select **Test connection**.
+7. Turn on the endpoint when the test succeeds. The endpoint switch saves immediately.
+
+Each agent has one executor URL and signing secret. All actions for that agent are sent to the same URL and identified by `action.name`.
+
+<Warning>
+  Rotating the signing secret immediately invalidates the previous secret. Update your executor before running another customer action.
+</Warning>
+
+## Define an action
+
+Select **Add action** and provide:
+
+- **Tool name**: A stable lowercase identifier such as `change_customer_plan`.
+- **Display name**: The action name shown in Discord confirmations and status messages.
+- **Description**: When the agent should choose the action.
+- **Additional instructions**: Optional rules for choosing the action or filling its arguments.
+- **Require confirmation**: Whether the requesting Discord user must select **Confirm** before execution. This is on by default.
+- **Arguments**: The typed values sent to your executor.
+
+The argument editor generates a strict JSON Schema. Every property is required by the schema. Turn on **Allow null** when a value is optional.
+
+## Import actions
+
+Use **Import actions** to create several action definitions from one JSON document. This is useful when you want an AI coding agent to inspect your application and generate action definitions that match functions your backend already exposes.
+
+1. Open your agent and select **Customer actions**.
+2. Select **Import actions**, to the right of **Add action**.
+3. Paste the JSON document or select **Choose JSON file**.
+4. Review every generated action and argument before importing.
+5. Select **Import actions**.
+
+An import only creates action definitions. It does not configure the executor URL, add handler code to your application, or replace an existing action.
+
+<Warning>
+  Treat generated actions like production integration code. Review which operations they expose, require confirmation for mutations, and never import a generic action that accepts executable code, arbitrary URLs, SQL, shell commands, or unrestricted operation names.
+</Warning>
+
+### Import document format
+
+The import document must be JSON with exactly two top-level fields: `version` and `actions`.
+
+```json
+{
+  "version": "1",
+  "actions": [
+    {
+      "name": "change_customer_plan",
+      "displayName": "Change customer plan",
+      "description": "Use when a customer explicitly asks to change their account plan.",
+      "instructions": "Use the authenticated customer's account identifier. Do not infer a plan that the customer did not request.",
+      "requiresConfirmation": true,
+      "enabled": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "string",
+            "description": "The immutable customer identifier in your system."
+          },
+          "plan": {
+            "type": "string",
+            "description": "The destination plan.",
+            "enum": ["starter", "plus", "pro"]
+          },
+          "effective_at": {
+            "type": ["string", "null"],
+            "description": "An ISO 8601 activation time, or null to apply the change immediately.",
+            "format": "date-time"
+          }
+        },
+        "required": ["customer_id", "plan", "effective_at"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
+```
+
+The top-level fields are:
+
+| Field | Required | Value |
+| --- | --- | --- |
+| `version` | Yes | The string `"1"`. Do not use a number. |
+| `actions` | Yes | An array containing 1 to 10 action objects. |
+
+Each action supports only these fields:
+
+| Field | Required | Rules |
+| --- | --- | --- |
+| `name` | Yes | Stable lowercase tool name. It must match `^[a-z][a-z0-9_]{0,63}$`. |
+| `displayName` | Yes | Human-readable name shown in Discord. Maximum 100 characters. |
+| `description` | Yes | Tell the model precisely when to use the action. Maximum 1,024 characters. |
+| `instructions` | No | Add selection, identity, and argument-filling rules. Maximum 4,000 characters. |
+| `requiresConfirmation` | No | Boolean. Defaults to `true`. |
+| `enabled` | No | Boolean. Defaults to `true`. |
+| `parameters` | Yes | Strict object JSON Schema for `action.arguments`. Maximum 16 KB per action. |
+
+The complete import document must be 64 KB or smaller. An agent can have at most 10 actions in total, including actions that already exist. Names must be unique within the document and must not conflict with an existing action.
+
+Imports are create-only and atomic. If one action is invalid, a name conflicts, or the batch would exceed the agent limit, Suppio rejects the complete import and creates no actions. Remove or edit existing actions separately before importing replacements.
+
+Do not include `type: "function"`, `strict`, an executor URL, a signing secret, or handler source code in an action object. Unknown fields are rejected.
+
+The following names are reserved by Suppio and cannot be imported:
+
+- `check_live_status`
+- `escalate_to_human`
+- `file_search`
+- `flag_knowledge_issue`
+- `forum_resolution`
+- `mark_resolved`
+- `rename_ticket`
+- `resolve_chat`
+- `resolve_ticket`
+- `suggest_title`
+
+### Strict parameter schemas
+
+Every `parameters` value must use a strict object JSON Schema:
+
+- The root must have `"type": "object"` and cannot use `anyOf` at the root.
+- Every object must define `properties`, list every property exactly once in `required`, and set `additionalProperties` to `false`.
+- Use `type: ["string", "null"]` or the corresponding two-value type array when a value is optional. The property still stays in `required`; the model sends `null` when no value applies.
+- Every array must define one `items` schema.
+- Supported value types are `object`, `array`, `string`, `number`, `integer`, `boolean`, and `null` through a nullable two-value type array.
+- `enum` must be a non-empty array. If an enum is nullable, include `null` in the enum as well as in its `type`.
+- Descriptions should state meaning, format, units, and how the value maps to your application. Do not put secrets or customer data in descriptions.
+
+This example includes nested objects, arrays, enums, and a nullable value:
+
+```json
+{
+  "name": "update_notification_preferences",
+  "displayName": "Update notification preferences",
+  "description": "Use when a customer asks to change product notification settings.",
+  "instructions": "Only include channels supported by the account. Preserve settings the customer did not ask to change by sending null for schedule.",
+  "requiresConfirmation": true,
+  "enabled": true,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "customer_id": {
+        "type": "string",
+        "description": "The immutable customer identifier."
+      },
+      "preferences": {
+        "type": "object",
+        "description": "The complete requested notification configuration.",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether product notifications are enabled."
+          },
+          "channels": {
+            "type": "array",
+            "description": "Delivery channels selected by the customer.",
+            "items": {
+              "type": "string",
+              "enum": ["email", "discord"]
+            },
+            "minItems": 1,
+            "maxItems": 2
+          },
+          "schedule": {
+            "type": ["string", "null"],
+            "description": "The IANA time zone for scheduled delivery, or null when no schedule applies."
+          }
+        },
+        "required": ["enabled", "channels", "schedule"],
+        "additionalProperties": false
+      }
+    },
+    "required": ["customer_id", "preferences"],
+    "additionalProperties": false
+  }
+}
+```
+
+Supported schema keywords are:
+
+- Structure: `type`, `properties`, `required`, `additionalProperties`, and `items`.
+- Documentation and choices: `title`, `description`, and `enum`.
+- Strings: `format`, `pattern`, `minLength`, and `maxLength`.
+- Numbers: `minimum`, `maximum`, `exclusiveMinimum`, `exclusiveMaximum`, and `multipleOf`.
+- Arrays: `minItems` and `maxItems`.
+- Advanced local composition: `$defs`, local `$ref` values beginning with `#`, and nested `anyOf`.
+
+Supported string formats are `date-time`, `time`, `date`, `duration`, `email`, `hostname`, `ipv4`, `ipv6`, and `uuid`. Other JSON Schema keywords are rejected. Prefer direct types and nullable type arrays over advanced composition unless your action contract requires it.
+
+### Ask an AI coding agent to generate the import
+
+Give the AI agent access to the application code that will receive the webhook. It should inspect real service methods, authorization rules, identifier types, enums, validation, and failure cases instead of inventing operations.
+
+You can copy this prompt and replace the bracketed values:
+
+```text
+Analyze this codebase and create a Suppio Customer Actions import document for the
+operations that a Discord support agent should be allowed to perform.
+
+Read https://docs.suppio.ai/customer-actions#import-actions and follow the version 1
+format exactly. Return only valid JSON, with no Markdown fence or commentary.
+
+Requirements:
+- Generate no more than [NUMBER] actions and only expose operations implemented in this codebase.
+- Use stable lowercase names matching ^[a-z][a-z0-9_]{0,63}$.
+- Do not use Suppio reserved names.
+- Make each description specific enough that the model can distinguish the action from every other action.
+- Derive parameters, types, enums, formats, constraints, and identifiers from the actual code.
+- Use strict object schemas. Every object must list every property in required and set additionalProperties to false.
+- Represent an optional value as required-but-nullable with a type such as ["string", "null"].
+- Set requiresConfirmation to true for every mutation unless I explicitly identify a safe action that can run automatically.
+- Set enabled to true.
+- Never expose arbitrary code execution, shell commands, SQL, URLs, HTTP methods, unrestricted operation names, secrets, credentials, or internal-only administrator functions.
+- Do not include the executor URL, signing secret, implementation code, type: "function", or strict in the import document.
+- Keep each parameters schema under 16 KB and the complete JSON document under 64 KB.
+
+Before producing JSON, inspect [PATHS OR MODULES TO ANALYZE]. Include only actions that
+can be authorized using the Discord actor and conversation identifiers Suppio sends.
+```
+
+After the AI returns JSON:
+
+1. Confirm that each `name` maps to one explicit allowlisted handler in your executor.
+2. Confirm that your executor authorizes `actor.user_id` for the targeted customer or account. A signed request proves that Suppio sent it; it does not grant the actor permission in your system.
+3. Confirm that identifiers and enum values match your application exactly.
+4. Keep `requiresConfirmation` on for actions with side effects.
+5. Remove any argument that could turn a narrow action into a generic remote-control interface.
+6. Import the document, then test each action in a non-production account before enabling production mutations.
+
+Your executor should dispatch by the exact imported name and reject every unknown name. For example:
+
+```ts
+type ActionArguments = Record<string, unknown>;
+
+const handlers: Record<
+  string,
+  (arguments_: ActionArguments) => Promise<{ summary: string; data?: unknown }>
+> = {
+  change_customer_plan: changeCustomerPlan,
+  update_notification_preferences: updateNotificationPreferences,
+};
+
+async function dispatchCustomerAction(
+  name: string,
+  arguments_: ActionArguments
+) {
+  const handler = handlers[name];
+  if (!handler) {
+    return {
+      status: "failed" as const,
+      summary: "This action is not supported.",
+      code: "unknown_action",
+      retryable: false,
+    };
+  }
+
+  try {
+    const result = await handler(arguments_);
+    return {
+      status: "succeeded" as const,
+      summary: result.summary,
+      data: result.data,
+    };
+  } catch (error) {
+    console.error("Customer action failed", { name, error });
+    return {
+      status: "failed" as const,
+      summary: "The requested change could not be completed.",
+      code: "action_failed",
+      retryable: false,
+    };
+  }
+}
+```
+
+The imported schema tells Suppio what arguments to generate. Your executor must still parse, validate, authorize, and safely handle those arguments before changing data.
+
+## Execution request
+
+Suppio sends an HTTPS `POST` with `Content-Type: application/json`:
+
+```json
+{
+  "version": "1",
+  "event": "customer_action.execute",
+  "action_id": "f4e0b489-45d4-48ac-bf72-c0bd5e289fe8",
+  "action": {
+    "name": "change_customer_plan",
+    "arguments": {
+      "plan": "pro"
+    }
+  },
+  "actor": {
+    "provider": "discord",
+    "user_id": "123456789012345678"
+  },
+  "conversation": {
+    "surface": "ticket",
+    "guild_id": "123456789012345678",
+    "channel_id": "234567890123456789",
+    "message_id": "345678901234567890"
+  },
+  "agent": {
+    "id": "agent_123",
+    "workspace_id": "workspace_123"
+  }
+}
+```
+
+The request includes these authentication headers:
+
+- `X-Suppio-Action-Id`: The same UUID as `action_id`.
+- `X-Suppio-Timestamp`: The request time as Unix seconds.
+- `X-Suppio-Signature`: `v1=` followed by the hexadecimal HMAC-SHA256 signature.
+
+Suppio signs the exact raw body with:
+
+```text
+HMAC_SHA256(secret, timestamp + "." + rawBody)
+```
+
+## Verify signatures
+
+Always verify the raw request body before parsing JSON. Reject timestamps more than five minutes away from your server time.
+
+```ts
+import express from "express";
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+const app = express();
+const secret = process.env.SUPPIO_ACTION_SECRET;
+
+if (!secret) {
+  throw new Error("SUPPIO_ACTION_SECRET is required");
+}
+
+app.post(
+  "/suppio/actions",
+  express.raw({ type: "application/json", limit: "64kb" }),
+  async (req, res) => {
+    const timestamp = req.header("X-Suppio-Timestamp") ?? "";
+    const supplied = req.header("X-Suppio-Signature") ?? "";
+    const ageSeconds = Math.abs(Date.now() / 1000 - Number(timestamp));
+
+    if (!Number.isFinite(ageSeconds) || ageSeconds > 300) {
+      res.status(401).json({ error: "Expired request" });
+      return;
+    }
+
+    const expected = `v1=${createHmac("sha256", secret)
+      .update(timestamp)
+      .update(".")
+      .update(req.body)
+      .digest("hex")}`;
+    const expectedBuffer = Buffer.from(expected);
+    const suppliedBuffer = Buffer.from(supplied);
+
+    if (
+      expectedBuffer.length !== suppliedBuffer.length ||
+      !timingSafeEqual(expectedBuffer, suppliedBuffer)
+    ) {
+      res.status(401).json({ error: "Invalid signature" });
+      return;
+    }
+
+    const event = JSON.parse(req.body.toString("utf8"));
+
+    if (event.event === "customer_action.test") {
+      res.json({ status: "succeeded", summary: "Connection verified." });
+      return;
+    }
+
+    // Deduplicate event.action_id before making a change.
+    await executeYourAction(event.action.name, event.action.arguments);
+    res.json({
+      status: "succeeded",
+      summary: "The requested action completed."
+    });
+  }
+);
+```
+
+## Return a result
+
+For success, return a `2xx` response with:
+
+```json
+{
+  "status": "succeeded",
+  "summary": "The customer was changed to the Pro plan.",
+  "data": {
+    "effective_at": "2026-07-22T18:00:00Z"
+  }
+}
+```
+
+For a known failure, return:
+
+```json
+{
+  "status": "failed",
+  "summary": "The customer could not be found.",
+  "code": "customer_not_found",
+  "retryable": false
+}
+```
+
+Suppio uses `summary` and optional `data` to write the final answer. Your response can be up to 64 KB, and `summary` can be up to 2,000 characters.
+
+Executor output is treated as untrusted result data. It is never used as an instruction for the agent to follow.
+
+## Timeouts and idempotency
+
+Your executor has 15 seconds to respond. Suppio does not automatically retry customer actions because a retry could repeat a change.
+
+Store each `action_id` before applying a side effect. If you receive the same ID again, return the result of the original execution instead of repeating it.
+
+If Suppio loses the connection or reaches the timeout after sending a request, it reports that completion could not be confirmed. The action may still have completed in your system.
+
+## Discord behavior
+
+For actions that require confirmation, Suppio shows the display name and arguments with **Confirm** and **Cancel** buttons. Only the user who requested the action can choose. The confirmation expires after 10 minutes.
+
+After execution begins, Suppio shows a working message, updates it with the outcome, and sends a separate natural-language reply based on the executor result.

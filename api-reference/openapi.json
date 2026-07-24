@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Suppio Agent API",
-    "description": "Call a Suppio agent from trusted backend code with text and optional base64 image attachments, then receive a support response with optional structured action signals.",
-    "version": "1.1.0"
+    "description": "Call a Suppio agent from trusted backend code with text, optional base64 image attachments, and optional caller-defined function tools, then receive a support response with structured action signals and tool calls.",
+    "version": "1.2.0"
   },
   "servers": [
     {
@@ -20,7 +20,7 @@
     "/v1/agents/{agentId}/responses": {
       "post": {
         "summary": "Create an agent response",
-        "description": "Send one support message with optional base64 image attachments to a Suppio agent. The response includes the agent answer, usage, and action signals your backend can handle.",
+        "description": "Send one support message with optional base64 image attachments and caller-defined function tools to a Suppio agent. The response includes the agent answer, usage, built-in action signals, and recorded custom tool calls your backend can handle.",
         "operationId": "createAgentResponse",
         "parameters": [
           {
@@ -58,6 +58,37 @@
                         "name": "error.png",
                         "media_type": "image/png",
                         "data": "iVBORw0KGgoAAAANSUhEUgAA..."
+                      }
+                    ]
+                  }
+                },
+                "customTool": {
+                  "summary": "Support request with a caller-defined tool",
+                  "value": {
+                    "message": "Please have a support agent contact me.",
+                    "tools": [
+                      {
+                        "type": "function",
+                        "name": "create_ticket",
+                        "description": "Create a support ticket.",
+                        "instructions": "Call when the user needs human follow-up.",
+                        "strict": true,
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "priority": {
+                              "type": "string",
+                              "enum": [
+                                "low",
+                                "high"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "priority"
+                          ],
+                          "additionalProperties": false
+                        }
                       }
                     ]
                   }
@@ -99,11 +130,19 @@
                     "summary": "Successful support answer",
                     "value": {
                       "outcome": "success",
-                      "response": "You can reset your password from Account Settings.",
+                      "response": "I’ll pass this to the support team.",
                       "actions": [
                         {
-                          "type": "mark_resolved",
-                          "reason": "The request was fully answered."
+                          "type": "escalate_to_human",
+                          "reason": "The user requested human follow-up."
+                        }
+                      ],
+                      "tool_calls": [
+                        {
+                          "name": "create_ticket",
+                          "arguments": {
+                            "priority": "high"
+                          }
                         }
                       ],
                       "usage": {
@@ -118,6 +157,7 @@
                       "outcome": "blocked",
                       "response": "I can't help with that request.",
                       "actions": [],
+                      "tool_calls": [],
                       "usage": {
                         "credits": 2,
                         "tokens": 120
@@ -189,6 +229,14 @@
             "items": {
               "$ref": "#/components/schemas/ImageAttachment"
             }
+          },
+          "tools": {
+            "type": "array",
+            "description": "Optional caller-defined action-signal tools for this request. Up to 10 tools are allowed. Each parameters schema is limited to 16 KB, and the complete tools array is limited to 64 KB.",
+            "maxItems": 10,
+            "items": {
+              "$ref": "#/components/schemas/CustomFunctionTool"
+            }
           }
         }
       },
@@ -227,12 +275,86 @@
           }
         }
       },
+      "CustomFunctionTool": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "name",
+          "description",
+          "instructions",
+          "parameters"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "function"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+            "description": "A request-unique function name. Suppio-owned tool names are reserved."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "A concise description of the function's purpose."
+          },
+          "instructions": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "description": "When and how the agent should call the function. Suppio appends these instructions to the agent instructions for this request."
+          },
+          "strict": {
+            "type": "boolean",
+            "const": true,
+            "default": true,
+            "description": "May be omitted or true. Non-strict tools are rejected."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "A strict object JSON Schema. Every object must set additionalProperties to false and list every property in required.",
+            "required": [
+              "type",
+              "properties",
+              "required",
+              "additionalProperties"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "object"
+              },
+              "properties": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "required": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {
+                "type": "boolean",
+                "const": false
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
       "AgentResponse": {
         "type": "object",
         "required": [
           "outcome",
           "response",
           "actions",
+          "tool_calls",
           "usage"
         ],
         "properties": {
@@ -252,8 +374,34 @@
               "$ref": "#/components/schemas/ActionSignal"
             }
           },
+          "tool_calls": {
+            "type": "array",
+            "description": "Caller-defined tool calls recorded during the agent run. Blocked responses return an empty array.",
+            "items": {
+              "$ref": "#/components/schemas/CustomToolCall"
+            }
+          },
           "usage": {
             "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "CustomToolCall": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The caller-defined function name."
+          },
+          "arguments": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Arguments generated according to the function's strict parameters schema."
           }
         }
       },
@@ -357,6 +505,7 @@
                 "type": "string",
                 "examples": [
                   "invalid_request",
+                  "invalid_tools",
                   "context_required",
                   "out_of_credits"
                 ]

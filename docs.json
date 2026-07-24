@@ -49,6 +49,8 @@
               "usage",
               "commands",
               "actions",
+              "customer-actions",
+              "customer-actions-https",
               "forums",
               "permissions"
             ]
