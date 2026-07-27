@@ -47,7 +47,7 @@ Command access is managed in **Discord permissions**.
     - `private` - optional. When enabled, only you see the summary.
   </Accordion>
   <Accordion title="/close">
-    Close the current ticket and save a transcript.
+    Close the current ticket and save a transcript. When **Ticket closing notifications** is active, `/close` marks the ticket resolved, queues a signed `ticket.resolved` event, and leaves the channel for your integration instead.
   </Accordion>
   <Accordion title="/resolve">
     Mark the current forum thread as resolved.

@@ -27,6 +27,56 @@ Each agent has one executor URL and signing secret. All actions for that agent a
   Rotating the signing secret immediately invalidates the previous secret. Update your executor before running another customer action.
 </Warning>
 
+## Receive ticket closing notifications
+
+Turn on **Ticket closing notifications** below **Actions** to receive a signed `ticket.resolved` event whenever Suppio resolves a Discord ticket through the support agent, `/close`, or inactivity handling.
+
+This setting reuses the executor URL and signing secret. When it is active, Suppio marks the ticket resolved but leaves the Discord channel in place so your integration can delete, archive, rename, move, or otherwise process it.
+
+If **Auto-close tickets** is still enabled in **Actions**, the setting remains **Pending**. Suppio reminds you every minute until you turn auto-close off. The setting activates automatically afterward. A disabled or deleted executor pauses delivery without clearing your requested setting.
+
+Suppio sends:
+
+```json
+{
+  "version": "1",
+  "event": "ticket.resolved",
+  "event_id": "f4e0b489-45d4-48ac-bf72-c0bd5e289fe8",
+  "occurred_at": "2026-07-26T18:30:00.000Z",
+  "source": "agent",
+  "reason": "The customer confirmed the issue is fixed.",
+  "actor": {
+    "provider": "discord",
+    "user_id": "123456789012345678"
+  },
+  "conversation": {
+    "surface": "ticket",
+    "guild_id": "123456789012345678",
+    "channel_id": "234567890123456789",
+    "message_id": "345678901234567890"
+  },
+  "agent": {
+    "id": "agent_123",
+    "workspace_id": "workspace_123"
+  }
+}
+```
+
+`source` is `agent`, `manual`, or `inactivity`. `reason` and `actor.user_id` can be `null`.
+
+The request uses the same `X-Suppio-Timestamp` and `X-Suppio-Signature` headers as customer actions. It also includes `X-Suppio-Event-Id`, which matches `event_id`. Return any `2xx` response to acknowledge delivery; Suppio ignores the response body.
+
+Store `event_id` before changing the ticket. Suppio retries retryable failures after 1 minute, 5 minutes, 30 minutes, and 2 hours. Network failures, timeouts, HTTP `408`, HTTP `429`, and `5xx` responses are retryable. Other `4xx` responses end delivery.
+
+<Warning>
+  **Test connection** sends `customer_action.test`; it does not send
+  `ticket.resolved`. A successful connection test therefore does not verify
+  your ticket-resolution branch or `X-Suppio-Event-Id` handling. Run the
+  signed ticket-resolution smoke test in the
+  [complete executor example](/customer-action-executor-example#create-smoke-testmjs)
+  before enabling closing notifications.
+</Warning>
+
 ## Define an action
 
 Select **Add action** and provide:

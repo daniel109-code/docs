@@ -3,7 +3,7 @@ title: "Connect a customer action executor over HTTPS"
 description: "Publish a customer action executor securely from a VPS, private server, or managed host."
 ---
 
-Suppio calls your customer action executor through a public HTTPS URL. Your executor can run on a VPS, inside a private network connected through a tunnel, or on a managed application platform.
+Suppio calls your customer action executor through a public HTTPS URL. The same endpoint can receive customer action requests and ticket closing notifications. Your executor can run on a VPS, inside a private network connected through a tunnel, or on a managed application platform.
 
 This guide covers the complete network path. Read [Customer actions](/customer-actions) for action definitions, request signatures, payloads, results, confirmations, and idempotency.
 
@@ -13,7 +13,7 @@ This guide covers the complete network path. Read [Customer actions](/customer-a
 flowchart LR
     S["Suppio"] -->|"Signed HTTPS POST"| H["Public hostname on port 443"]
     H -->|"Reverse proxy or secure tunnel"| E["Executor on 127.0.0.1:8787"]
-    E -->|"JSON result"| H
+    E -->|"JSON result or 2xx acknowledgment"| H
     H -->|"HTTPS response"| S
 ```
 
@@ -38,14 +38,14 @@ Your configured executor URL must meet every requirement below.
 | TLS | A valid, publicly trusted certificate for the configured hostname. Do not use a self-signed certificate. |
 | Method | Accept `POST` at the exact configured path. |
 | Request body | Accept `application/json` and preserve the exact raw bytes until after signature verification. |
-| Authentication | Verify `X-Suppio-Timestamp`, `X-Suppio-Signature`, and `X-Suppio-Action-Id`. |
+| Authentication | Always verify `X-Suppio-Timestamp` and `X-Suppio-Signature`. Match `X-Suppio-Action-Id` to `action_id` for customer actions or `X-Suppio-Event-Id` to `event_id` for ticket closing notifications. |
 | Redirects | Return a response directly. Suppio does not follow `301`, `302`, `307`, or `308` redirects. |
 | Response time | Respond within 15 seconds. |
-| Request size | Accept action request bodies up to 64 KB. |
+| Request size | Accept request bodies up to 64 KB. |
 | Response size | Return no more than 64 KB. Keep `summary` at or below 2,000 characters. |
-| Response format | Return a JSON success or failure result described in [Return a result](/customer-actions#return-a-result). |
+| Response format | Return the JSON result described in [Return a result](/customer-actions#return-a-result) for customer actions. Return any `2xx` response for `ticket.resolved`; Suppio ignores that response body. |
 
-Before each request, Suppio's production relay resolves both `A` and `AAAA` records and continues only when every returned address is public. A hostname that has no public answer or includes any private or reserved answer is rejected. Outbound executor requests use a strictly public network path, and the relay never follows redirects.
+Before each outbound request, Suppio resolves the hostname and continues only when every returned address is public. A hostname that has no public answer or includes any private or reserved answer is rejected. Suppio uses a strictly public network path and never follows redirects.
 
 <Warning>
   Do not put a browser login, basic authentication prompt, CAPTCHA, or interactive access page in front of the action path. Suppio authenticates with its signature headers and cannot complete an interactive challenge.
@@ -341,7 +341,7 @@ A managed container, application, or serverless platform can work when it provid
 - cold starts and action execution finish within 15 seconds
 - the application accepts request bodies up to 64 KB
 - the response body stays below 64 KB
-- the application has a persistent database or durable store for `action_id` deduplication
+- the application has a persistent database or durable store for `action_id` and `event_id` deduplication
 - logs exclude signature headers, secrets, raw request bodies, arguments, and result data
 
 Some serverless frameworks parse and reconstruct JSON before your handler runs. Signature verification fails if you calculate the HMAC over reconstructed JSON. Enable the platform's raw-body mode and verify the signature before calling `JSON.parse`.
@@ -350,22 +350,34 @@ Use the exact HTTPS URL shown by the platform, including the final action path. 
 
 ## The complete request lifecycle
 
-For every real action, your executor should follow this order:
+For every request, verify the shared envelope first:
 
 1. Receive the HTTPS request at the exact configured path.
 2. Limit how much request data the server accepts.
-3. Read the timestamp, signature, and action ID headers.
+3. Read the timestamp and signature headers.
 4. Reject a timestamp more than five minutes away from the executor's clock.
 5. Calculate the HMAC over the exact raw body and compare it in constant time.
 6. Parse JSON only after the signature succeeds.
-7. Confirm that the header action ID matches `action_id` in the body.
-8. Return success without mutating data when `event` is `customer_action.test`.
-9. Reject action names that are not in an explicit handler allowlist.
-10. Validate every argument again in your application.
-11. Authorize `actor.user_id` for the targeted account or resource.
-12. Atomically claim `action_id` in durable storage. Return the stored result if that ID already completed, and never repeat a result whose completion is uncertain.
-13. Perform the action once.
-14. Store and return a `succeeded` or `failed` JSON result within 15 seconds. Return both known outcomes with HTTP `2xx`.
+
+For `customer_action.execute` and `customer_action.test`:
+
+1. Confirm that `X-Suppio-Action-Id` matches `action_id`.
+2. Return success without mutating data when `event` is `customer_action.test`.
+3. Reject action names that are not in an explicit handler allowlist.
+4. Validate every argument again in your application.
+5. Authorize `actor.user_id` for the targeted account or resource.
+6. Atomically claim `action_id` in durable storage. Return the stored result if that ID already completed, and never repeat a result whose completion is uncertain.
+7. Perform the action once.
+8. Store and return a `succeeded` or `failed` JSON result within 15 seconds. Return both known outcomes with HTTP `2xx`.
+
+For `ticket.resolved`:
+
+1. Confirm that `X-Suppio-Event-Id` matches `event_id`.
+2. Validate `source`, `actor`, `conversation`, and `agent`.
+3. Atomically store `event_id` and the work your integration must perform. If the same ID arrives again, acknowledge it without creating duplicate work.
+4. Return any `2xx` response after the event is durably accepted. Suppio ignores the body.
+
+Ticket closing notifications use at-least-once delivery. Suppio retries network failures, timeouts, HTTP `408`, HTTP `429`, and `5xx` responses. Your `event_id` claim prevents those retries from applying the same close operation twice.
 
 The signature proves that Suppio sent an unchanged request. It does not prove that the Discord user is authorized to modify a record in your application. Your executor remains responsible for that authorization decision.
 
@@ -376,7 +388,7 @@ The signature proves that Suppio sent an unchanged request. It does not prove th
 - Keep the signing secret in a protected environment file or secret manager.
 - Verify signatures against raw bytes before parsing JSON.
 - Keep the server clock synchronized so timestamp checks are reliable.
-- Persist `action_id` values before applying side effects.
+- Persist `action_id` and `event_id` values before applying side effects.
 - Use explicit action handlers instead of dynamic code, commands, URLs, SQL, or unrestricted operation names.
 - Validate and authorize arguments even though the action has a strict schema.
 - Do not log secrets, signature headers, request bodies, action arguments, or executor result data.
@@ -410,6 +422,16 @@ The signature proves that Suppio sent an unchanged request. It does not prove th
   <Accordion title="The test works but actions are not available">
     Turn on the executor endpoint, enable the individual action definitions, and start a new Discord ticket or forum workflow run. Existing run traces do not change retroactively.
   </Accordion>
+  <Accordion title="Test connection succeeds but ticket closing returns HTTP 400">
+    **Test connection** sends `customer_action.test`, not `ticket.resolved`.
+    Make sure your route handles `ticket.resolved` before it requires
+    `action_id` or `X-Suppio-Action-Id`. Validate
+    `X-Suppio-Event-Id` against `event_id`, accept the documented nullable
+    fields, and return any `2xx` response after durably storing the event. Run
+    the two-envelope smoke test in the
+    [complete executor example](/customer-action-executor-example#create-smoke-testmjs)
+    to verify both branches.
+  </Accordion>
   <Accordion title="Suppio reports an unknown result">
     The request was dispatched, but Suppio lost the connection or reached the 15-second timeout. The mutation may have completed. Look up the request by `action_id`; do not repeat it automatically.
   </Accordion>
@@ -424,10 +446,11 @@ Before enabling production actions, confirm that:
 - the executor listens only on loopback or through the intended private network
 - the action path has no interactive access challenge
 - the signing secret is stored outside source control
-- signature, timestamp, action ID, schema, and authorization checks run in the correct order
+- signature and timestamp checks run before parsing, and the matching action ID or event ID is validated afterward
 - every action name maps to one explicit handler
 - durable idempotency is working
 - known failures return HTTP `2xx` with structured failure results
 - the executor responds in less than 15 seconds
 - **Test connection** succeeds
+- the signed `ticket.resolved` smoke test returns `2xx` when you use ticket closing notifications
 - the endpoint and intended actions are enabled
