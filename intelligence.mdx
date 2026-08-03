@@ -1,9 +1,9 @@
 ---
 title: "Intelligence"
-description: "Choose model intelligence and reasoning effort while testing an agent in Sandbox."
+description: "Choose Standard or High reasoning while testing an agent in Sandbox."
 ---
 
-Sandbox includes intelligence controls so you can test how different model and reasoning settings affect an agent's answers before you deploy it.
+Suppio uses one unified intelligence system across every plan and support workflow. Sandbox lets you test how Standard and High reasoning affect an agent's answers before you deploy it.
 
 ## Where to change it
 
@@ -27,11 +27,11 @@ Replace `{workspaceId}` with your workspace ID and `{agentId}` with the agent ID
   <Step title="Open Sandbox">
     Click **Sandbox** in the agent navigation.
   </Step>
-  <Step title="Choose intelligence">
-    In the sidebar, choose **Model intelligence** and **Reasoning effort**.
+  <Step title="Choose reasoning">
+    In the sidebar, confirm **Model intelligence** and choose **Reasoning effort**.
   </Step>
   <Step title="Send a test message">
-    Each sandbox message uses the model and reasoning values currently selected in the sidebar.
+    Each sandbox message uses the reasoning value currently selected in the sidebar.
   </Step>
 </Steps>
 
@@ -39,44 +39,36 @@ Replace `{workspaceId}` with your workspace ID and `{agentId}` with the agent ID
   Sandbox intelligence controls are used for sandbox test runs. They are not a separate saved Intelligence tab.
 </Note>
 
-## Model options
+## Unified intelligence
 
-Suppio shows simple model labels in the dashboard.
+Every plan uses **Suppio Intelligence**. The underlying model and provider are managed by Suppio, so you do not need to choose between model families or update an agent when Suppio improves its intelligence.
 
-<AccordionGroup>
-  <Accordion title="Smart">
-    Smart is the default model option and is designed for strong answers in most support cases.
-  </Accordion>
-  <Accordion title="Advanced">
-    Advanced is the highest intelligence option for complex requests.
-  </Accordion>
-</AccordionGroup>
+This applies to support replies and supporting workflows such as safety checks, actions, summaries, images, analysis, and escalation.
 
 ## Plan access
 
-| Plan | Available model choices | Maximum reasoning |
+| Plan | Intelligence | Reasoning options |
 | --- | --- | --- |
-| Free | Smart | Medium |
-| Plus | Smart | High |
-| Pro | Smart and Advanced | High |
-| Enterprise | Smart and Advanced | High |
+| Free | Suppio Intelligence | Standard |
+| Plus | Suppio Intelligence | Standard and High |
+| Pro | Suppio Intelligence | Standard and High |
+| Enterprise | Suppio Intelligence | Standard and High |
 
 ## Reasoning settings
 
-Reasoning effort controls how much extra work the model spends before answering a sandbox message.
+Reasoning effort controls how much analysis Suppio performs before answering a sandbox message.
 
-- Use **Low** for quick checks and straightforward questions.
-- Use **Medium** for balanced depth on most questions.
-- Use higher reasoning for complex support questions that need more careful judgment.
-- Model choice and reasoning both affect response quality, latency, and credits.
+- **Standard** maps to medium reasoning and balances answer quality, speed, and credit usage.
+- **High** maps to high reasoning for complex requests that need more careful judgment. High is available on paid plans.
+- Reasoning affects response quality, latency, and credits.
 
 ## What this affects
 
-The Sandbox intelligence controls affect the test message you send from Sandbox. Use them to compare answer quality, speed, and credit usage while preparing the agent.
+The Sandbox reasoning control affects the test message you send from Sandbox. Use it to compare answer quality, speed, and credit usage while preparing the agent.
 
 ## Tips
 
-- Start with Smart unless your support questions are consistently complex.
-- Ask the same sandbox question with different intelligence settings to compare results.
-- Watch Usage after testing with Advanced or higher reasoning.
-- If answers are wrong because information is missing, update [Context](/context) before increasing model strength.
+- Start with Standard for most support questions.
+- Ask the same sandbox question with Standard and High to compare results.
+- Watch Usage after testing with High reasoning.
+- If answers are wrong because information is missing, update [Context](/context) before increasing reasoning.
