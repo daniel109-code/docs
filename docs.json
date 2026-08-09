@@ -30,6 +30,7 @@
             "group": "Deployment",
             "pages": [
               "discord",
+              "live-support",
               "web-chat-widget",
               "hosted-support-page"
             ]

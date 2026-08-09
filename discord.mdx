@@ -20,6 +20,7 @@ Suppio can work in:
 - ticket channels
 - ticket categories created by ticket bots
 - Discord forum channels
+- temporary private voice channels on supported plans
 - one-off `/ask` command replies
 
 ## When to use it
@@ -66,6 +67,8 @@ For forums, Suppio answers inside the forum thread and can update the thread sta
 
 For `/ask`, Suppio sends a private one-off answer. `/ask` does not manage ticket state, close tickets, or mark issues resolved.
 
+When live support is enabled, Suppio can offer a temporary private voice session during a ticket or forum conversation. It creates the channel only after the customer explicitly accepts. Pro and Enterprise workspaces can also let customers share a tab, window, or screen through a secure Suppio link. See [Discord live support](/live-support).
+
 ## How escalations work
 
 Suppio escalates when a user asks for a person or when the agent cannot confidently continue.
@@ -83,7 +86,7 @@ For Discord forums, escalation can apply the configured escalation tag and show 
 
 <AccordionGroup>
   <Accordion title="Discord routing">
-    Controls ticket destinations, support team roles, response delay, first-message replies, the log channel, and automatic handoff when a support role speaks.
+    Controls ticket destinations, support team roles, response delay, first-message replies, the log channel, live voice and screen-share support, and automatic handoff when a support role speaks.
   </Accordion>
   <Accordion title="Discord forums">
     Controls forum channels, allowed forum tags, status tags, resolved and inactive behavior, and forum embed text.
@@ -108,6 +111,7 @@ For Discord forums, escalation can apply the configured escalation tag and show 
 - Suppio needs permission to read and send messages in the channels it manages.
 - Context is required before deployment.
 - Discord-only features do not apply to the chat widget, support page, or API.
+- Voice-call support requires Plus or higher. Screen sharing requires Pro or Enterprise and must be used inside a voice-support session.
 - Some automation and customization settings depend on your plan. See [Plans and billing](/billing).
 
 ## Troubleshooting
@@ -130,6 +134,9 @@ For Discord forums, escalation can apply the configured escalation tag and show 
 ## Related pages
 
 <CardGroup cols={2}>
+  <Card title="Live support" icon="headset" href="/live-support">
+    Configure private voice sessions and secure screen sharing.
+  </Card>
   <Card title="Actions" icon="bell-ring" href="/actions">
     Configure ticket automation, escalation alerts, transcripts, and inactivity reminders.
   </Card>

@@ -1,0 +1,156 @@
+---
+title: "Discord live support"
+description: "Configure private Discord voice sessions and secure screen sharing for live customer support."
+---
+
+Discord live support lets Suppio move a ticket or forum conversation into a temporary private voice channel when talking through the issue would be faster or clearer.
+
+Voice-call support is available on Plus, Pro, and Enterprise. Secure screen sharing is available on Pro and Enterprise.
+
+<Note>
+  Live support works only in configured Discord tickets and forum posts. It does not apply to `/ask`, the chat widget, the support page, or the Agent API.
+</Note>
+
+## How live support starts
+
+Suppio can offer live support during a qualifying conversation, such as setup, configuration, a multi-step task, or troubleshooting that needs back-and-forth questions. It continues helping in text while making the offer.
+
+Suppio creates a session only after the customer explicitly accepts the offer. It does not treat silence or an unrelated answer as consent.
+
+After the customer accepts:
+
+1. Suppio creates a temporary private Discord voice channel.
+2. The original ticket or forum post receives **Join VC** and **End session** buttons.
+3. If screen sharing is enabled, the message also includes **Share screen**.
+4. The customer has 3 minutes to join before the unused channel expires.
+5. Suppio carries the originating conversation into the call so the customer does not need to repeat the issue.
+
+The requester, Suppio, and members with a configured support team role can access the private channel.
+
+## Configure voice-call support
+
+Before enabling voice calls, connect Suppio to Discord and configure at least one ticket destination or forum workflow.
+
+<Steps>
+  <Step title="Open Discord routing">
+    Open your agent, expand **Discord**, and select **Discord routing**.
+  </Step>
+  <Step title="Choose a log channel">
+    Under **Log channel**, click **Manage** and select where Suppio should send live-session summaries and transcript files.
+  </Step>
+  <Step title="Choose a channel category">
+    Under **Live support > Voice-call support**, select the Discord category where temporary private voice channels should be created.
+  </Step>
+  <Step title="Enable voice calls">
+    Turn on **Voice-call support**. Your workspace must be on Plus or higher.
+  </Step>
+  <Step title="Save the settings">
+    Click **Save changes** in the unsaved-changes prompt.
+  </Step>
+</Steps>
+
+Suppio needs **Manage Channels** in the server. In the selected log channel, it also needs **View Channel**, **Send Messages**, and **Attach Files**.
+
+## Configure screen sharing
+
+Screen sharing extends a voice session with visual context. It does not connect to Discord Go Live.
+
+<Steps>
+  <Step title="Enable voice calls first">
+    Screen sharing requires **Voice-call support** and a Pro or Enterprise workspace.
+  </Step>
+  <Step title="Enable screen sharing">
+    Under **Live support**, turn on **Screen-share support**.
+  </Step>
+  <Step title="Choose capture timing">
+    Select when Suppio should use the latest screen image:
+
+    - **When requested** lets Suppio inspect the latest image only when the conversation calls for it.
+    - **After the customer speaks** automatically gives Suppio a current image after each completed customer turn. This is the default.
+  </Step>
+  <Step title="Save the settings">
+    Click **Save changes**.
+  </Step>
+</Steps>
+
+### What the customer does
+
+The customer clicks **Share screen** in the original support conversation or the private voice channel chat. In the secure Suppio page, they:
+
+1. Click **Start sharing**.
+2. Choose the relevant browser tab, window, or screen.
+3. Return to the Discord voice call.
+4. Click **Stop sharing** when visual guidance is no longer needed.
+
+Use **Share screen**, not Discord Go Live. A Discord Go Live stream is not connected to Suppio.
+
+## During the session
+
+- Suppio begins when the requester joins the voice channel.
+- The first spoken response explains that speech is transcribed for the private support log and that raw audio and screen-share video are not retained.
+- The customer can speak naturally and interrupt Suppio while it is responding.
+- Configured customer actions remain available. If an action requires confirmation, Suppio posts **Confirm** and **Cancel** buttons in the private voice channel chat.
+- A session lasts 10 minutes. Near the end, the customer can explicitly request one 10-minute extension, for a maximum of 20 minutes.
+- If the requester disconnects, they have 3 minutes to rejoin before the session ends.
+- Only one Suppio live-support session can be active in a Discord server at a time.
+
+Live sessions use workspace credits. The session ends if the workspace runs out of credits.
+
+## End a session
+
+The customer or a configured support team member can click **End session**. Before a normal session ends, Suppio asks whether it may mark the originating ticket or forum post resolved.
+
+Suppio changes the originating issue to resolved only after the customer agrees. If the customer declines, the issue stays open.
+
+The session also ends automatically if the temporary voice channel or originating support conversation is deleted, or if the originating ticket or forum post is resolved or escalated.
+
+When the session ends, Suppio:
+
+- deletes the temporary voice channel
+- invalidates the screen-share link
+- posts a session summary and transcript file in the configured log channel
+- posts an ended-session message in the originating support conversation
+
+## Privacy and screen processing
+
+Suppio transcribes live speech so it can respond and create the private session log. It does not retain raw live audio as a recording.
+
+Screen sharing sends occasional still images rather than a continuous video recording. Images are resized, stripped of source metadata, processed in memory, and not stored. The customer can stop sharing at any time.
+
+<Warning>
+  Customers should share only the tab, window, or screen needed for support and should hide passwords, payment details, private keys, recovery codes, and unrelated personal information.
+</Warning>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Voice-call support cannot be enabled">
+    Confirm the workspace is on Plus or higher, select both a **Log channel** and a live-support **Channel category**, then save the settings. If the dashboard says voice support is temporarily unavailable, try again later.
+  </Accordion>
+  <Accordion title="Suppio cannot create the private channel">
+    Confirm Suppio has **Manage Channels** in the server. Also confirm it has **View Channel**, **Send Messages**, and **Attach Files** in the selected log channel.
+  </Accordion>
+  <Accordion title="The private channel expired">
+    The requester must join within 3 minutes. Continue in the original conversation and accept a new live-support offer when ready.
+  </Accordion>
+  <Accordion title="Discord Go Live does nothing">
+    Discord Go Live is not connected to Suppio. Click **Share screen** in the original support conversation or private voice channel chat instead.
+  </Accordion>
+  <Accordion title="The browser cannot start screen sharing">
+    Open the secure link in a current version of Chrome, Edge, or Safari, allow the browser's screen-sharing prompt, and choose a tab, window, or screen. If sharing was dismissed, click **Start sharing** again.
+  </Accordion>
+  <Accordion title="Suppio is not using the latest screen">
+    Confirm the secure page says **Screen sharing is active**. With **When requested**, describe what Suppio should inspect. With **After the customer speaks**, finish your spoken turn so Suppio receives the latest sample.
+  </Accordion>
+</AccordionGroup>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Discord deployment" icon="messages-square" href="/discord">
+    Connect Suppio and configure Discord support workflows.
+  </Card>
+  <Card title="Plans and billing" icon="credit-card" href="/billing">
+    Compare voice and screen-share availability by plan.
+  </Card>
+</CardGroup>
