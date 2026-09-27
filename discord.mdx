@@ -5,7 +5,7 @@ description: "Connect a Suppio agent to Discord and configure ticket, forum, com
 
 Discord deployment connects a Suppio agent to a Discord server so it can answer support questions in real time.
 
-Use Discord deployment when your community already handles support in ticket channels, ticket categories, or Discord forum posts.
+Use Discord deployment when your community needs native Suppio tickets, already handles support through another ticket bot, or uses Discord forum posts.
 
 <Warning>
   Add at least one context source before deploying to Discord. Suppio will not respond without context.
@@ -51,7 +51,7 @@ Use Discord when:
     Finish the Discord invite. After the bot joins, mention Suppio or run `/setup` for a guided checklist.
   </Step>
   <Step title="Configure Discord settings">
-    Use the Discord settings tabs to choose ticket routing, forum routing, command permissions, actions, and bot customization.
+    Use the Discord settings tabs to configure routing, forums, native tickets, command permissions, actions, and bot customization.
   </Step>
 </Steps>
 
@@ -91,6 +91,9 @@ For Discord forums, escalation can apply the configured escalation tag and show 
   <Accordion title="Discord forums">
     Controls forum channels, allowed forum tags, status tags, resolved and inactive behavior, and forum embed text.
   </Accordion>
+  <Accordion title="Discord tickets">
+    Creates and manages native ticket panels, forms, private channels or threads, lifecycle permissions, automations, logs, statistics, recycling, and hosted transcripts. Native tickets are available on every plan.
+  </Accordion>
   <Accordion title="Discord permissions">
     Controls which Discord roles can run each Suppio slash command and optional `/ask` cooldowns.
   </Accordion>
@@ -112,7 +115,7 @@ For Discord forums, escalation can apply the configured escalation tag and show 
 - Context is required before deployment.
 - Discord-only features do not apply to the chat widget, support page, or API.
 - Voice-call support requires Plus or higher. Screen sharing requires Pro or Enterprise and must be used inside a voice-support session.
-- Some automation and customization settings depend on your plan. See [Plans and billing](/billing).
+- Some AI automation and bot customization settings depend on your plan. Native ticket controls are available on every plan. See [Plans and billing](/billing).
 
 ## Troubleshooting
 
@@ -136,6 +139,9 @@ For Discord forums, escalation can apply the configured escalation tag and show 
 <CardGroup cols={2}>
   <Card title="Live support" icon="headset" href="/live-support">
     Configure private voice sessions and secure screen sharing.
+  </Card>
+  <Card title="Tickets" icon="ticket" href="/tickets">
+    Build and publish native ticket panels with hosted transcripts.
   </Card>
   <Card title="Actions" icon="bell-ring" href="/actions">
     Configure ticket automation, escalation alerts, transcripts, and inactivity reminders.

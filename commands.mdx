@@ -9,7 +9,8 @@ Command access is managed in **Discord permissions**.
 
 ## Permission behavior
 
-- `/help` and `/support` are available to everyone by default.
+- `/help`, `/support`, and native ticket commands are registered for everyone by default.
+- Native ticket command policies can enable or disable each command, reserve it for support, and apply role or channel allow and deny lists.
 - Other commands default to members with **Manage Server** unless you assign allowed roles.
 - `/ask` can also have per-role cooldowns.
 
@@ -47,7 +48,43 @@ Command access is managed in **Discord permissions**.
     - `private` - optional. When enabled, only you see the summary.
   </Accordion>
   <Accordion title="/close">
-    Close the current ticket and save a transcript. When **Ticket closing notifications** is active, `/close` marks the ticket resolved, queues a signed `ticket.resolved` event, and leaves the channel for your integration instead.
+    Close the current ticket and save a transcript. Add an optional `reason`. Native tickets follow their configured two-step close and retained-closed-state rules. External ticket routes continue to use their existing close workflow.
+  </Accordion>
+  <Accordion title="/new">
+    Create a native ticket from a panel. You can provide a panel name or ID, an optional reason, and, when permitted, another member as the owner.
+  </Accordion>
+  <Accordion title="/panel">
+    Publish a configured Components V2 ticket panel in the current channel or another selected channel.
+  </Accordion>
+  <Accordion title="/add and /remove">
+    Add or remove a Discord member or role from the current native ticket. Discord private threads accept individual members only because Discord cannot add a role directly to a private thread.
+  </Accordion>
+  <Accordion title="/claim and /unclaim">
+    Claim or release the current native ticket according to the panel&apos;s claiming rules. Support can optionally assign `/claim` to another configured support member.
+  </Accordion>
+  <Accordion title="/open">
+    Reopen a retained closed native ticket.
+  </Accordion>
+  <Accordion title="/close-request">
+    Ask the ticket owner to approve closing the ticket. You can include an optional reason.
+  </Accordion>
+  <Accordion title="/delete">
+    Save the required transcript, then delete or recycle a closed native ticket. You can include an optional reason.
+  </Accordion>
+  <Accordion title="/rename">
+    Rename the current native ticket channel.
+  </Accordion>
+  <Accordion title="/transcript">
+    Save and share a private hosted transcript for the current native ticket. A dashboard manager can also run it in another server text channel.
+  </Accordion>
+  <Accordion title="/escalate">
+    Transfer the current native ticket to an allowed target panel. You can include an optional reason.
+  </Accordion>
+  <Accordion title="/automation">
+    List the current ticket&apos;s automation status, stop its rules durably, or restart them with a fresh seven-day window.
+  </Accordion>
+  <Accordion title="/ticket-debug">
+    Show native ticket configuration and Discord permission diagnostics.
   </Accordion>
   <Accordion title="/resolve">
     Mark the current forum thread as resolved.

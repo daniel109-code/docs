@@ -1,0 +1,136 @@
+---
+title: "Discord tickets"
+description: "Build native Discord ticket panels, forms, permissions, automations, logs, statistics, and hosted transcripts."
+---
+
+Suppio includes a native Discord ticket system on every plan, including Free. You can keep existing external ticket-bot routing active while you introduce native panels.
+
+<Info>
+  Native ticketing does not consume Suppio credits. AI replies inside a ticket continue to follow your Discord routing settings and normal AI usage rules. Bot customization remains available on paid plans.
+</Info>
+
+## Create and publish a panel
+
+<Steps>
+  <Step title="Open Tickets">
+    Open a Discord-connected workspace, expand **Discord**, and select **Tickets**.
+  </Step>
+  <Step title="Create a panel">
+    Select the plus button in the panel bar. Choose the new panel tab and configure its settings.
+  </Step>
+  <Step title="Save the panel">
+    Select **Save settings**. Active tickets keep the settings snapshot from when they were created.
+  </Step>
+  <Step title="Send the panel">
+    Open the three-dot menu, select **Send**, and choose a Discord text channel. Use **Update** after later edits to refresh every published copy.
+  </Step>
+</Steps>
+
+The three-dot menu also lets you clone, rename, or delete a panel. Deleting a panel disables its published creation messages without changing active tickets.
+
+## Ticket surfaces and entry points
+
+A panel can create either:
+
+- a private Discord text channel
+- a private thread under a selected text channel
+
+You can link panels and display their creation choices as buttons or a select menu. Configure one to five buttons per row, custom menu labels, descriptions, and emoji. You can also enable `/new` for a panel and limit that command to selected channels.
+
+## Forms and lifecycle
+
+Creation forms support up to five short or paragraph questions. Each question can have a placeholder, required state, and minimum and maximum length. Suppio can display the submitted answers in the new ticket.
+
+Use `{create.form.1}` through `{create.form.5}` in any message template to reuse submitted answers. Command-created tickets also expose `{reason}` and `{create.reason}`.
+
+For each panel, you can configure:
+
+- open, claimed, and closed channel names
+- open, claimed, and closed categories
+- category overflow order
+- two-step close confirmation
+- retained closed tickets and reopening
+- welcome-message pinning
+- private support-only staff threads
+- owner role changes when a ticket opens, closes, is claimed, or is unclaimed
+
+Channel and private-thread tickets follow the same saved lifecycle state. Private threads can use their parent channel for the agent routing match.
+
+## Permissions, access, and limits
+
+The visual permission matrix has separate open and closed rules for the ticket owner, support roles, additional roles, and everyone. A separate permission set can apply to support roles after a ticket is claimed.
+
+You can also configure:
+
+- support and additional roles
+- a server-wide ticket blacklist
+- one open ticket per member in each panel, plus panel-wide open-ticket limits
+- retained closed-ticket limits and closed-limit bypass roles
+- weekly support-hour intervals and schedule-bypass roles
+- claim, takeover, and unclaim behavior
+- per-button allow and deny roles
+- per-command enablement, support-only access, and role or channel allow and deny lists; explicit allow lists override deny lists
+
+Discord server owners and administrators can delegate full dashboard access from the agent&apos;s **Discord > Permissions** tab under **Dashboard access**. Suppio verifies the member&apos;s current Discord roles when they use the dashboard. Delegated members cannot change the delegation list.
+
+## Automations and escalation
+
+Each panel supports up to ten durable automation rules. A rule can run when a ticket is created, closed, reopened, receives a close request, loses its owner, or meets a message-activity check. Actions can send a Components V2 message, close the ticket, or delete it after an optional delay.
+
+Message checks can inspect owner, support, or any-member activity, repeat, and reset when matching activity occurs. Failed jobs retry without running the same completed job twice. Use `/automation stop` to pause a ticket&apos;s rules durably and `/automation restart` to start a fresh seven-day automation window.
+
+Escalation can transfer a ticket into an allowed target panel and optionally update its category, name, permissions, claim state, and welcome message.
+
+## Components V2 messages
+
+All native ticket messages, direct messages, and logs use Discord Components V2. The visual editor supports:
+
+- containers and accent colors
+- text blocks
+- sections with a thumbnail or link button
+- separators
+- media galleries
+- file download links
+- managed action buttons
+
+Separate templates cover panel creation, ticket welcome, close confirmation, closed and reopened states, moderator controls, deletion, claiming, transcripts, direct messages, unavailable support hours, and escalation. Managed ticket buttons have configurable labels, emoji, styles, visibility, support-only behavior, and role restrictions.
+
+Templates support server, panel, channel, ticket-owner, author, claimer, reason, form-answer, time, role, and transcript variables. You can add modifiers for capitalization, maximum length, zero padding, fallback text, cleanup, and basic math. Suppio validates the rendered layout against Discord&apos;s Components V2 component limit before saving or publishing it.
+
+## Hosted transcripts
+
+Hosted transcripts use private storage and signed, unguessable links. Each transcript contains the latest 1,000 messages and can mirror up to 8 MiB of attachments. Links expire after 365 days.
+
+From **Tickets > Transcripts**, you can:
+
+- open an active transcript link
+- rotate the link and invalidate the previous URL
+- revoke access immediately
+
+You can save transcripts manually, on close, or before deletion. Dashboard managers can also run `/transcript` in another text channel. A panel can send transcript notices to an archive channel and direct-message the ticket owner when a ticket is created, closed, or deleted. Ticket deletion requires the configured transcript step to finish first.
+
+## Logs and statistics
+
+Choose a log channel and the lifecycle events you want recorded. Native logs use Components V2.
+
+**Tickets > Activity** shows recent tickets, open and closed totals, claims, average time to first claim, average time to close, and a claim leaderboard. Saved conversations are available in **Tickets > Transcripts**.
+
+## Related commands
+
+Ticket lifecycle commands include `/new`, `/panel`, `/add`, `/remove`, `/claim`, `/unclaim`, `/open`, `/close`, `/close-request`, `/delete`, `/rename`, `/transcript`, `/escalate`, `/automation`, and `/ticket-debug`.
+
+See [Discord commands](/commands) for command details.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="A panel message is out of date">
+    Save the panel, open its three-dot menu, and select **Update**. The dashboard reports any published messages Discord could not update.
+  </Accordion>
+  <Accordion title="A ticket cannot be created">
+    Check panel enablement, support hours, blacklists, global and panel limits, the selected category or thread parent, and the bot&apos;s Discord permissions. Run `/ticket-debug` for permission diagnostics.
+  </Accordion>
+  <Accordion title="A transcript link no longer works">
+    The link may have been rotated, revoked, or expired. Open **Tickets > Transcripts** to get the current link or create a new transcript from the ticket.
+  </Accordion>
+</AccordionGroup>

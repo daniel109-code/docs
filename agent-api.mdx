@@ -79,6 +79,13 @@ API keys:
 - are shown in full only when created
 - are stored by Suppio as a hash, a display prefix, and the last four characters
 
+## Response behavior
+
+In your agent's **API settings**, turn on **Disable follow-up questions** to ask the agent to answer directly using the available context. It will avoid clarification questions, requests for more information, confirmation requests, and closing invitations to continue the conversation.
+
+The setting is off by default and applies only to that agent's subsequent API requests. When details are missing, the agent can explain limitations or state reasonable assumptions without inventing facts. Questions in content you explicitly request, such as a quiz, FAQ, or interview script, remain supported.
+
+
 ## Endpoint
 
 ```http
