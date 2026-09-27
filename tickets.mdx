@@ -77,7 +77,7 @@ Discord server owners and administrators can delegate full dashboard access from
 
 Each panel supports up to ten durable automation rules. A rule can run when a ticket is created, closed, reopened, receives a close request, loses its owner, or meets a message-activity check. Actions can send a Components V2 message, close the ticket, or delete it after an optional delay.
 
-Message checks can inspect owner, support, or any-member activity, repeat, and reset when matching activity occurs. Failed jobs retry without running the same completed job twice. Use `/automation stop` to pause a ticket&apos;s rules durably and `/automation restart` to start a fresh seven-day automation window.
+Message checks can inspect owner, support, or any-member activity and repeat. After a check matches, its action waits for the configured delay. Inactivity checks can reset their timer when matching activity occurs; a reply during an inactivity action’s delay cancels that action. Found-message checks keep their observation window so matching activity is not postponed until it ages out. Failed jobs retry without running the same completed job twice. Use `/automation stop` to pause a ticket&apos;s rules durably and `/automation restart` to start a fresh seven-day automation window.
 
 Escalation can transfer a ticket into an allowed target panel and optionally update its category, name, permissions, claim state, and welcome message.
 
